@@ -15,6 +15,7 @@ import pytest
 
 from stackos_connectors import CallOptions, ConnectorAuth, ConnectorError, ConnectorRequest
 from stackos_connectors.connectors.ftp.actions import FtpActionConnector
+from stackos_connectors.errors import ValidationError
 
 from .catalog_fixture import client_for
 
@@ -77,6 +78,91 @@ def _ftp_connector_request(*, operation, input_json, progress_callback=None):
         ),
         options=CallOptions(progress_callback=progress_callback),
     )
+
+
+@pytest.mark.parametrize(
+    ("saved_value", "expected"),
+    [
+        (True, True),
+        (False, False),
+        ("true", True),
+        ("false", False),
+        ("1", True),
+        ("0", False),
+        ("yes", True),
+        ("no", False),
+        ("on", True),
+        ("off", False),
+        ("TrUe", True),
+        ("FaLsE", False),
+        ("YES", True),
+        ("NO", False),
+        ("On", True),
+        ("OfF", False),
+        (1, True),
+        (0, False),
+    ],
+)
+@pytest.mark.asyncio
+async def test_named_ftp_passive_mode_values_reach_wire(monkeypatch, saved_value, expected):
+    _patch_ftps(monkeypatch)
+    original = _ftp_connector_request(operation="directory.list", input_json={}).auth
+    auth = ConnectorAuth(
+        original.method, dict(original.fields), {**original.config, "passive_mode": saved_value}
+    )
+    result = await client_for("ftp").execute(
+        "ftp", "ftp.directory.list", {"remote_path": "/"}, auth
+    )
+    assert result.output_json["status"] == "success"
+    values = [call[1] for call in _FakeFTPTLS.instances[0].calls if call[0] == "set_pasv"]
+    assert len(values) == 1
+    assert values[0] is expected
+    assert result.metadata_json["passive_mode"] is expected
+
+
+@pytest.mark.parametrize(
+    ("config_value", "field_value", "expected"),
+    [
+        ({}, {}, True),
+        ({}, {"passive_mode": "false"}, False),
+        ({"passive_mode": "false"}, {"passive_mode": "true"}, False),
+        ({"passive_mode": True}, {"passive_mode": "invalid"}, True),
+    ],
+)
+@pytest.mark.asyncio
+async def test_named_ftp_passive_mode_default_and_precedence(
+    monkeypatch, config_value, field_value, expected
+):
+    _patch_ftps(monkeypatch)
+    original = _ftp_connector_request(operation="directory.list", input_json={}).auth
+    config = {key: value for key, value in original.config.items() if key != "passive_mode"}
+    auth = ConnectorAuth(
+        original.method, {**original.fields, **field_value}, {**config, **config_value}
+    )
+    result = await client_for("ftp").execute(
+        "ftp", "ftp.directory.list", {"remote_path": "/"}, auth
+    )
+    assert result.output_json["status"] == "success"
+    values = [call[1] for call in _FakeFTPTLS.instances[0].calls if call[0] == "set_pasv"]
+    assert len(values) == 1
+    assert values[0] is expected
+
+
+@pytest.mark.parametrize("saved_value", ["", "invalid", None, [], {}, 2, 1.0, " true ", " false "])
+@pytest.mark.asyncio
+async def test_named_ftp_passive_mode_invalid_rejects_before_connection(monkeypatch, saved_value):
+    _patch_ftps(monkeypatch)
+    original = _ftp_connector_request(operation="directory.list", input_json={}).auth
+    # Valid fields cannot override an explicitly invalid config value.
+    auth = ConnectorAuth(
+        original.method,
+        {**original.fields, "passive_mode": True},
+        {**original.config, "passive_mode": saved_value},
+    )
+    with pytest.raises(ValidationError) as caught:
+        await client_for("ftp").execute("ftp", "ftp.directory.list", {"remote_path": "/"}, auth)
+    assert caught.value.metadata_json["provider_executed"] is False
+    assert not _FakeFTPTLS.instances
 
 
 @pytest.mark.asyncio
