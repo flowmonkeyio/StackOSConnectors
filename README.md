@@ -94,8 +94,52 @@ icon = description["actions"][0]["icon"]
 icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read_bytes()
 ```
 
-Python 3.12 or newer is required.
+## Installation
+
+Python 3.12 or newer is required. Source:
+[flowmonkeyio/StackOSConnectors](https://github.com/flowmonkeyio/StackOSConnectors).
+
+Version 0.1.0 has not yet been published to PyPI. After the first successful
+publication, install the pinned release with:
+
+```bash
+python -m pip install stackos-connectors==0.1.0
+```
+
+Or add `stackos-connectors==0.1.0` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+## Publishing
+
+The manual [publish workflow](.github/workflows/publish.yml) uses PyPI Trusted
+Publishing through GitHub OIDC. It does not store a PyPI API token. Pushing a
+commit does not publish a release.
+
+Before running it, configure the GitHub `pypi` environment and a PyPI GitHub
+trusted publisher with these exact values:
+
+| Field | Value |
+| --- | --- |
+| PyPI project name | `stackos-connectors` |
+| GitHub owner | `flowmonkeyio` |
+| Repository | `StackOSConnectors` |
+| Workflow filename | `publish.yml` |
+| Environment | `pypi` |
+
+Use a pending publisher for the first release. See the official
+[PyPI trusted publisher setup](https://docs.pypi.org/trusted-publishers/adding-a-publisher/).
+
+After configuration and release review, open **Actions → Publish to PyPI → Run
+workflow** and select `main`. The build job checks out the selected commit,
+builds the wheel and source distribution on Python 3.12, checks their metadata,
+and uploads them as one workflow artifact. The separate publish job downloads
+that artifact and requests the OIDC token inside the `pypi` environment.
+Runs selected on other branches do not build or publish. Only the publish job
+has `id-token: write` permission.
+
+The workflow does not rerun the connector test suite; run the tests and review
+the intended release commit before dispatch. A version already uploaded to
+PyPI cannot be replaced; change the package version for a later release.
