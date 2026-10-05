@@ -1,0 +1,2121 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "telegram",
+  "name": "Telegram",
+  "description": "Fixed TDLib messaging, chat and file requests through an authorized caller-bound native session.",
+  "implementation": "stackos_connectors.connectors.telegram.actions:TelegramActionConnector",
+  "icon": {
+    "path": "connectors/telegram/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "setup": {
+    "description": "Supply CallOptions.native_session bound to the authorized session. This package does not select accounts or start a session from a token.",
+    "documentation_url": "https://core.telegram.org/tdlib/docs/"
+  },
+  "auth_methods": [
+    {
+      "key": "tdlib-bot-token",
+      "description": "Uses an already authorized caller-bound TDLib session. Credentials and sign-in are supplied during native session setup.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "payload_format": "none",
+      "setup": {
+        "description": "Create and authorize a TDLib session using a Telegram application api_id/api_hash and the selected bot or user flow, then pass the bound native session.",
+        "documentation_url": "https://core.telegram.org/tdlib/docs/",
+        "account_kind": "bot"
+      }
+    },
+    {
+      "key": "tdlib-user-session",
+      "description": "Uses an already authorized caller-bound TDLib session. Credentials and sign-in are supplied during native session setup.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "payload_format": "none",
+      "setup": {
+        "description": "Create and authorize a TDLib session using a Telegram application api_id/api_hash and the selected bot or user flow, then pass the bound native session.",
+        "documentation_url": "https://core.telegram.org/tdlib/docs/",
+        "account_kind": "user"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "telegram.identity.get",
+      "operation": "getMe",
+      "name": "Get authenticated identity",
+      "description": "Get authenticated identity using TDLib getMe on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "required": [],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "user"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get authenticated identity"
+      },
+      "guidance": "Performs one getMe request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.user.get",
+      "operation": "getUser",
+      "name": "Get user",
+      "description": "Get user using TDLib getUser on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "user"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get user"
+      },
+      "guidance": "Performs one getUser request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chat.get",
+      "operation": "getChat",
+      "name": "Get chat",
+      "description": "Get chat using TDLib getChat on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "chat"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get chat"
+      },
+      "guidance": "Performs one getChat request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chat.searchPublic",
+      "operation": "searchPublicChat",
+      "name": "Find public chat",
+      "description": "Find public chat using TDLib searchPublicChat on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "chat"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Find public chat"
+      },
+      "guidance": "Performs one searchPublicChat request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chat.createPrivate",
+      "operation": "createPrivateChat",
+      "name": "Create private chat",
+      "description": "Create private chat using TDLib createPrivateChat on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "force": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "user_id",
+          "force"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "chat"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Create private chat"
+      },
+      "guidance": "Performs one createPrivateChat request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.group.get",
+      "operation": "getBasicGroup",
+      "name": "Get basic group",
+      "description": "Get basic group using TDLib getBasicGroup on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "basic_group_id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "basic_group_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "basicGroup"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get basic group"
+      },
+      "guidance": "Performs one getBasicGroup request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.supergroup.get",
+      "operation": "getSupergroup",
+      "name": "Get supergroup",
+      "description": "Get supergroup using TDLib getSupergroup on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "supergroup_id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "supergroup_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "supergroup"
+          },
+          "id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get supergroup"
+      },
+      "guidance": "Performs one getSupergroup request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chat.senders",
+      "operation": "getChatAvailableMessageSenders",
+      "name": "List available senders",
+      "description": "List available senders using TDLib getChatAvailableMessageSenders on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "chatMessageSenders"
+          },
+          "senders": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sender": {
+                  "type": "object",
+                  "properties": {
+                    "@type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "@type"
+                  ],
+                  "additionalProperties": true
+                },
+                "needs_premium": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "List available senders"
+      },
+      "guidance": "Performs one getChatAvailableMessageSenders request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chat.sender.set",
+      "operation": "setChatMessageSender",
+      "name": "Set message sender",
+      "description": "Set message sender using TDLib setChatMessageSender on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_sender_id": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_sender_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Set message sender"
+      },
+      "guidance": "Performs one setChatMessageSender request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.get",
+      "operation": "getMessage",
+      "name": "Get message",
+      "description": "Get message using TDLib getMessage on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get message"
+      },
+      "guidance": "Performs one getMessage request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chats.get",
+      "operation": "getChats",
+      "name": "Get chat IDs",
+      "description": "Get chat IDs using TDLib getChats on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_list": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "chat_list",
+          "limit"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "chats"
+          },
+          "chat_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get chat IDs"
+      },
+      "guidance": "Performs one getChats request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.chats.load",
+      "operation": "loadChats",
+      "name": "Load chat IDs",
+      "description": "Load chat IDs using TDLib loadChats on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_list": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "chat_list",
+          "limit"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Load chat IDs"
+      },
+      "guidance": "Performs one loadChats request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.history.get",
+      "operation": "getChatHistory",
+      "name": "Get chat history",
+      "description": "Get chat history using TDLib getChatHistory on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "from_message_id": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "only_local": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_id",
+          "from_message_id",
+          "offset",
+          "limit",
+          "only_local"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "messages"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "const": "message"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "chat_id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "@type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "@type"
+                  ],
+                  "additionalProperties": true
+                },
+                "sending_state": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "@type",
+                "id",
+                "chat_id"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Get chat history"
+      },
+      "guidance": "Performs one getChatHistory request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.text.parse",
+      "operation": "parseTextEntities",
+      "name": "Parse text entities",
+      "description": "Parse text entities using TDLib parseTextEntities on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "parse_mode": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "text",
+          "parse_mode"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "formattedText"
+          },
+          "text": {
+            "type": "string"
+          },
+          "entities": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "@type"
+              ],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Parse text entities"
+      },
+      "guidance": "Performs one parseTextEntities request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.callback.answer",
+      "operation": "answerCallbackQuery",
+      "name": "Answer callback query",
+      "description": "Answer callback query using TDLib answerCallbackQuery on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "callback_query_id": {
+            "type": "integer"
+          },
+          "text": {
+            "type": "string"
+          },
+          "show_alert": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "cache_time": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "callback_query_id",
+          "text",
+          "show_alert",
+          "url",
+          "cache_time"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Answer callback query"
+      },
+      "guidance": "Performs one answerCallbackQuery request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.send",
+      "operation": "sendMessage",
+      "name": "Send message",
+      "description": "Send message using TDLib sendMessage on the supplied session. Returns final native message receipts; timeout preserves confirmed member IDs and never resends.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reply_to": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "options": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input_message_content": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "chat_id",
+          "topic_id",
+          "reply_to",
+          "options",
+          "reply_markup",
+          "input_message_content"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "messages"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "const": "message"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "chat_id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "@type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "@type"
+                  ],
+                  "additionalProperties": true
+                },
+                "sending_state": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "@type",
+                "id",
+                "chat_id"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "temporary_message_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "send_failures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Send message"
+      },
+      "guidance": "Submits once and joins pending native message IDs to terminal receipts. Progress reports each confirmed member before joining the next. An incomplete receipt or callback failure retains safe native IDs and does not authorize resubmission."
+    },
+    {
+      "key": "telegram.album.send",
+      "operation": "sendMessageAlbum",
+      "name": "Send album",
+      "description": "Send album using TDLib sendMessageAlbum on the supplied session. Returns final native message receipts; timeout preserves confirmed member IDs and never resends.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reply_to": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "options": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "input_message_contents": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 10,
+            "items": {
+              "type": "object",
+              "required": [
+                "@type"
+              ],
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "chat_id",
+          "topic_id",
+          "reply_to",
+          "options",
+          "input_message_contents"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "messages"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "const": "message"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "chat_id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "@type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "@type"
+                  ],
+                  "additionalProperties": true
+                },
+                "sending_state": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "@type",
+                "id",
+                "chat_id"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "temporary_message_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "send_failures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Send album"
+      },
+      "guidance": "Submits once and joins pending native message IDs to terminal receipts. Progress reports each confirmed member before joining the next. An incomplete receipt or callback failure retains safe native IDs and does not authorize resubmission."
+    },
+    {
+      "key": "telegram.message.forward",
+      "operation": "forwardMessages",
+      "name": "Forward messages",
+      "description": "Forward messages using TDLib forwardMessages on the supplied session. Returns final native message receipts; timeout preserves confirmed member IDs and never resends.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "topic_id": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "options": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "from_chat_id": {
+            "type": "integer"
+          },
+          "message_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "send_copy": {
+            "type": "boolean"
+          },
+          "remove_caption": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_id",
+          "topic_id",
+          "options",
+          "from_chat_id",
+          "message_ids",
+          "send_copy",
+          "remove_caption"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "messages"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "const": "message"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "chat_id": {
+                  "type": "integer"
+                },
+                "content": {
+                  "type": "object",
+                  "properties": {
+                    "@type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "@type"
+                  ],
+                  "additionalProperties": true
+                },
+                "sending_state": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "@type",
+                "id",
+                "chat_id"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "temporary_message_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "send_failures": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Forward messages"
+      },
+      "guidance": "Submits once and joins pending native message IDs to terminal receipts. Progress reports each confirmed member before joining the next. An incomplete receipt or callback failure retains safe native IDs and does not authorize resubmission."
+    },
+    {
+      "key": "telegram.message.delete",
+      "operation": "deleteMessages",
+      "name": "Delete messages",
+      "description": "Delete messages using TDLib deleteMessages on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "revoke": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_ids",
+          "revoke"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Delete messages"
+      },
+      "guidance": "Performs one deleteMessages request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.react",
+      "operation": "setMessageReactions",
+      "name": "Set reactions",
+      "description": "Set reactions using TDLib setMessageReactions on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reaction_types": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "@type"
+              ],
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "is_big": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reaction_types",
+          "is_big"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Set reactions"
+      },
+      "guidance": "Performs one setMessageReactions request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.poll.stop",
+      "operation": "stopPoll",
+      "name": "Stop poll",
+      "description": "Stop poll using TDLib stopPoll on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Stop poll"
+      },
+      "guidance": "Performs one stopPoll request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.editText",
+      "operation": "editMessageText",
+      "name": "Edit message text",
+      "description": "Edit message text using TDLib editMessageText on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input_message_content": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reply_markup",
+          "input_message_content"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Edit message text"
+      },
+      "guidance": "Performs one editMessageText request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.editMedia",
+      "operation": "editMessageMedia",
+      "name": "Edit message media",
+      "description": "Edit message media using TDLib editMessageMedia on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "input_message_content": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reply_markup",
+          "input_message_content"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Edit message media"
+      },
+      "guidance": "Performs one editMessageMedia request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.editCaption",
+      "operation": "editMessageCaption",
+      "name": "Edit caption",
+      "description": "Edit caption using TDLib editMessageCaption on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "caption": {
+            "type": "object",
+            "required": [
+              "@type"
+            ],
+            "properties": {
+              "@type": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": true
+          },
+          "show_caption_above_media": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reply_markup",
+          "caption",
+          "show_caption_above_media"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Edit caption"
+      },
+      "guidance": "Performs one editMessageCaption request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.editButtons",
+      "operation": "editMessageReplyMarkup",
+      "name": "Edit buttons",
+      "description": "Edit buttons using TDLib editMessageReplyMarkup on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reply_markup"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Edit buttons"
+      },
+      "guidance": "Performs one editMessageReplyMarkup request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.message.editLocation",
+      "operation": "editMessageLiveLocation",
+      "name": "Edit live location",
+      "description": "Edit live location using TDLib editMessageLiveLocation on the supplied session.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "chat_id": {
+            "type": "integer"
+          },
+          "message_id": {
+            "type": "integer"
+          },
+          "reply_markup": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "object",
+                "required": [
+                  "@type"
+                ],
+                "properties": {
+                  "@type": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "chat_id",
+          "message_id",
+          "reply_markup",
+          "location"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "message"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "chat_id": {
+            "type": "integer"
+          },
+          "content": {
+            "type": "object",
+            "properties": {
+              "@type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "@type"
+            ],
+            "additionalProperties": true
+          },
+          "sending_state": {
+            "type": [
+              "object",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Edit live location"
+      },
+      "guidance": "Performs one editMessageLiveLocation request. Supply native IDs and TDLib typed payloads explicitly."
+    },
+    {
+      "key": "telegram.file.download",
+      "operation": "downloadFile",
+      "name": "Download file",
+      "description": "Download file using TDLib downloadFile on the supplied session. Returns a plain file only after completion and containment within the session files directory.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "file_id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "synchronous": {
+            "const": true
+          }
+        },
+        "required": [
+          "file_id",
+          "priority",
+          "offset",
+          "limit",
+          "synchronous"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "@type": {
+            "const": "file"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "local": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "is_downloading_completed": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "@type"
+        ],
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "tdlib-bot-token",
+        "tdlib-user-session"
+      ],
+      "config": {},
+      "metadata": {
+        "name": "Download file"
+      },
+      "guidance": "Performs one downloadFile request. Supply native IDs and TDLib typed payloads explicitly."
+    }
+  ]
+}
