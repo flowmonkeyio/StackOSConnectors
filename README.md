@@ -99,8 +99,7 @@ icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read
 Python 3.12 or newer is required. Source:
 [flowmonkeyio/StackOSConnectors](https://github.com/flowmonkeyio/StackOSConnectors).
 
-Version 0.1.0 has not yet been published to PyPI. After the first successful
-publication, install the pinned release with:
+Published releases can be installed with:
 
 ```bash
 python -m pip install stackos-connectors==0.1.0
