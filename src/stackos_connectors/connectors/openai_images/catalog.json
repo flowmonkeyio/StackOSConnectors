@@ -1,0 +1,277 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "openai-images",
+  "name": "OpenAI Images",
+  "description": "Image generation provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": "sk-...",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 32000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "size": {
+            "type": "string"
+          },
+          "quality": {
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high"
+            ],
+            "type": "string"
+          },
+          "n": {
+            "type": "integer"
+          },
+          "model": {
+            "enum": [
+              "gpt-image-2",
+              "gpt-image-1.5",
+              "gpt-image-1",
+              "gpt-image-1-mini"
+            ],
+            "type": "string"
+          },
+          "output_format": {
+            "enum": [
+              "webp",
+              "png",
+              "jpeg"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt",
+          "size",
+          "quality",
+          "n",
+          "model",
+          "output_format"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Image"
+      }
+    },
+    {
+      "key": "image.edit",
+      "operation": "image.edit",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 32000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "input_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "size": {
+            "type": "string"
+          },
+          "quality": {
+            "enum": [
+              "auto",
+              "low",
+              "medium",
+              "high"
+            ],
+            "type": "string"
+          },
+          "n": {
+            "type": "integer"
+          },
+          "model": {
+            "enum": [
+              "gpt-image-2",
+              "gpt-image-1.5",
+              "gpt-image-1",
+              "gpt-image-1-mini"
+            ],
+            "type": "string"
+          },
+          "output_format": {
+            "enum": [
+              "webp",
+              "png",
+              "jpeg"
+            ],
+            "type": "string"
+          },
+          "input_fidelity": {
+            "enum": [
+              "high",
+              "low"
+            ],
+            "type": "string",
+            "description": "Input image fidelity control for gpt-image-1.5, gpt-image-1, and gpt-image-1-mini; gpt-image-2 always uses high fidelity."
+          }
+        },
+        "required": [
+          "prompt",
+          "input_image_paths",
+          "size",
+          "quality",
+          "n",
+          "model",
+          "output_format"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Edit Image With References. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Edit Image With References"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://platform.openai.com/settings/organization/billing/overview",
+    "console_url": "https://platform.openai.com/",
+    "credential_label": "OpenAI API key",
+    "credential_url": "https://platform.openai.com/api-keys",
+    "docs_url": "https://developers.openai.com/api/docs/guides/image-generation",
+    "homepage_url": "https://openai.com/api/",
+    "signup_url": "https://platform.openai.com/signup",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/openai_images/assets/icon.webp",
+    "media_type": "image/webp",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.openai_images.actions:MediaActionConnector"
+}

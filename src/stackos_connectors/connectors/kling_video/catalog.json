@@ -1,0 +1,227 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "kling-video",
+  "name": "Kling AI",
+  "description": "Kling AI text-to-video and image-to-video provider.",
+  "auth_methods": [
+    {
+      "key": "access_key_secret",
+      "description": "Supply Access key and secret key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secret_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "access_key",
+          "secret_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "label": "Access key and secret key",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_key",
+            "label": "Access Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "secret_key",
+            "label": "Secret Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply Access key and secret key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "kling.video.generate",
+      "operation": "video.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "text-to-video",
+              "image-to-video",
+              "first-last-frame"
+            ],
+            "type": "string"
+          },
+          "model_name": {
+            "enum": [
+              "kling-v3"
+            ],
+            "type": "string"
+          },
+          "quality_mode": {
+            "enum": [
+              "std",
+              "pro",
+              "4k"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "maximum": 15,
+            "minimum": 3,
+            "type": "integer"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1"
+            ],
+            "type": "string"
+          },
+          "sound": {
+            "enum": [
+              "on",
+              "off"
+            ],
+            "type": "string"
+          },
+          "negative_prompt": {
+            "maxLength": 2500,
+            "type": "string"
+          },
+          "cfg_scale": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          },
+          "input_image_path": {
+            "type": "string",
+            "description": "Caller-provided local file path."
+          },
+          "image_tail_path": {
+            "type": "string",
+            "description": "Caller-provided local file path."
+          },
+          "watermark_enabled": {
+            "type": "boolean"
+          },
+          "external_task_id": {
+            "type": "string"
+          },
+          "poll_interval_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "poll_timeout_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "prompt",
+          "mode",
+          "model_name",
+          "quality_mode",
+          "duration",
+          "aspect_ratio",
+          "sound",
+          "poll_interval_seconds",
+          "poll_timeout_seconds"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "mp4"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "access_key_secret"
+      ],
+      "config": {},
+      "description": "Generate Kling Video. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Kling Video"
+      }
+    }
+  ],
+  "setup": {
+    "console_url": "https://app.klingai.com/",
+    "credential_label": "Kling AccessKey and SecretKey",
+    "credential_url": "https://kling.ai/document-api",
+    "docs_url": "https://kling.ai/document-api",
+    "fallback_url": "https://kling.ai/document-api",
+    "homepage_url": "https://klingai.com/",
+    "signup_url": "https://app.klingai.com/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/kling_video/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.kling_video.actions:MediaActionConnector"
+}

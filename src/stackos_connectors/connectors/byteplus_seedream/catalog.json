@@ -1,0 +1,286 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "byteplus-seedream",
+  "name": "BytePlus ModelArk",
+  "description": "BytePlus ModelArk media generation provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "BytePlus ModelArk API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "byteplus.image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "seedream-5-0-lite-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
+            ],
+            "type": "string"
+          },
+          "size": {
+            "type": "string",
+            "description": "Model-supported shortcut or custom WxH satisfying BytePlus Seedream pixel/aspect limits."
+          },
+          "region": {
+            "enum": [
+              "ap-southeast-1",
+              "eu-west-1"
+            ],
+            "type": "string"
+          },
+          "sequential_image_generation": {
+            "enum": [
+              "disabled",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "max_images": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "watermark": {
+            "type": "boolean"
+          },
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png"
+            ],
+            "type": "string",
+            "description": "Only supported by seedream-5-0-lite-260128."
+          }
+        },
+        "required": [
+          "prompt",
+          "model",
+          "size",
+          "region",
+          "sequential_image_generation"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate BytePlus Seedream Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate BytePlus Seedream Image"
+      }
+    },
+    {
+      "key": "byteplus.image.edit",
+      "operation": "image.edit",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "input_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "model": {
+            "enum": [
+              "seedream-5-0-lite-260128",
+              "seedream-4-5-251128",
+              "seedream-4-0-250828"
+            ],
+            "type": "string"
+          },
+          "size": {
+            "type": "string",
+            "description": "Model-supported shortcut or custom WxH satisfying BytePlus Seedream pixel/aspect limits."
+          },
+          "region": {
+            "enum": [
+              "ap-southeast-1",
+              "eu-west-1"
+            ],
+            "type": "string"
+          },
+          "sequential_image_generation": {
+            "enum": [
+              "disabled",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "max_images": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "watermark": {
+            "type": "boolean"
+          },
+          "output_format": {
+            "enum": [
+              "jpeg",
+              "png"
+            ],
+            "type": "string",
+            "description": "Only supported by seedream-5-0-lite-260128."
+          }
+        },
+        "required": [
+          "prompt",
+          "input_image_paths",
+          "model",
+          "size",
+          "region",
+          "sequential_image_generation"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Edit BytePlus Seedream Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Edit BytePlus Seedream Image"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://console.byteplus.com/finance/",
+    "console_url": "https://console.byteplus.com/",
+    "credential_label": "BytePlus ModelArk API key",
+    "credential_url": "https://console.byteplus.com/iam/keymanage/",
+    "docs_url": "https://docs.byteplus.com/en/docs/ModelArk/",
+    "fallback_url": "https://docs.byteplus.com/en/docs/ModelArk/",
+    "homepage_url": "https://www.byteplus.com/en/product/modelark",
+    "signup_url": "https://console.byteplus.com/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  },
+  "implementation": "stackos_connectors.connectors.byteplus_seedream.actions:MediaActionConnector"
+}

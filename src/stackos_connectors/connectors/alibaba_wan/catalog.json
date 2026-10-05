@@ -1,0 +1,215 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "alibaba-wan",
+  "name": "Alibaba Wan",
+  "description": "Alibaba Model Studio Wan async video generation provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Model Studio API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "alibaba.video.generate",
+      "operation": "video.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "mode": {
+            "enum": [
+              "text-to-video",
+              "image-to-video",
+              "first-last-frame",
+              "video-continuation"
+            ],
+            "type": "string"
+          },
+          "region": {
+            "enum": [
+              "singapore",
+              "beijing"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "720P",
+              "1080P"
+            ],
+            "type": "string"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "16:9",
+              "9:16",
+              "1:1",
+              "4:3",
+              "3:4"
+            ],
+            "type": "string"
+          },
+          "duration": {
+            "maximum": 15,
+            "minimum": 2,
+            "type": "integer"
+          },
+          "prompt_extend": {
+            "type": "boolean"
+          },
+          "watermark": {
+            "type": "boolean"
+          },
+          "negative_prompt": {
+            "type": "string"
+          },
+          "seed": {
+            "maximum": 2147483647,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "first_frame_url": {
+            "type": "string",
+            "description": "Provider-fetchable http(s) image URL for image modes."
+          },
+          "last_frame_url": {
+            "type": "string",
+            "description": "Provider-fetchable http(s) image URL for first-last-frame."
+          },
+          "first_clip_url": {
+            "type": "string",
+            "description": "Provider-fetchable http(s) video URL for video-continuation."
+          },
+          "audio_url": {
+            "type": "string"
+          },
+          "poll_interval_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "poll_timeout_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "prompt",
+          "mode",
+          "region",
+          "resolution",
+          "aspect_ratio",
+          "duration",
+          "prompt_extend",
+          "poll_interval_seconds",
+          "poll_timeout_seconds"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "mp4"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Alibaba Wan Video. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Alibaba Wan Video"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://billing-cost.console.aliyun.com/",
+    "console_url": "https://bailian.console.alibabacloud.com/",
+    "credential_label": "Alibaba Model Studio/DashScope API key",
+    "credential_url": "https://bailian.console.alibabacloud.com/",
+    "docs_url": "https://www.alibabacloud.com/help/en/model-studio/",
+    "fallback_url": "https://www.alibabacloud.com/help/en/model-studio/",
+    "homepage_url": "https://www.alibabacloud.com/help/en/model-studio/",
+    "signup_url": "https://account.alibabacloud.com/register/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/alibaba_wan/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.alibaba_wan.actions:MediaActionConnector"
+}

@@ -1,0 +1,392 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "xai-imagine",
+  "name": "xAI Imagine",
+  "description": "Grok Imagine image and video generation provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "xAI API Key",
+            "options": null,
+            "placeholder": "xai-...",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "xai.image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3",
+              "2:1",
+              "1:2",
+              "19.5:9",
+              "9:19.5",
+              "20:9",
+              "9:20",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "type": "string"
+          },
+          "n": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "model": {
+            "enum": [
+              "grok-imagine-image-quality"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt",
+          "aspect_ratio",
+          "resolution",
+          "n",
+          "model"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Grok Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Grok Image"
+      }
+    },
+    {
+      "key": "xai.image.edit",
+      "operation": "image.edit",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "input_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3",
+              "2:1",
+              "1:2",
+              "19.5:9",
+              "9:19.5",
+              "20:9",
+              "9:20",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "1k",
+              "2k"
+            ],
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "grok-imagine-image-quality"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt",
+          "input_image_paths",
+          "resolution",
+          "model"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Edit Grok Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Edit Grok Image"
+      }
+    },
+    {
+      "key": "xai.video.generate",
+      "operation": "video.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "duration": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "16:9",
+              "9:16",
+              "4:3",
+              "3:4",
+              "3:2",
+              "2:3"
+            ],
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "480p",
+              "720p"
+            ],
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "grok-imagine-video"
+            ],
+            "type": "string"
+          },
+          "image_path": {
+            "type": "string",
+            "description": "Caller-provided local file path."
+          },
+          "reference_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "poll_interval_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "poll_timeout_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "prompt",
+          "duration",
+          "aspect_ratio",
+          "resolution",
+          "model",
+          "poll_interval_seconds",
+          "poll_timeout_seconds"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "mp4"
+                  ],
+                  "type": "string"
+                },
+                "request_id": {
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Grok Video. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Grok Video"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://console.x.ai/",
+    "console_url": "https://console.x.ai/",
+    "credential_label": "xAI API key",
+    "credential_url": "https://console.x.ai/",
+    "docs_url": "https://docs.x.ai/overview",
+    "homepage_url": "https://x.ai/",
+    "signup_url": "https://console.x.ai/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/xai_imagine/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.xai_imagine.actions:MediaActionConnector"
+}

@@ -1,0 +1,270 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "google-gemini-image",
+  "name": "Google Gemini Image",
+  "description": "Gemini Nano Banana image generation and editing provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Gemini API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "google.image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "gemini-3.1-flash-image",
+              "gemini-3-pro-image",
+              "gemini-2.5-flash-image"
+            ],
+            "type": "string"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "1:4",
+              "1:8",
+              "2:3",
+              "3:2",
+              "3:4",
+              "4:1",
+              "4:3",
+              "4:5",
+              "5:4",
+              "8:1",
+              "9:16",
+              "16:9",
+              "21:9"
+            ],
+            "type": "string"
+          },
+          "image_size": {
+            "enum": [
+              "512",
+              "1K",
+              "2K",
+              "4K"
+            ],
+            "type": "string",
+            "description": "Gemini 3 image size. 512 is valid only for gemini-3.1-flash-image; image_size is not valid for gemini-2.5-flash-image."
+          }
+        },
+        "required": [
+          "prompt",
+          "model",
+          "aspect_ratio"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Google Gemini Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Google Gemini Image"
+      }
+    },
+    {
+      "key": "google.image.edit",
+      "operation": "image.edit",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "input_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "model": {
+            "enum": [
+              "gemini-3.1-flash-image",
+              "gemini-3-pro-image",
+              "gemini-2.5-flash-image"
+            ],
+            "type": "string"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "1:1",
+              "1:4",
+              "1:8",
+              "2:3",
+              "3:2",
+              "3:4",
+              "4:1",
+              "4:3",
+              "4:5",
+              "5:4",
+              "8:1",
+              "9:16",
+              "16:9",
+              "21:9"
+            ],
+            "type": "string"
+          },
+          "image_size": {
+            "enum": [
+              "512",
+              "1K",
+              "2K",
+              "4K"
+            ],
+            "type": "string",
+            "description": "Gemini 3 image size. 512 is valid only for gemini-3.1-flash-image; image_size is not valid for gemini-2.5-flash-image."
+          }
+        },
+        "required": [
+          "prompt",
+          "input_image_paths",
+          "model"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Edit Google Gemini Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Edit Google Gemini Image"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://console.cloud.google.com/billing",
+    "console_url": "https://aistudio.google.com/",
+    "credential_label": "Gemini API key",
+    "credential_url": "https://aistudio.google.com/app/apikey",
+    "docs_url": "https://ai.google.dev/gemini-api/docs/image-generation",
+    "homepage_url": "https://ai.google.dev/",
+    "signup_url": "https://aistudio.google.com/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/google_gemini_image/assets/icon.webp",
+    "media_type": "image/webp",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.google_gemini_image.actions:MediaActionConnector"
+}

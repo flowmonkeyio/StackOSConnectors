@@ -4,11 +4,16 @@ from __future__ import annotations
 
 import base64
 import binascii
+import hashlib
 import ipaddress
+import os
+import re
+import tempfile
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
 
+from stackos_connectors.contracts import ConnectorFile
 from stackos_connectors.errors import IntegrationDownError
 
 _OUTPUT_EXTENSIONS: dict[str, str] = {
@@ -21,6 +26,47 @@ _OUTPUT_EXTENSIONS: dict[str, str] = {
 }
 _REDIRECT_STATUSES = {301, 302, 303, 307, 308}
 _UNSAFE_HOSTNAMES = frozenset({"localhost", "localhost.localdomain"})
+
+
+def write_media_file(
+    raw: bytes,
+    *,
+    output_dir: Path | None,
+    prefix: str,
+    ext: str,
+    files: list[ConnectorFile],
+    mime_type: str | None = None,
+) -> dict[str, Any]:
+    """Write bytes in the caller's directory and append one ordered file receipt.
+
+    The caller owns the directory and passes a collection scoped to its invocation.
+    A failed write leaves that collection unchanged and never follows target symlinks.
+    """
+    if output_dir is None:
+        raise ValueError("output_dir is required for generated media")
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", prefix) or not re.fullmatch(r"[a-z0-9]+", ext):
+        raise ValueError("media prefix and extension must be filename components")
+    directory = Path(output_dir).resolve()
+    directory.mkdir(parents=True, exist_ok=True)
+    filename = f"{prefix}-{hashlib.sha256(raw).hexdigest()[:32]}.{ext}"
+    target = directory / filename
+    temporary = None
+    try:
+        with tempfile.NamedTemporaryFile(dir=directory, prefix=".media-", delete=False) as stream:
+            temporary = Path(stream.name)
+            stream.write(raw)
+        os.replace(temporary, target)
+    finally:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
+    descriptor = ConnectorFile(
+        path=str(target),
+        name=filename,
+        mime_type=mime_type or image_mime_type(ext) or ("video/mp4" if ext == "mp4" else None),
+        size_bytes=len(raw),
+    )
+    files.append(descriptor)
+    return {"path": str(target), "file_format": ext}
 
 
 async def download_generated_media(
@@ -213,4 +259,5 @@ __all__ = [
     "image_mime_type",
     "media_file_format",
     "validate_generated_media_url",
+    "write_media_file",
 ]

@@ -1,0 +1,662 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "aignc",
+  "name": "AIGNC",
+  "description": "Model discovery, text completion, JPEG generation, and audio analysis through AIGNC.",
+  "implementation": "stackos_connectors.connectors.aignc.actions:AigncActionConnector",
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  },
+  "setup": {
+    "credential_label": "AIGNC API key",
+    "fallback_url": "https://cli-api.f2nd.com/",
+    "setup_note": "Obtain a bearer API key from the AIGNC supplier. The supplied service address is not a verified signup or public documentation page.",
+    "docs": [
+      "connectors/aignc/docs/aignc.md"
+    ],
+    "caller_limits": "CallOptions.provider_context accepts optional positive-integer max_response_bytes, max_image_bytes, and max_audio_bytes transport limits. They have no package default and are caller limits, not provider requirements."
+  },
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply the AIGNC bearer API key.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {}
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "description": "Requests send Authorization: Bearer to the fixed AIGNC endpoint."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "aignc.models.list",
+      "operation": "models.list",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object",
+        "required": []
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "provider_request_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "List model identifiers returned by AIGNC.",
+      "metadata": {
+        "name": "List AIGNC Models"
+      }
+    },
+    {
+      "key": "aignc.chat.complete",
+      "operation": "chat.complete",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "google_search": {
+            "type": "boolean",
+            "description": "Explicit Google grounding for reviewed Gemini text models."
+          },
+          "messages": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "content": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "role": {
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "model": {
+            "enum": [
+              "gemini-3.8-flash",
+              "gemini-3.8-flash-high",
+              "gemini-3.8-flash-medium",
+              "gemini-3.8-flash-low",
+              "gemini-3.8-flash-extra-low",
+              "gemini-3.7-flash",
+              "gemini-3.7-flash-high",
+              "gemini-3.7-flash-medium",
+              "gemini-3.6-flash",
+              "gemini-3.6-flash-high",
+              "gemini-3.6-flash-medium",
+              "gemini-3.1-flash-lite",
+              "gemini-3.1-pro",
+              "gemini-1.5-flash",
+              "gemini-1.5-pro",
+              "gemini-pro-agent",
+              "claude-3-5-sonnet-20241022",
+              "claude-opus-4-6-thinking",
+              "gpt-oss-120b-medium"
+            ],
+            "type": "string"
+          },
+          "max_tokens": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "model",
+          "messages",
+          "max_tokens"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "finish_reason": {
+            "type": "string"
+          },
+          "grounding_metadata": {
+            "additionalProperties": false,
+            "properties": {
+              "groundingChunks": {
+                "description": "Provider source positions; invalid slots remain empty objects.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "web": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "groundingSupports": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "groundingChunkIndices": {
+                      "description": "Indices into the unchanged groundingChunks order.",
+                      "items": {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "segment": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "endIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "segment",
+                    "groundingChunkIndices"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "webSearchQueries": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "provider_request_id": {
+            "type": "string"
+          },
+          "requested_model": {
+            "type": "string"
+          },
+          "returned_model": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": false,
+            "properties": {
+              "cached_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "completion_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "google_searches": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "prompt_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "reasoning_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "total_count": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Send text messages and optional Google grounding through AIGNC.",
+      "metadata": {
+        "name": "Complete AIGNC Chat"
+      }
+    },
+    {
+      "key": "aignc.image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "max_tokens": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "prompt": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "prompt",
+          "max_tokens"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "finish_reason": {
+            "type": "string"
+          },
+          "grounding_metadata": {
+            "additionalProperties": false,
+            "properties": {
+              "groundingChunks": {
+                "description": "Provider source positions; invalid slots remain empty objects.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "web": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "groundingSupports": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "groundingChunkIndices": {
+                      "description": "Indices into the unchanged groundingChunks order.",
+                      "items": {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "segment": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "endIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "segment",
+                    "groundingChunkIndices"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "webSearchQueries": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "provider_request_id": {
+            "type": "string"
+          },
+          "requested_model": {
+            "type": "string"
+          },
+          "returned_model": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": false,
+            "properties": {
+              "cached_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "completion_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "google_searches": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "prompt_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "reasoning_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "total_count": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate one JPEG through the AIGNC image model.",
+      "metadata": {
+        "name": "Generate AIGNC Image"
+      }
+    },
+    {
+      "key": "aignc.audio.analyze",
+      "operation": "audio.analyze",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "audio_path": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Path to a readable local audio file."
+          },
+          "instruction": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "gemini-3.8-flash",
+              "gemini-3.7-flash"
+            ],
+            "type": "string"
+          },
+          "max_tokens": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "wav",
+              "mp3",
+              "aac",
+              "flac",
+              "ogg"
+            ]
+          }
+        },
+        "required": [
+          "model",
+          "instruction",
+          "max_tokens",
+          "audio_path",
+          "format"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "finish_reason": {
+            "type": "string"
+          },
+          "grounding_metadata": {
+            "additionalProperties": false,
+            "properties": {
+              "groundingChunks": {
+                "description": "Provider source positions; invalid slots remain empty objects.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "web": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "groundingSupports": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "groundingChunkIndices": {
+                      "description": "Indices into the unchanged groundingChunks order.",
+                      "items": {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "type": "array"
+                    },
+                    "segment": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "endIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startIndex": {
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "text": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "segment",
+                    "groundingChunkIndices"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "webSearchQueries": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "id": {
+            "type": "string"
+          },
+          "provider_request_id": {
+            "type": "string"
+          },
+          "requested_model": {
+            "type": "string"
+          },
+          "returned_model": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "usage": {
+            "additionalProperties": false,
+            "properties": {
+              "cached_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "completion_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "google_searches": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "prompt_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "reasoning_count": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "total_count": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Analyze a local audio file using the selected AIGNC audio model.",
+      "metadata": {
+        "name": "Analyze AIGNC Audio"
+      }
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "ideogram",
+  "name": "Ideogram",
+  "description": "Ideogram 4.0 image generation and remix provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Ideogram API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "ideogram.image.generate",
+      "operation": "image.generate",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text_prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "resolution": {
+            "enum": [
+              "2048x2048",
+              "1440x2880",
+              "2880x1440",
+              "1664x2496",
+              "2496x1664",
+              "1792x2240",
+              "2240x1792",
+              "1440x2560",
+              "2560x1440",
+              "1600x2560",
+              "2560x1600",
+              "1728x2304",
+              "2304x1728",
+              "1296x3168",
+              "3168x1296",
+              "1152x2944",
+              "2944x1152",
+              "1248x3328",
+              "3328x1248",
+              "1280x3072",
+              "3072x1280",
+              "1024x3072",
+              "3072x1024"
+            ],
+            "type": "string"
+          },
+          "rendering_speed": {
+            "enum": [
+              "TURBO",
+              "DEFAULT",
+              "QUALITY"
+            ],
+            "type": "string",
+            "description": "Ideogram 4.0 speed tier. FLASH is documented as coming soon and currently returns 400, so it is not exposed."
+          },
+          "enable_copyright_detection": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "text_prompt",
+          "rendering_speed"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Ideogram Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Ideogram Image"
+      }
+    },
+    {
+      "key": "ideogram.image.remix",
+      "operation": "image.remix",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text_prompt": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "image_path": {
+            "type": "string",
+            "description": "Caller-provided local file path."
+          },
+          "image_weight": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "resolution": {
+            "enum": [
+              "2048x2048",
+              "1440x2880",
+              "2880x1440",
+              "1664x2496",
+              "2496x1664",
+              "1792x2240",
+              "2240x1792",
+              "1440x2560",
+              "2560x1440",
+              "1600x2560",
+              "2560x1600",
+              "1728x2304",
+              "2304x1728",
+              "1296x3168",
+              "3168x1296",
+              "1152x2944",
+              "2944x1152",
+              "1248x3328",
+              "3328x1248",
+              "1280x3072",
+              "3072x1280",
+              "1024x3072",
+              "3072x1024"
+            ],
+            "type": "string"
+          },
+          "rendering_speed": {
+            "enum": [
+              "TURBO",
+              "DEFAULT",
+              "QUALITY"
+            ],
+            "type": "string",
+            "description": "Ideogram 4.0 speed tier. FLASH is documented as coming soon and currently returns 400, so it is not exposed."
+          },
+          "enable_copyright_detection": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "text_prompt",
+          "image_path",
+          "rendering_speed"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Remix Ideogram Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Remix Ideogram Image"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://ideogram.ai/pricing",
+    "console_url": "https://ideogram.ai/api",
+    "credential_label": "Ideogram API key",
+    "credential_url": "https://ideogram.ai/api",
+    "docs_url": "https://developer.ideogram.ai/",
+    "homepage_url": "https://ideogram.ai/",
+    "signup_url": "https://ideogram.ai/api",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/ideogram/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.ideogram.actions:MediaActionConnector"
+}

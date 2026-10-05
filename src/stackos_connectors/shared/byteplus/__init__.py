@@ -1,0 +1,1 @@
+"""byteplus ark provider protocol."""

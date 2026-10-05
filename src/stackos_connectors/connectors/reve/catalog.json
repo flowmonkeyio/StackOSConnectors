@@ -1,0 +1,348 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "reve",
+  "name": "Reve",
+  "description": "Reve image create, edit, and remix provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Supply API key credentials.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Reve API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "description": "Supply API key credentials."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "reve.image.generate",
+      "operation": "image.create",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "aspect_ratio": {
+            "enum": [
+              "16:9",
+              "9:16",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "1:1",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "enum": [
+              "latest",
+              "reve-create@20250915"
+            ],
+            "type": "string"
+          },
+          "test_time_scaling": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt",
+          "aspect_ratio",
+          "version",
+          "test_time_scaling"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Generate Reve Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Generate Reve Image"
+      }
+    },
+    {
+      "key": "reve.image.edit",
+      "operation": "image.edit",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "edit_instruction": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "reference_image_path": {
+            "type": "string",
+            "description": "Caller-provided local file path."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "16:9",
+              "9:16",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "1:1",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "enum": [
+              "latest",
+              "latest-fast",
+              "reve-edit@20250915",
+              "reve-edit-fast@20251030"
+            ],
+            "type": "string"
+          },
+          "test_time_scaling": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "edit_instruction",
+          "reference_image_path",
+          "version",
+          "test_time_scaling"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Edit Reve Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Edit Reve Image"
+      }
+    },
+    {
+      "key": "reve.image.remix",
+      "operation": "image.remix",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "maxLength": 2560,
+            "minLength": 1,
+            "type": "string"
+          },
+          "reference_image_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Caller-provided local file paths."
+          },
+          "aspect_ratio": {
+            "enum": [
+              "16:9",
+              "9:16",
+              "3:2",
+              "2:3",
+              "4:3",
+              "3:4",
+              "1:1",
+              "auto"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "enum": [
+              "latest",
+              "latest-fast",
+              "reve-remix@20250915",
+              "reve-remix-fast@20251030"
+            ],
+            "type": "string"
+          },
+          "test_time_scaling": {
+            "maximum": 15,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "prompt",
+          "reference_image_paths",
+          "version",
+          "test_time_scaling"
+        ]
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "data": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "file_format": {
+                  "enum": [
+                    "webp",
+                    "png",
+                    "jpg",
+                    "jpeg"
+                  ],
+                  "type": "string"
+                },
+                "source_model": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path of the output file in the caller-provided output directory."
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "usage": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Remix Reve Image. Supply native inputs and an output directory for downloaded media.",
+      "metadata": {
+        "name": "Remix Reve Image"
+      }
+    }
+  ],
+  "setup": {
+    "billing_url": "https://app.reve.com/",
+    "console_url": "https://app.reve.com/",
+    "credential_label": "Reve API key",
+    "credential_url": "https://app.reve.com/",
+    "docs_url": "https://api.reve.com/console/docs",
+    "fallback_url": "https://app.reve.com/",
+    "homepage_url": "https://app.reve.com/",
+    "signup_url": "https://app.reve.com/",
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+  },
+  "icon": {
+    "path": "connectors/reve/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  },
+  "implementation": "stackos_connectors.connectors.reve.actions:MediaActionConnector"
+}
