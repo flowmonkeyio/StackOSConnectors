@@ -71,6 +71,7 @@ class FirecrawlActionConnector:
             client = FirecrawlIntegration(
                 payload=credential_value(request, "api_key").encode(),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
             )
             match request.operation:

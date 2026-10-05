@@ -66,8 +66,7 @@
             "type": "string"
           },
           "limit": {
-            "description": "Ahrefs plan row caps are enforced at runtime: Lite 100, Standard 250, Advanced 500, Enterprise bounded by the StackOS action cap of 1000.",
-            "maximum": 1000,
+            "description": "Positive number of rows requested from Ahrefs. Defaults to 100; provider plan restrictions are returned by Ahrefs.",
             "minimum": 1,
             "type": "integer"
           },
@@ -89,7 +88,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "Pull competitor organic keyword evidence for agent analysis; StackOS captures Ahrefs API-unit headers while monetary budget enforcement remains disabled until API units are modeled.",
+      "description": "Fetch organic keywords for a target. Returns provider data and API-unit response headers. Does not make an implicit limits request.",
       "metadata": {
         "capability": "seo-research",
         "name": "Competitor Keywords",
@@ -103,8 +102,7 @@
         "additionalProperties": false,
         "properties": {
           "limit": {
-            "description": "Ahrefs plan row caps are enforced at runtime: Lite 100, Standard 250, Advanced 500, Enterprise bounded by the StackOS action cap of 1000.",
-            "maximum": 1000,
+            "description": "Positive number of rows requested from Ahrefs. Defaults to 100; provider plan restrictions are returned by Ahrefs.",
             "minimum": 1,
             "type": "integer"
           },
@@ -135,11 +133,33 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "Pull backlink evidence for an agent-defined SEO investigation; StackOS captures Ahrefs API-unit headers while monetary budget enforcement remains disabled until API units are modeled.",
+      "description": "Fetch backlinks for a target. Returns provider data and API-unit response headers. Does not make an implicit limits request.",
       "metadata": {
         "capability": "seo-research",
         "name": "Backlink Research",
         "risk_level": "cost"
+      }
+    },
+    {
+      "key": "limits_and_usage",
+      "operation": "limits_and_usage",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Fetch subscription limits and usage with GET /v3/subscription-info/limits-and-usage. Returns provider facts without enforcing caller admission policy.",
+      "metadata": {
+        "name": "Limits and usage",
+        "risk_level": "read"
       }
     }
   ],
@@ -153,7 +173,7 @@
       "fallback_reason": "API access is plan/account gated; official API docs and Ahrefs app are the nearest setup path.",
       "fallback_url": "https://docs.ahrefs.com/",
       "homepage_url": "https://ahrefs.com/",
-      "setup_note": "Confirm the Ahrefs plan has Direct API access/API units, then create or copy the API key and store it in StackOS. StackOS checks subscription usage before costed Ahrefs row calls.",
+      "setup_note": "Confirm Direct API access, create or copy an API key, and pass it using the api_key authentication method. The limits_and_usage action explicitly reads subscription information.",
       "signup_url": "https://app.ahrefs.com/user/sign-up",
       "url_confidence": {
         "billing_url": "directional",

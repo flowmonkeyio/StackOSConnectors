@@ -314,55 +314,6 @@
       }
     },
     {
-      "key": "inventory_risk_report",
-      "operation": "admin.graphql",
-      "input_schema": {
-        "additionalProperties": false,
-        "properties": {
-          "days_of_stock_threshold": {
-            "description": "Days of stock threshold for risk classification",
-            "type": "integer"
-          },
-          "limit": {
-            "description": "Number of items to return",
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer"
-          }
-        },
-        "type": "object"
-      },
-      "output_schema": {
-        "additionalProperties": true,
-        "type": "object"
-      },
-      "auth_methods": [
-        "admin-api-token"
-      ],
-      "auth_optional": false,
-      "config": {
-        "shopify": {
-          "action_name": "inventory_risk_report",
-          "domain": "analytics",
-          "graphql_file": "graphql/analytics/inventory-risk-report.graphql",
-          "mode": "inventory_risk",
-          "scopes": [
-            "read_inventory",
-            "read_products",
-            "read_orders"
-          ],
-          "source": "cob-shopify-mcp",
-          "source_path": "src/shopify/tools/analytics/inventory-risk-report.tool.ts"
-        }
-      },
-      "description": "Products at overstock or understock risk based on sales velocity",
-      "metadata": {
-        "capability": "analytics",
-        "name": "Inventory Risk Report",
-        "risk_level": "read"
-      }
-    },
-    {
       "key": "orders_by_date_range",
       "operation": "admin.graphql",
       "input_schema": {
@@ -1662,55 +1613,6 @@
       "metadata": {
         "capability": "inventory",
         "name": "List Inventory Levels",
-        "risk_level": "read"
-      }
-    },
-    {
-      "key": "low_stock_report",
-      "operation": "admin.graphql",
-      "input_schema": {
-        "additionalProperties": false,
-        "properties": {
-          "limit": {
-            "description": "Maximum number of low-stock items to return",
-            "maximum": 100,
-            "minimum": 1,
-            "type": "integer"
-          },
-          "threshold": {
-            "description": "Stock threshold - items with available quantity below this are included",
-            "type": "integer"
-          }
-        },
-        "type": "object"
-      },
-      "output_schema": {
-        "additionalProperties": true,
-        "type": "object"
-      },
-      "auth_methods": [
-        "admin-api-token"
-      ],
-      "auth_optional": false,
-      "config": {
-        "shopify": {
-          "action_name": "low_stock_report",
-          "domain": "inventory",
-          "graphql_file": "graphql/inventory/low-stock-report.graphql",
-          "mode": "graphql",
-          "scopes": [
-            "read_inventory",
-            "read_products",
-            "read_locations"
-          ],
-          "source": "cob-shopify-mcp",
-          "source_path": "src/shopify/tools/inventory/low-stock-report.tool.ts"
-        }
-      },
-      "description": "Get a report of inventory items below a specified stock threshold. Queries all inventory, filters items with available quantity below threshold, and returns a sorted list with product name, variant title, SKU, available quantity, and location.",
-      "metadata": {
-        "capability": "inventory",
-        "name": "Low Stock Report",
         "risk_level": "read"
       }
     },
@@ -3124,6 +3026,137 @@
         "capability": "products",
         "name": "Update Product Variant",
         "risk_level": "write"
+      }
+    },
+    {
+      "key": "list_inventory_item_availability",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 250,
+            "description": "Number of records in this page."
+          },
+          "after": {
+            "type": "string",
+            "description": "Provider cursor from the preceding page."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "config": {
+        "shopify": {
+          "action_name": "list_inventory_item_availability",
+          "mode": "graphql",
+          "graphql_file": "graphql/inventory/list-inventory-item-availability.graphql"
+        }
+      },
+      "description": "Fetch one inventoryItems page with available quantities, locations, variant and product identity. Returns native edges and pageInfo; the caller selects pagination and any stock thresholds.",
+      "metadata": {
+        "name": "List inventory item availability",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_product_variant_inventory",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 250,
+            "description": "Number of records in this page."
+          },
+          "after": {
+            "type": "string",
+            "description": "Provider cursor from the preceding page."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "config": {
+        "shopify": {
+          "action_name": "list_product_variant_inventory",
+          "mode": "graphql",
+          "graphql_file": "graphql/inventory/list-product-variant-inventory.graphql"
+        }
+      },
+      "description": "Fetch one productVariants page with inventory quantity and product identity. Returns native edges and pageInfo without stock risk classification.",
+      "metadata": {
+        "name": "List product variant inventory",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_order_variant_quantities",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "first": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 250,
+            "description": "Number of records in this page."
+          },
+          "after": {
+            "type": "string",
+            "description": "Provider cursor from the preceding page."
+          },
+          "query": {
+            "type": "string",
+            "description": "Explicit Shopify order search filter, passed as the fixed query variable."
+          }
+        },
+        "required": [
+          "first",
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "config": {
+        "shopify": {
+          "action_name": "list_order_variant_quantities",
+          "mode": "graphql",
+          "graphql_file": "graphql/orders/list-order-variant-quantities.graphql"
+        }
+      },
+      "description": "Fetch one orders page using an explicit Shopify order search query. Includes each order's first 250 line items with quantity, variant ID and line-item pageInfo. Returns native edges and pageInfo; the caller chooses any date window and pagination.",
+      "metadata": {
+        "name": "List order variant quantities",
+        "risk_level": "read"
       }
     }
   ],

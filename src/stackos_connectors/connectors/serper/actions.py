@@ -54,6 +54,7 @@ class SerperActionConnector:
             client = SerperIntegration(
                 payload=credential_value(request, "api_key").encode(),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
             )
             call_result = await client.search(

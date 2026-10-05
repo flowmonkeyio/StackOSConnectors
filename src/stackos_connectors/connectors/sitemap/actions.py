@@ -72,6 +72,7 @@ class SitemapActionConnector:
                 list(payload["urls"]),
                 client=http,
                 timeout_s=timeout_s,
+                request_timeout=request.options.timeout,
                 max_index_depth=int(payload.get("max_index_depth", MAX_INDEX_DEPTH)),
                 max_entries=int(payload.get("max_entries", MAX_ENTRIES_PER_FETCH)),
             )

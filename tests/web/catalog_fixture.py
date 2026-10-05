@@ -16,7 +16,6 @@ PROVIDERS = [
     "ghost",
     "google-analytics",
     "google-indexing",
-    "google-paa",
     "google-search-console",
     "google-tag-manager",
     "http",

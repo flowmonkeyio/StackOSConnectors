@@ -64,9 +64,11 @@ class BaseIntegration:
         probe_context: AuthMethodProbeContext | None = None,
         rate_limiter: RateLimiter | None = None,
         qps_override: float | None = None,
+        timeout: float | None = None,
     ) -> None:
         self.payload = payload
         self._http = http
+        self._timeout = timeout
         self.probe_context = probe_context
         self._rate_limiter = (
             rate_limiter
@@ -211,6 +213,7 @@ class BaseIntegration:
                     headers=headers,
                     auth=auth,
                     follow_redirects=follow_redirects,
+                    **({"timeout": self._timeout} if self._timeout is not None else {}),
                 )
             except httpx.HTTPError:
                 if attempt >= max_retries:

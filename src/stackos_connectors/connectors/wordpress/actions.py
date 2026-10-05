@@ -58,6 +58,7 @@ class WordPressActionConnector:
             client = WordPressIntegration(
                 payload=credential_payload(request),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
                 site_url=site_url,
             )

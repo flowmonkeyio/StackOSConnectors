@@ -47,6 +47,7 @@ class JinaActionConnector:
             client = JinaReaderIntegration(
                 payload=(credential_value(request, "api_key").encode() if request.auth else b""),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
             )
             call_result = await client.read(url=str(payload["url"]))

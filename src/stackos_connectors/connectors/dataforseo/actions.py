@@ -97,6 +97,7 @@ class DataForSeoActionConnector:
             client = DataForSeoIntegration(
                 payload=credential_value(request, "password").encode(),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
                 login=login,
             )

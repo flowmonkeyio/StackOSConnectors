@@ -2,12 +2,12 @@
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PermissionVerification(BaseModel):
     evidence_source: Literal["oauth_response", "provider_probe", "unavailable"]
-    enforcement: Literal["local_required", "provider_enforced"]
+    model_config = ConfigDict(extra="forbid")
 
 
 class AuthMethodProbeContext(BaseModel):

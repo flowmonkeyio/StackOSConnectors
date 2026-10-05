@@ -288,6 +288,7 @@ class CloudflareActionConnector:
                 client = CloudflareIntegration(
                     payload=token.encode("utf-8"),
                     rate_limiter=request.options.rate_limiter,
+                    timeout=request.options.timeout,
                     http=http,
                 )
                 match request.operation:

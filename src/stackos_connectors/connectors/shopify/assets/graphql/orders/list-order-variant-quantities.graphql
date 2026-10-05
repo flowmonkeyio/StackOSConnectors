@@ -1,0 +1,18 @@
+query RecentSales($first: Int!, $query: String, $after: String) {
+  orders(first: $first, query: $query, after: $after) {
+    edges {
+      node {
+        lineItems(first: 250) {
+          edges {
+            node {
+              quantity
+              variant { id }
+            }
+          }
+          pageInfo { hasNextPage endCursor }
+        }
+      }
+    }
+    pageInfo { hasNextPage endCursor }
+  }
+}

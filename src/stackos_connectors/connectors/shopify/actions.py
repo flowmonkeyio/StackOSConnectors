@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from contextlib import nullcontext
-from datetime import UTC, datetime, timedelta
 from importlib import resources
 from pathlib import Path
 from typing import Any
@@ -16,11 +15,6 @@ from stackos_connectors.connectors.shopify.integration import (
 )
 from stackos_connectors.connectors.shopify.payloads import (
     _clean_variables,
-    _dict_value,
-    _int_value,
-    _inventory_risk_item,
-    _limit,
-    _low_stock_items,
     _required_str,
     _shopifyql_queries,
     _validate_action_payload,
@@ -47,7 +41,6 @@ from stackos_connectors.shared.vendor_utils import (
     unknown_operation,
 )
 
-MAX_GRAPHQL_PAGES = 20
 _TAGS_ADD = """mutation TagsAdd($id: ID!, $tags: [String!]!) {
   tagsAdd(id: $id, tags: $tags) {
     node { id }
@@ -59,25 +52,6 @@ _TAGS_REMOVE = """mutation TagsRemove($id: ID!, $tags: [String!]!) {
   tagsRemove(id: $id, tags: $tags) {
     node { id }
     userErrors { field message }
-  }
-}"""
-
-_RECENT_SALES_QUERY = """query RecentSales($first: Int!, $query: String, $after: String) {
-  orders(first: $first, query: $query, after: $after) {
-    edges {
-      node {
-        lineItems(first: 250) {
-          edges {
-            node {
-              quantity
-              variant { id }
-            }
-          }
-          pageInfo { hasNextPage endCursor }
-        }
-      }
-    }
-    pageInfo { hasNextPage endCursor }
   }
 }"""
 
@@ -95,13 +69,13 @@ class ShopifyActionConnector:
         if not spec:
             return issues
         mode = str(spec.get("mode") or "")
-        if mode not in {"graphql", "shopifyql", "tag_mutations", "inventory_risk"}:
+        if mode not in {"graphql", "shopifyql", "tag_mutations"}:
             issues.append(
                 issue(
                     "$.config.shopify.mode", f"unsupported Shopify mode {mode!r}", "enum_mismatch"
                 )
             )
-        if mode in {"graphql", "shopifyql", "inventory_risk"} and not spec.get("graphql_file"):
+        if mode in {"graphql", "shopifyql"} and not spec.get("graphql_file"):
             issues.append(
                 issue("$.config.shopify.graphql_file", "graphql_file is required", "required")
             )
@@ -146,6 +120,7 @@ class ShopifyActionConnector:
             integration = ShopifyIntegration(
                 payload=credential_payload(request),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
                 store_domain=store_domain,
                 api_version=api_version,
@@ -156,8 +131,6 @@ class ShopifyActionConnector:
                     return await _execute_shopifyql_action(request, integration, spec)
                 if mode == "tag_mutations":
                     return await _execute_tag_mutations(request, integration)
-                if mode == "inventory_risk":
-                    return await _execute_inventory_risk(request, integration, spec)
                 return await _execute_graphql_action(request, integration, spec)
             except (IntegrationDownError, RateLimitedError) as exc:
                 raise connector_error_from_integration(
@@ -194,8 +167,6 @@ async def _execute_graphql_action(
     integration: ShopifyIntegration,
     spec: dict[str, Any],
 ) -> ConnectorResult:
-    if request.action_key == "low_stock_report":
-        return await _execute_low_stock_report(request, integration, spec)
     query = _read_shopify_asset(str(spec["graphql_file"]))
     variables = _variables_for_action(request.action_key, request.input_json)
     body, metadata = await _admin_graphql(
@@ -206,71 +177,6 @@ async def _execute_graphql_action(
     )
     data = _successful_graphql_data(body, action_key=request.action_key, metadata=metadata)
     return _result(request.action_key, data=data, metadata=metadata)
-
-
-async def _execute_low_stock_report(
-    request: ConnectorRequest,
-    integration: ShopifyIntegration,
-    spec: dict[str, Any],
-) -> ConnectorResult:
-    query = _read_shopify_asset(str(spec["graphql_file"]))
-    threshold = _int_value(
-        request.input_json,
-        "threshold",
-        default=10,
-        minimum=0,
-        maximum=1_000_000,
-    )
-    limit = _limit(request.input_json, default=25, maximum=100)
-    cursor = request.input_json.get("cursor")
-    after = cursor if isinstance(cursor, str) else None
-    items: list[dict[str, Any]] = []
-    truncated = False
-    combined_metadata: dict[str, Any] = {}
-
-    for _page in range(MAX_GRAPHQL_PAGES):
-        body, metadata = await _admin_graphql(
-            integration,
-            action_key=request.action_key,
-            query=query,
-            variables=_clean_variables({"first": 50, "after": after}),
-        )
-        combined_metadata.update(metadata)
-        data = _successful_graphql_data(
-            body,
-            action_key=request.action_key,
-            metadata=metadata,
-        )
-        connection = data.get("inventoryItems") if isinstance(data, dict) else None
-        if not isinstance(connection, dict):
-            break
-        items.extend(_low_stock_items(connection, threshold))
-        page_info = _dict_value(connection.get("pageInfo"))
-        if not page_info.get("hasNextPage"):
-            break
-        after = page_info.get("endCursor")
-    else:
-        truncated = True
-
-    items.sort(key=lambda item: int(item.get("available") or 0))
-    limited = items[:limit]
-    metadata = {
-        "vendor": "shopify",
-        "operation": request.action_key,
-        "threshold": threshold,
-        "truncated": truncated,
-        **combined_metadata,
-    }
-    return _result(
-        request.action_key,
-        data={
-            "count": len(limited),
-            "threshold": threshold,
-            "items": limited,
-            "truncated": truncated,
-        },
-        metadata=metadata,
-    )
 
 
 async def _execute_tag_mutations(
@@ -374,117 +280,6 @@ def _shopifyql_result(data: dict[str, Any]) -> dict[str, Any]:
         elif isinstance(row, dict):
             rows.append(row)
     return {"data": rows, "columns": columns}
-
-
-async def _execute_inventory_risk(
-    request: ConnectorRequest,
-    integration: ShopifyIntegration,
-    spec: dict[str, Any],
-) -> ConnectorResult:
-    inventory_query = _read_shopify_asset(str(spec["graphql_file"]))
-    threshold = int(request.input_json.get("days_of_stock_threshold") or 30)
-    limit = int(request.input_json.get("limit") or 25)
-    variants: list[dict[str, Any]] = []
-    after: str | None = None
-    truncated = False
-
-    for _page in range(MAX_GRAPHQL_PAGES):
-        variables = {"first": 250, "after": after}
-        body, _metadata = await _admin_graphql(
-            integration,
-            action_key=request.action_key,
-            query=inventory_query,
-            variables=_clean_variables(variables),
-        )
-        data = _successful_graphql_data(body, action_key=request.action_key, metadata={})
-        connection = data.get("productVariants") if isinstance(data, dict) else None
-        if not isinstance(connection, dict):
-            break
-        for edge in connection.get("edges") or []:
-            node = edge.get("node") if isinstance(edge, dict) else None
-            if isinstance(node, dict):
-                product = _dict_value(node.get("product"))
-                variants.append(
-                    {
-                        "variantId": node.get("id"),
-                        "variantTitle": node.get("title"),
-                        "sku": node.get("sku") or "",
-                        "inventoryQuantity": node.get("inventoryQuantity") or 0,
-                        "productId": product.get("id"),
-                        "productTitle": product.get("title") or "Unknown Product",
-                    }
-                )
-        page_info = _dict_value(connection.get("pageInfo"))
-        if not page_info.get("hasNextPage"):
-            break
-        after = page_info.get("endCursor")
-    else:
-        truncated = True
-
-    sales_velocity, sales_truncated = await _recent_sales_velocity(integration, request.action_key)
-    truncated = truncated or sales_truncated
-    items = [_inventory_risk_item(item, sales_velocity, threshold) for item in variants]
-    risk_order = {"understock": 0, "overstock": 1, "healthy": 2}
-    items.sort(key=lambda item: risk_order.get(str(item.get("riskCategory")), 99))
-    limited = items[:limit]
-    summary = {
-        "totalVariants": len(variants),
-        "understock": sum(1 for item in items if item.get("riskCategory") == "understock"),
-        "overstock": sum(1 for item in items if item.get("riskCategory") == "overstock"),
-        "healthy": sum(1 for item in items if item.get("riskCategory") == "healthy"),
-        "truncated": truncated,
-    }
-    return _result(
-        request.action_key,
-        data={"items": limited, "summary": summary},
-        metadata={"vendor": "shopify", "operation": request.action_key, "truncated": truncated},
-    )
-
-
-async def _recent_sales_velocity(
-    integration: ShopifyIntegration,
-    action_key: str,
-) -> tuple[dict[str, int], bool]:
-    end = datetime.now(UTC).date()
-    start = end - timedelta(days=30)
-    query_text = f"created_at:>={start.isoformat()} created_at:<={end.isoformat()}"
-    after: str | None = None
-    velocity: dict[str, int] = {}
-    truncated = False
-    for _page in range(MAX_GRAPHQL_PAGES):
-        body, _metadata = await _admin_graphql(
-            integration,
-            action_key=action_key,
-            query=_RECENT_SALES_QUERY,
-            variables=_clean_variables({"first": 250, "query": query_text, "after": after}),
-        )
-        data = _successful_graphql_data(body, action_key=action_key, metadata={})
-        connection = data.get("orders") if isinstance(data, dict) else None
-        if not isinstance(connection, dict):
-            break
-        for order_edge in connection.get("edges") or []:
-            order = order_edge.get("node") if isinstance(order_edge, dict) else None
-            line_items = (order or {}).get("lineItems") if isinstance(order, dict) else None
-            for item_edge in (line_items or {}).get("edges") or []:
-                item = item_edge.get("node") if isinstance(item_edge, dict) else None
-                if not isinstance(item, dict):
-                    continue
-                variant = _dict_value(item.get("variant"))
-                variant_id = variant.get("id")
-                if isinstance(variant_id, str) and variant_id:
-                    velocity[variant_id] = velocity.get(variant_id, 0) + int(
-                        item.get("quantity") or 0
-                    )
-            line_items_page = line_items.get("pageInfo") if isinstance(line_items, dict) else None
-            if isinstance(line_items_page, dict) and line_items_page.get("hasNextPage"):
-                truncated = True
-        page_info = _dict_value(connection.get("pageInfo"))
-        if not page_info.get("hasNextPage"):
-            break
-        after = page_info.get("endCursor")
-    else:
-        truncated = True
-    return velocity, truncated
 
 
 async def _admin_graphql(

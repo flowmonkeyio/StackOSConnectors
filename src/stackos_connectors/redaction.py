@@ -21,6 +21,15 @@ _SECRET_KEY_PARTS = (
     "secret",
     "token",
 )
+# Provider facts about key usage and expiry are not credential values. Values
+# still pass through recursive/text and exact-auth-value redaction.
+_PUBLIC_KEY_FACTS = frozenset(
+    {
+        "units_usage_api_key",
+        "units_limit_api_key",
+        "api_key_expiration_date",
+    }
+)
 _SECRET_TEXT_RE = re.compile(
     r"(?i)([\"']?(?:access[_-]?token|api[_-]?key|apikey|authorization|client[_-]?secret|"
     r"service[_-]?account[_-]?json|assertion|credential|password|private[_-]?key|refresh[_-]?token|secret|token)[\"']?\s*[:=]\s*"
@@ -41,6 +50,8 @@ _SIGNED_URL_PARAM_RE = re.compile(
 
 
 def _is_sensitive_key(key: str) -> bool:
+    if key in _PUBLIC_KEY_FACTS:
+        return False
     normalized = key.lower().replace("-", "_")
     return any(part in normalized for part in _SECRET_KEY_PARTS)
 

@@ -123,6 +123,7 @@ async def fetch_sitemap_entries(
     *,
     client: httpx.AsyncClient | None = None,
     timeout_s: float = DEFAULT_TIMEOUT_S,
+    request_timeout: float | None = None,
     max_index_depth: int = MAX_INDEX_DEPTH,
     max_entries: int = MAX_ENTRIES_PER_FETCH,
 ) -> SitemapFetchResult:
@@ -152,6 +153,7 @@ async def fetch_sitemap_entries(
                 result=result,
                 seen_urls=seen_urls,
                 max_entries=max_entries,
+                request_timeout=request_timeout,
             )
             if len(result.entries) >= max_entries:
                 _log.info("sitemap.entry_cap_hit cap=%s", max_entries)
@@ -177,10 +179,11 @@ async def _fetch_one(
     result: SitemapFetchResult,
     seen_urls: set[str],
     max_entries: int,
+    request_timeout: float | None = None,
 ) -> None:
     """Fetch ``url``; recurse into a sitemap-index if encountered."""
     try:
-        body = await _http_get(client, url)
+        body = await _http_get(client, url, timeout=request_timeout)
     except _SitemapHttpError as exc:
         result.errors.append(SitemapFetchError(url=url, error=str(exc)))
         return
@@ -208,6 +211,7 @@ async def _fetch_one(
                 result=result,
                 seen_urls=seen_urls,
                 max_entries=max_entries,
+                request_timeout=request_timeout,
             )
             if len(result.entries) >= max_entries:
                 return
@@ -232,7 +236,7 @@ class _SitemapHttpError(Exception):
     """Internal exception type for sitemap fetch failures."""
 
 
-async def _http_get(client: httpx.AsyncClient, url: str) -> bytes:
+async def _http_get(client: httpx.AsyncClient, url: str, *, timeout: float | None = None) -> bytes:
     """GET ``url`` with size + status guards.
 
     We stream the body so we can early-out on oversize without buffering
@@ -240,7 +244,9 @@ async def _http_get(client: httpx.AsyncClient, url: str) -> bytes:
     parsing a 1 GB sitemap.
     """
     try:
-        async with client.stream("GET", url) as response:
+        async with client.stream(
+            "GET", url, **({"timeout": timeout} if timeout is not None else {})
+        ) as response:
             if response.status_code >= 400:
                 raise _SitemapHttpError(f"HTTP {response.status_code}")
             chunks: list[bytes] = []

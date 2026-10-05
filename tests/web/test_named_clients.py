@@ -20,31 +20,6 @@ from stackos_connectors import (
 from .catalog_fixture import PROVIDERS, client_for, document
 
 
-@pytest.mark.asyncio
-async def test_ahrefs_guard_records_limits_read_and_no_paid_request():
-    seen = []
-
-    def handle(request):
-        seen.append(request)
-        assert str(request.url) == "https://api.ahrefs.com/v3/subscription-info/limits-and-usage"
-        return httpx.Response(200, json={"limits_and_usage": {"subscription": "Lite"}})
-
-    async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:
-        with pytest.raises(ValidationError) as caught:
-            await client_for("ahrefs").execute(
-                "ahrefs",
-                "competitor.keywords",
-                {"target": "example.test", "limit": 101, "date": "2026-06-15"},
-                ConnectorAuth("api_key", {"api_key": "synthetic-ahrefs-key"}),
-                CallOptions(http=http),
-            )
-    assert caught.value.data["effective_row_limit"] == 100
-    assert caught.value.metadata_json["provider_executed"] is True
-    assert caught.value.metadata_json["primary_request_executed"] is False
-    assert caught.value.metadata_json["retry_safe"] is True
-    assert len(seen) == 1
-
-
 @pytest.mark.parametrize("provider", PROVIDERS)
 def test_catalog_native_contracts_and_lazy_implementation(provider):
     doc = document(provider)
@@ -53,7 +28,7 @@ def test_catalog_native_contracts_and_lazy_implementation(provider):
         if method["payload_format"] == "raw":
             assert method["payload_field"]
         assert "type" in method["fields_schema"]
-    if provider in {"google-paa", "openrouter"}:
+    if provider in {"openrouter"}:
         assert not doc["actions"] and "implementation" not in doc
         return
     module, symbol = doc["implementation"].split(":")

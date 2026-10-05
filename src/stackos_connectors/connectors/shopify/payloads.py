@@ -16,37 +16,19 @@ _SALES_COMPARE_VALUES = {"previous_period", "previous_year"}
 _GEOGRAPHY_GROUP_VALUES = {"country", "region"}
 
 
-def _inventory_risk_item(
-    variant: dict[str, Any],
-    sales_velocity: dict[str, int],
-    threshold: int,
-) -> dict[str, Any]:
-    variant_id = str(variant.get("variantId") or "")
-    inventory_quantity = int(variant.get("inventoryQuantity") or 0)
-    units_sold = sales_velocity.get(variant_id, 0)
-    daily_velocity = units_sold / 30
-    if daily_velocity > 0:
-        days_of_stock = inventory_quantity / daily_velocity
-    elif inventory_quantity > 0:
-        days_of_stock = float("inf")
-    else:
-        days_of_stock = 0.0
-    if (days_of_stock == 0 and inventory_quantity == 0) or days_of_stock < threshold:
-        risk = "understock"
-    elif days_of_stock > threshold * 3:
-        risk = "overstock"
-    else:
-        risk = "healthy"
-    return {
-        **variant,
-        "unitsSoldLast30Days": units_sold,
-        "dailyVelocity": round(daily_velocity, 2),
-        "estimatedDaysOfStock": None if days_of_stock == float("inf") else round(days_of_stock),
-        "riskCategory": risk,
-    }
-
-
 def _variables_for_action(action_key: str, payload: dict[str, Any]) -> dict[str, Any]:
+    if action_key in {
+        "list_inventory_item_availability",
+        "list_product_variant_inventory",
+        "list_order_variant_quantities",
+    }:
+        variables = {
+            "first": _int_value(payload, "first", minimum=1, maximum=250),
+            "after": payload.get("after"),
+        }
+        if action_key == "list_order_variant_quantities":
+            variables["query"] = payload["query"]
+        return variables
     if action_key in {
         "add_customer_tag",
         "remove_customer_tag",
@@ -130,8 +112,6 @@ def _variables_for_action(action_key: str, payload: dict[str, Any]) -> dict[str,
             "first": _limit(payload, default=10, maximum=250),
             "after": payload.get("cursor"),
         }
-    if action_key == "low_stock_report":
-        return {"first": 50, "after": payload.get("cursor")}
     if action_key in {"add_order_note", "update_order_note"}:
         return {
             "input": {"id": _required_str(payload, "id"), "note": _required_str(payload, "note")}
@@ -411,12 +391,6 @@ def _validate_action_payload(action_key: str, payload: dict[str, Any]) -> None:
             _enum_value(payload, "sort_by", {"amount", "orders"}, default="amount")
         else:
             _enum_value(payload, "sort_by", {"revenue", "orders"}, default="revenue")
-    if action_key == "inventory_risk_report":
-        _int_value(payload, "days_of_stock_threshold", default=30, minimum=1, maximum=3650)
-        _limit(payload, default=25, maximum=100)
-    if action_key == "low_stock_report":
-        _int_value(payload, "threshold", default=10, minimum=0, maximum=1_000_000)
-        _limit(payload, default=25, maximum=100)
     if action_key == "create_draft_order":
         _draft_order_input(payload)
     if action_key == "adjust_inventory":
@@ -498,61 +472,8 @@ def _shopify_search_quote(value: str) -> str:
     return f'"{escaped}"'
 
 
-def _low_stock_items(connection: dict[str, Any], threshold: int) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
-    for item_edge in connection.get("edges") or []:
-        item = item_edge.get("node") if isinstance(item_edge, dict) else None
-        if not isinstance(item, dict):
-            continue
-        variant = _first_variant(item)
-        for level_edge in _dict_value(item.get("inventoryLevels")).get("edges") or []:
-            level = level_edge.get("node") if isinstance(level_edge, dict) else None
-            if not isinstance(level, dict):
-                continue
-            available = _quantity_value(level.get("quantities"), "available")
-            if available >= threshold:
-                continue
-            location = _dict_value(level.get("location"))
-            product = _dict_value(variant.get("product"))
-            out.append(
-                {
-                    "inventoryItemId": item.get("id"),
-                    "variantId": variant.get("id"),
-                    "productId": product.get("id"),
-                    "productTitle": product.get("title") or "Unknown",
-                    "variantTitle": variant.get("title") or "Default",
-                    "sku": item.get("sku") or "",
-                    "available": available,
-                    "locationId": location.get("id"),
-                    "location": location.get("name") or "Unknown",
-                }
-            )
-    return out
-
-
-def _first_variant(item: dict[str, Any]) -> dict[str, Any]:
-    variants = _dict_value(item.get("variants"))
-    nodes = variants.get("nodes")
-    if isinstance(nodes, list) and nodes and isinstance(nodes[0], dict):
-        return nodes[0]
-    edges = variants.get("edges")
-    if isinstance(edges, list) and edges:
-        node = edges[0].get("node") if isinstance(edges[0], dict) else None
-        if isinstance(node, dict):
-            return node
-    return {}
-
-
 def _dict_value(value: Any) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
-
-
-def _quantity_value(quantities: Any, name: str) -> int:
-    for quantity in quantities or []:
-        if isinstance(quantity, dict) and quantity.get("name") == name:
-            value = quantity.get("quantity")
-            return value if isinstance(value, int) and not isinstance(value, bool) else 0
-    return 0
 
 
 def _customer_input(payload: dict[str, Any], *, include_id: bool) -> dict[str, Any]:

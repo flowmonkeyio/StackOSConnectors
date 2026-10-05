@@ -51,11 +51,10 @@ class AhrefsIntegration(BaseIntegration):
     def _require_key(self) -> str:
         if not self._api_key:
             raise IntegrationDownError(
-                "Ahrefs API key is not configured. The keyword-discovery skill "
-                "works without it because DataForSEO covers most use cases.",
+                "Ahrefs API key is not configured.",
                 data={
                     "vendor": "ahrefs",
-                    "hint": "docs/api-keys.md — Ahrefs section",
+                    "hint": "Pass a non-empty API key using the api_key authentication method.",
                 },
             )
         return self._api_key

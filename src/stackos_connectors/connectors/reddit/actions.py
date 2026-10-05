@@ -60,6 +60,7 @@ class RedditActionConnector:
             client = RedditIntegration(
                 payload=credential_payload(request),
                 rate_limiter=request.options.rate_limiter,
+                timeout=request.options.timeout,
                 http=http,
             )
             match request.operation:
