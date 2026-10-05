@@ -1,0 +1,139 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "webhook"
+      ],
+      "config": {},
+      "description": "Submit explicit rows to a Clay table webhook contract for asynchronous enrichment.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "metadata": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "rows"
+        ],
+        "type": "object"
+      },
+      "key": "clay.table.webhook.submit",
+      "metadata": {
+        "capability": "enrichment",
+        "name": "Submit Clay Table Webhook",
+        "risk_level": "cost"
+      },
+      "operation": "table.webhook.submit",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "webhook_url": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "webhook_url"
+        ],
+        "type": "object"
+      },
+      "description": "Supply the table webhook URL and optional webhook authentication token.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "webhook_token": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "webhook",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "webhook-url-token",
+        "description": "Create a Clay table webhook and obtain its URL and optional authentication token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "webhook_url",
+            "label": "Webhook URL",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": false,
+            "type": "url"
+          },
+          {
+            "description": null,
+            "key": "webhook_token",
+            "label": "Webhook Token",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "Table webhook"
+      }
+    }
+  ],
+  "auth_type": "webhook",
+  "config": {
+    "setup": {
+      "billing_url": "https://www.clay.com/pricing",
+      "console_url": "https://app.clay.com/",
+      "credential_label": "Clay table webhook URL and optional token",
+      "credential_url": "https://app.clay.com/",
+      "docs_url": "https://university.clay.com/",
+      "fallback_reason": "Exact credential screens are app/workspace gated; use the official Clay app and API guidance.",
+      "fallback_url": "https://university.clay.com/docs/using-clay-as-an-api",
+      "homepage_url": "https://www.clay.com/",
+      "setup_note": "Create a Clay table webhook and obtain its URL and optional authentication token.",
+      "signup_url": "https://app.clay.com/signup",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "clay",
+  "description": "Clay enrichment and workflow provider contract.",
+  "icon": {
+    "kind": "wordmark-dark",
+    "media_type": "image/png",
+    "path": "connectors/clay/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.clay.actions:ClayActionConnector",
+  "name": "Clay",
+  "schema_version": "stackos.connector.v1"
+}

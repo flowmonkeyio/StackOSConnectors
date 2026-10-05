@@ -1,0 +1,197 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create an Outreach sequence state linking explicit prospect, sequence, and mailbox IDs.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "mailbox_id": {
+            "description": "Provider-native mailbox id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "prospect_id": {
+            "description": "Provider-native prospect id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "sequence_id": {
+            "description": "Provider-native sequence id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "sequence_id",
+          "prospect_id",
+          "mailbox_id"
+        ],
+        "type": "object"
+      },
+      "key": "outreach.sequence_state.create",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Create Outreach Sequence State",
+        "required_scopes": [
+          "sequenceStates.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "sequence_state.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "base_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Create or use an Outreach OAuth app with your callback and sequenceStates.write scope. Supply the resulting access token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Outreach"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "base_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Create or use an Outreach OAuth app with your callback and sequenceStates.write scope. Supply the resulting access token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "scopes": [
+      "sequenceStates.write"
+    ],
+    "setup": {
+      "billing_url": "https://www.outreach.ai/pricing",
+      "console_url": "https://developers.outreach.io/",
+      "credential_label": "Outreach OAuth access token",
+      "credential_url": "https://developers.outreach.io/",
+      "docs_url": "https://developers.outreach.io/",
+      "homepage_url": "https://www.outreach.ai/",
+      "setup_note": "Create or use an Outreach OAuth app with your callback and sequenceStates.write scope. Supply the resulting access token.",
+      "signup_url": "https://www.outreach.ai/request-demo",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "outreach",
+  "description": "Outreach sequence provider contract.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/outreach/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.outreach.actions:OutreachActionConnector",
+  "name": "Outreach",
+  "schema_version": "stackos.connector.v1"
+}

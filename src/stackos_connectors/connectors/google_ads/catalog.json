@@ -1,0 +1,797 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Read accessible Google Ads customer metadata for the configured credential.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "filters": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "key": "google.customer.list",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "List Google Ads Customers",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "customer.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads campaign budget for a customer ID from explicit budget fields.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "budget": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "budget"
+        ],
+        "type": "object"
+      },
+      "key": "google.campaign_budget.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Google Campaign Budget",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign_budget.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Update a Google Ads campaign budget from explicit budget changes.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_budget_id": {
+            "description": "Provider-native campaign budget id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          },
+          "update_mask": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "changes",
+          "update_mask"
+        ],
+        "type": "object"
+      },
+      "key": "google.campaign_budget.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Google Campaign Budget",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign_budget.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads campaign from an explicit campaign object and campaign budget resource name.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign": {
+            "additionalProperties": true,
+            "required": [
+              "name",
+              "advertisingChannelType"
+            ],
+            "type": "object"
+          },
+          "campaign_budget_id": {
+            "description": "Provider-native campaign budget id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "campaign_budget_id",
+          "campaign"
+        ],
+        "type": "object"
+      },
+      "key": "google.campaign.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Google Campaign",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads ad group from explicit bidding, targeting, and status fields.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_group": {
+            "additionalProperties": true,
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "campaign_id",
+          "ad_group"
+        ],
+        "type": "object"
+      },
+      "key": "google.ad_group.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Google Ad Group",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_group.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads asset from an explicit provider-native asset object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "asset"
+        ],
+        "type": "object"
+      },
+      "key": "google.asset.create",
+      "metadata": {
+        "capability": "creative-operations",
+        "name": "Create Google Asset",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "asset.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads ad group ad from an explicit ad_group_ad object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_group_ad": {
+            "additionalProperties": true,
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "ad_group_id": {
+            "description": "Provider-native ad group id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "ad_group_id",
+          "ad_group_ad"
+        ],
+        "type": "object"
+      },
+      "key": "google.ad_group_ad.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Google Ad Group Ad",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_group_ad.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Run one Google Ads GAQL search page. Pass body.next_page_cursor as page_cursor with the same customer_id and query to continue; no cursor means the final page.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "page_cursor": {
+            "description": "Nonsecret paging value from the preceding body.next_page_cursor; forwarded to Google as pageToken. Keep customer_ref and query unchanged.",
+            "type": "string"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "query"
+        ],
+        "type": "object"
+      },
+      "key": "google.report.search",
+      "metadata": {
+        "capability": "media-measurement",
+        "docs": [
+          "docs/integration-contracts/media-buying.md",
+          "https://developers.google.com/google-ads/api/rest/common/search"
+        ],
+        "name": "Search Google Ads Report",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "report.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Ads conversion action from explicit tracking and attribution fields.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "conversion_action": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "customer_id",
+          "conversion_action"
+        ],
+        "type": "object"
+      },
+      "key": "google.conversion_action.create",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Create Google Conversion Action",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "conversion_action.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Upload explicit Google Ads click conversion records.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "conversions": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "customer_id": {
+            "description": "Provider-native customer id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "debug_enabled": {
+            "type": "boolean"
+          },
+          "job_id": {
+            "type": "integer"
+          },
+          "partial_failure": {
+            "type": "boolean"
+          },
+          "validate_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "customer_id",
+          "conversions"
+        ],
+        "type": "object"
+      },
+      "key": "google.conversion_upload.clicks",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Upload Google Click Conversions",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/adwords"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "conversion_upload.clicks",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          },
+          "login_customer_id": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication. Also supply the Google Ads developer_token.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "developer_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "developer_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Enable Google Ads API and obtain a developer token. Obtain an OAuth access token through user authorization or a service account granted Google Ads access. Service accounts do not need a delegated user. Supply login_customer_id for the login-customer-id header when accessing customers through a manager.",
+        "fields": [
+          {
+            "description": null,
+            "key": "developer_token",
+            "label": "Developer Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Google"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          },
+          "login_customer_id": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication. Also supply the Google Ads developer_token.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "developer_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "developer_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_refresh_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Enable Google Ads API and obtain a developer token. Obtain an OAuth access token through user authorization or a service account granted Google Ads access. Service accounts do not need a delegated user. Supply login_customer_id for the login-customer-id header when accessing customers through a manager.",
+        "fields": [
+          {
+            "description": null,
+            "key": "developer_token",
+            "label": "Developer Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "refresh_token",
+            "label": "Refresh Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 refresh token"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          },
+          "login_customer_id": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication. Also supply the Google Ads developer_token.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "developer_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token",
+          "developer_token"
+        ],
+        "type": "object"
+      },
+      "key": "service-account",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Use a Google service-account JSON key to acquire an access token. Enable Google Ads API and obtain a developer token. Obtain an OAuth access token through user authorization or a service account granted Google Ads access. Service accounts do not need a delegated user. Supply login_customer_id for the login-customer-id header when accessing customers through a manager.",
+        "fields": [
+          {
+            "description": null,
+            "key": "service_account_json",
+            "label": "Service-account JSON key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "developer_token",
+            "label": "Developer Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "Service account"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "setup": {
+      "billing_url": "https://ads.google.com/aw/billing/summary",
+      "console_url": "https://ads.google.com/aw/apicenter",
+      "credential_label": "Google Ads developer token and Google credential",
+      "credential_url": "https://ads.google.com/aw/apicenter",
+      "docs_url": "https://developers.google.com/google-ads/api/docs/start",
+      "homepage_url": "https://ads.google.com/home/",
+      "setup_note": "Enable Google Ads API and obtain a developer token. Obtain an OAuth access token through user authorization or a service account granted Google Ads access. Service accounts do not need a delegated user. Supply login_customer_id for the login-customer-id header when accessing customers through a manager.",
+      "signup_url": "https://ads.google.com/home/",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "google-ads",
+  "description": "Google Ads API provider contract for customers, budgets, campaigns, ad groups, assets, ads, reporting, and conversions.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/google_ads/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.google_ads.actions:GoogleAdsActionConnector",
+  "name": "Google Ads",
+  "schema_version": "stackos.connector.v1"
+}

@@ -1,0 +1,261 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Send Microsoft Graph mail for an explicit user ID and mail payload.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "save_to_sent_items": {
+            "type": "boolean"
+          },
+          "user_id": {
+            "description": "Provider-native user id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "key": "microsoft-365.graph.mail.send",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Send Microsoft Graph Mail",
+        "required_scopes": [
+          "https://graph.microsoft.com/Mail.Send"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graph.mail.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Microsoft Graph calendar event for an explicit user ID and event payload.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "calendar_id": {
+            "description": "Provider-native calendar id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "event": {
+            "additionalProperties": true,
+            "required": [
+              "start",
+              "end"
+            ],
+            "type": "object"
+          },
+          "user_id": {
+            "description": "Provider-native user id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "event"
+        ],
+        "type": "object"
+      },
+      "key": "microsoft-365.graph.calendar.event.create",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Create Microsoft Graph Calendar Event",
+        "required_scopes": [
+          "https://graph.microsoft.com/Calendars.ReadWrite"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graph.calendar.event.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "auth_mode": {
+            "enum": [
+              "delegated",
+              "application"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Register a confidential web app in Microsoft Entra ID with your OAuth callback and delegated Mail.Send, Calendars.ReadWrite, and offline_access permissions. Supply the resulting Microsoft Graph access token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Application Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Application Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "tenant",
+            "label": "Microsoft Tenant",
+            "options": null,
+            "placeholder": "common, tenant id, or verified tenant domain",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Microsoft"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "auth_mode": {
+            "enum": [
+              "delegated",
+              "application"
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Register a confidential web app in Microsoft Entra ID with your OAuth callback and delegated Mail.Send, Calendars.ReadWrite, and offline_access permissions. Supply the resulting Microsoft Graph access token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "scopes": [
+      "offline_access",
+      "https://graph.microsoft.com/Mail.Send",
+      "https://graph.microsoft.com/Calendars.ReadWrite"
+    ],
+    "setup": {
+      "billing_url": "https://admin.microsoft.com/Adminportal/Home#/BillingAccounts",
+      "console_url": "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+      "credential_label": "Microsoft Graph OAuth credential",
+      "credential_url": "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+      "docs_url": "https://learn.microsoft.com/en-us/graph/overview",
+      "homepage_url": "https://www.microsoft.com/en-us/microsoft-365",
+      "setup_note": "Register a confidential web app in Microsoft Entra ID with your OAuth callback and delegated Mail.Send, Calendars.ReadWrite, and offline_access permissions. Supply the resulting Microsoft Graph access token.",
+      "signup_url": "https://www.microsoft.com/en-us/microsoft-365/business",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "microsoft-365",
+  "description": "Microsoft Graph mail send and calendar event provider contract.",
+  "icon": {
+    "kind": "wordmark",
+    "media_type": "image/png",
+    "path": "connectors/microsoft_365/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.microsoft_365.actions:MicrosoftGraphActionConnector",
+  "name": "Microsoft 365",
+  "schema_version": "stackos.connector.v1"
+}

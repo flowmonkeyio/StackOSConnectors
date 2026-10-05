@@ -1,0 +1,2847 @@
+[
+  {
+    "action": "apollo.people.search",
+    "auth": {
+      "config": {
+        "access_scope": "master"
+      },
+      "fields": {
+        "api_key": "canary-api_key"
+      },
+      "method": "api_key"
+    },
+    "connector": "apollo",
+    "data": {
+      "filters": {
+        "person_titles": [
+          "Founder"
+        ]
+      },
+      "page": 2,
+      "per_page": 3
+    },
+    "operation": "people.search",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Accept": "application/json",
+        "x-api-key": "canary-api_key"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://api.apollo.io/api/v1/mixed_people/api_search?person_titles=Founder&page=2&per_page=3"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "people.search",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "apollo"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "people.search",
+        "provider": "apollo",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "apollo.people.enrich",
+    "auth": {
+      "config": {
+        "access_scope": "master"
+      },
+      "fields": {
+        "api_key": "canary-api_key"
+      },
+      "method": "api_key"
+    },
+    "connector": "apollo",
+    "data": {
+      "record": {
+        "email": "someone@example.test"
+      }
+    },
+    "operation": "people.enrich",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Accept": "application/json",
+        "x-api-key": "canary-api_key"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://api.apollo.io/api/v1/people/match?email=someone%40example.test"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "people.enrich",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "apollo"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "people.enrich",
+        "provider": "apollo",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "apollo.people.bulk_enrich",
+    "auth": {
+      "config": {
+        "access_scope": "master"
+      },
+      "fields": {
+        "api_key": "canary-api_key"
+      },
+      "method": "api_key"
+    },
+    "connector": "apollo",
+    "data": {
+      "details": [
+        {
+          "email": "someone@example.test"
+        }
+      ]
+    },
+    "operation": "people.bulk_enrich",
+    "request": {
+      "content": "{\"details\":[{\"email\":\"someone@example.test\"}]}",
+      "form": null,
+      "headers": {
+        "Accept": "application/json",
+        "x-api-key": "canary-api_key"
+      },
+      "json": {
+        "details": [
+          {
+            "email": "someone@example.test"
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://api.apollo.io/api/v1/people/bulk_match"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "people.bulk_enrich",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "apollo"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "people.bulk_enrich",
+        "provider": "apollo",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "apollo.organization.enrich",
+    "auth": {
+      "config": {
+        "access_scope": "master"
+      },
+      "fields": {
+        "api_key": "canary-api_key"
+      },
+      "method": "api_key"
+    },
+    "connector": "apollo",
+    "data": {
+      "domain": "example.test"
+    },
+    "operation": "organization.enrich",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Accept": "application/json",
+        "x-api-key": "canary-api_key"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://api.apollo.io/api/v1/organizations/enrich?domain=example.test"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "organization.enrich",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "apollo"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "organization.enrich",
+        "provider": "apollo",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "apollo.organization.bulk_enrich",
+    "auth": {
+      "config": {
+        "access_scope": "master"
+      },
+      "fields": {
+        "api_key": "canary-api_key"
+      },
+      "method": "api_key"
+    },
+    "connector": "apollo",
+    "data": {
+      "domains": [
+        "example.test"
+      ]
+    },
+    "operation": "organization.bulk_enrich",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Accept": "application/json",
+        "x-api-key": "canary-api_key"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://api.apollo.io/api/v1/organizations/bulk_enrich?domains%5B%5D=example.test"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "organization.bulk_enrich",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "apollo"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "organization.bulk_enrich",
+        "provider": "apollo",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "clay.table.webhook.submit",
+    "auth": {
+      "config": {
+        "webhook_url": "https://hooks.example.test/table"
+      },
+      "fields": {},
+      "method": "webhook"
+    },
+    "connector": "clay",
+    "data": {
+      "metadata": {
+        "source": "fixture"
+      },
+      "rows": [
+        {
+          "email": "someone@example.test"
+        }
+      ]
+    },
+    "operation": "table.webhook.submit",
+    "request": {
+      "content": "{\"rows\":[{\"email\":\"someone@example.test\"}],\"metadata\":{\"source\":\"fixture\"}}",
+      "form": null,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "metadata": {
+          "source": "fixture"
+        },
+        "rows": [
+          {
+            "email": "someone@example.test"
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://hooks.example.test/table"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "table.webhook.submit",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "clay"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "table.webhook.submit",
+        "provider": "clay",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.customer.list",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {},
+    "operation": "customer.list",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://googleads.googleapis.com/v24/customers:listAccessibleCustomers"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "customer.list",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "customer.list",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.campaign_budget.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "budget": {},
+      "customer_id": "123"
+    },
+    "operation": "campaign_budget.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {}
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/campaignBudgets:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign_budget.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign_budget.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.campaign_budget.update",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "campaign_budget_id": "456",
+      "changes": {},
+      "customer_id": "123",
+      "update_mask": "example"
+    },
+    "operation": "campaign_budget.update",
+    "request": {
+      "content": "{\"operations\":[{\"update\":{\"resourceName\":\"customers/123/campaignBudgets/456\"},\"updateMask\":\"example\"}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "update": {
+              "resourceName": "customers/123/campaignBudgets/456"
+            },
+            "updateMask": "example"
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/campaignBudgets:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign_budget.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign_budget.update",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.campaign.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "campaign": {
+        "advertisingChannelType": "example",
+        "name": "example"
+      },
+      "campaign_budget_id": "123",
+      "customer_id": "123"
+    },
+    "operation": "campaign.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{\"name\":\"example\",\"advertisingChannelType\":\"example\",\"campaignBudget\":\"customers/123/campaignBudgets/123\"}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {
+              "advertisingChannelType": "example",
+              "campaignBudget": "customers/123/campaignBudgets/123",
+              "name": "example"
+            }
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/campaigns:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.ad_group.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "ad_group": {
+        "name": "example"
+      },
+      "campaign_id": "123",
+      "customer_id": "123"
+    },
+    "operation": "ad_group.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{\"name\":\"example\",\"campaign\":\"customers/123/campaigns/123\"}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {
+              "campaign": "customers/123/campaigns/123",
+              "name": "example"
+            }
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/adGroups:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_group.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_group.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.asset.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "asset": {},
+      "customer_id": "123"
+    },
+    "operation": "asset.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {}
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/assets:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "asset.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "asset.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.ad_group_ad.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "ad_group_ad": {
+        "name": "example"
+      },
+      "ad_group_id": "123",
+      "customer_id": "123"
+    },
+    "operation": "ad_group_ad.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{\"name\":\"example\",\"adGroup\":\"customers/123/adGroups/123\"}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {
+              "adGroup": "customers/123/adGroups/123",
+              "name": "example"
+            }
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/adGroupAds:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_group_ad.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_group_ad.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.report.search",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "customer_id": "123",
+      "page_cursor": "current-cursor",
+      "query": "SELECT Id FROM Opportunity"
+    },
+    "operation": "report.search",
+    "request": {
+      "content": "{\"query\":\"SELECT Id FROM Opportunity\",\"pageToken\":\"current-cursor\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "pageToken": "current-cursor",
+        "query": "SELECT Id FROM Opportunity"
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/googleAds:search"
+    },
+    "response": {
+      "nextPageToken": "next-cursor",
+      "results": [
+        {
+          "id": "row"
+        }
+      ]
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "report.search",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "next_page_cursor": "next-cursor",
+          "results": [
+            {
+              "id": "row"
+            }
+          ]
+        },
+        "operation": "report.search",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.conversion_action.create",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "conversion_action": {},
+      "customer_id": "123"
+    },
+    "operation": "conversion_action.create",
+    "request": {
+      "content": "{\"operations\":[{\"create\":{}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "operations": [
+          {
+            "create": {}
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123/conversionActions:mutate"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "conversion_action.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "conversion_action.create",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google.conversion_upload.clicks",
+    "auth": {
+      "config": {
+        "login_customer_id": "999-888-7777"
+      },
+      "fields": {
+        "access_token": "canary-access_token",
+        "developer_token": "canary-developer_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-ads",
+    "data": {
+      "conversions": [
+        {
+          "conversionValue": 10,
+          "gclid": "click"
+        }
+      ],
+      "customer_id": "123"
+    },
+    "operation": "conversion_upload.clicks",
+    "request": {
+      "content": "{\"conversions\":[{\"gclid\":\"click\",\"conversionValue\":10}],\"partialFailure\":true}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json",
+        "developer-token": "canary-developer_token",
+        "login-customer-id": "9998887777"
+      },
+      "json": {
+        "conversions": [
+          {
+            "conversionValue": 10,
+            "gclid": "click"
+          }
+        ],
+        "partialFailure": true
+      },
+      "method": "POST",
+      "url": "https://googleads.googleapis.com/v24/customers/123:uploadClickConversions"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "conversion_upload.clicks",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "conversion_upload.clicks",
+        "provider": "google-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google-workspace.gmail.message.send",
+    "auth": {
+      "config": {
+        "delegated_subject": "user@example.test"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-workspace",
+    "data": {
+      "message": {
+        "raw": "SGVsbG8"
+      }
+    },
+    "operation": "gmail.message.send",
+    "request": {
+      "content": "{\"raw\":\"SGVsbG8\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "raw": "SGVsbG8"
+      },
+      "method": "POST",
+      "url": "https://gmail.googleapis.com/gmail/v1/users/me/messages/send"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "gmail.message.send",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-workspace"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "gmail.message.send",
+        "provider": "google-workspace",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "google-workspace.calendar.event.create",
+    "auth": {
+      "config": {
+        "delegated_subject": "user@example.test"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "google-workspace",
+    "data": {
+      "calendar_id": "123",
+      "event": {
+        "end": "example",
+        "start": "example"
+      }
+    },
+    "operation": "calendar.event.create",
+    "request": {
+      "content": "{\"start\":\"example\",\"end\":\"example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "end": "example",
+        "start": "example"
+      },
+      "method": "POST",
+      "url": "https://www.googleapis.com/calendar/v3/calendars/123/events"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "calendar.event.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "google-workspace"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "calendar.event.create",
+        "provider": "google-workspace",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.account.list",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "after": "page",
+      "fields": [
+        "id",
+        "name"
+      ],
+      "limit": 2
+    },
+    "operation": "account.list",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://graph.facebook.com/v25.0/me/adaccounts?fields=id%2Cname&limit=2&after=page"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "account.list",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "account.list",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.campaign.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "account_id": "123",
+      "campaign": {
+        "name": "example",
+        "objective": "example",
+        "special_ad_categories": [
+          "example"
+        ]
+      }
+    },
+    "operation": "campaign.create",
+    "request": {
+      "content": "name=example&objective=example&special_ad_categories=%5B%22example%22%5D",
+      "form": {
+        "name": "example",
+        "objective": "example",
+        "special_ad_categories": "[\"example\"]"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/act_123/campaigns"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.create",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.campaign.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "campaign_id": "123",
+      "changes": {}
+    },
+    "operation": "campaign.update",
+    "request": {
+      "content": "",
+      "form": {},
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.update",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.campaign.pause",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "campaign_id": "123"
+    },
+    "operation": "campaign.pause",
+    "request": {
+      "content": "status=PAUSED",
+      "form": {
+        "status": "PAUSED"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.pause",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.pause",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.campaign.resume",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "campaign_id": "123"
+    },
+    "operation": "campaign.resume",
+    "request": {
+      "content": "status=ACTIVE",
+      "form": {
+        "status": "ACTIVE"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.resume",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.resume",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad_set.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "account_id": "123",
+      "ad_set": {
+        "name": "example"
+      },
+      "campaign_id": "123"
+    },
+    "operation": "ad_set.create",
+    "request": {
+      "content": "name=example&campaign_id=123",
+      "form": {
+        "campaign_id": "123",
+        "name": "example"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/act_123/adsets"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_set.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_set.create",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad_set.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "ad_set_id": "123",
+      "changes": {}
+    },
+    "operation": "ad_set.update",
+    "request": {
+      "content": "",
+      "form": {},
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_set.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_set.update",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad_creative.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "account_id": "123",
+      "creative": {
+        "name": "example"
+      }
+    },
+    "operation": "ad_creative.create",
+    "request": {
+      "content": "name=example",
+      "form": {
+        "name": "example"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/act_123/adcreatives"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_creative.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_creative.create",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "account_id": "123",
+      "ad": {
+        "name": "example"
+      },
+      "ad_set_id": "123",
+      "creative_id": "123"
+    },
+    "operation": "ad.create",
+    "request": {
+      "content": "name=example&adset_id=123&creative=%7B%22creative_id%22%3A%22123%22%7D",
+      "form": {
+        "adset_id": "123",
+        "creative": "{\"creative_id\":\"123\"}",
+        "name": "example"
+      },
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/act_123/ads"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad.create",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "ad_id": "123",
+      "changes": {}
+    },
+    "operation": "ad.update",
+    "request": {
+      "content": "",
+      "form": {},
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad.update",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.insights.fetch",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "after": "page",
+      "breakdowns": [
+        "country"
+      ],
+      "fields": [
+        "impressions"
+      ],
+      "scope_id": "123",
+      "time_range": {
+        "since": "2026-01-01",
+        "until": "2026-01-02"
+      }
+    },
+    "operation": "insights.fetch",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://graph.facebook.com/v25.0/123/insights?fields=impressions&time_range=%7B%22since%22%3A%222026-01-01%22%2C%22until%22%3A%222026-01-02%22%7D&breakdowns=country&after=page"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "insights.fetch",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "insights.fetch",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.campaign_budget.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "budget": {},
+      "campaign_id": "123"
+    },
+    "operation": "campaign_budget.update",
+    "request": {
+      "content": "",
+      "form": {},
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign_budget.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign_budget.update",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.ad_set_budget.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "ad_set_id": "123",
+      "budget": {}
+    },
+    "operation": "ad_set_budget.update",
+    "request": {
+      "content": "",
+      "form": {},
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "ad_set_budget.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "ad_set_budget.update",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "meta.conversions.send",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "meta-ads",
+    "data": {
+      "dataset_id": "123",
+      "events": [
+        {
+          "action_source": "website",
+          "event_name": "Purchase",
+          "event_time": 1,
+          "user_data": {
+            "em": [
+              "hashed-email"
+            ]
+          }
+        }
+      ]
+    },
+    "operation": "conversions.send",
+    "request": {
+      "content": "{\"data\":[{\"event_name\":\"Purchase\",\"event_time\":1,\"action_source\":\"website\",\"user_data\":{\"em\":[\"hashed-email\"]}}]}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "data": [
+          {
+            "action_source": "website",
+            "event_name": "Purchase",
+            "event_time": 1,
+            "user_data": {
+              "em": [
+                "hashed-email"
+              ]
+            }
+          }
+        ]
+      },
+      "method": "POST",
+      "url": "https://graph.facebook.com/v25.0/123/events"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "conversions.send",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "meta-ads"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "conversions.send",
+        "provider": "meta-ads",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "microsoft-365.graph.mail.send",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "microsoft-365",
+    "data": {
+      "message": {}
+    },
+    "operation": "graph.mail.send",
+    "request": {
+      "content": "{\"message\":{},\"saveToSentItems\":true}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "message": {},
+        "saveToSentItems": true
+      },
+      "method": "POST",
+      "url": "https://graph.microsoft.com/v1.0/me/sendMail"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "graph.mail.send",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "microsoft-365"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "graph.mail.send",
+        "provider": "microsoft-365",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "microsoft-365.graph.calendar.event.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "microsoft-365",
+    "data": {
+      "event": {
+        "end": "example",
+        "start": "example"
+      }
+    },
+    "operation": "graph.calendar.event.create",
+    "request": {
+      "content": "{\"start\":\"example\",\"end\":\"example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "end": "example",
+        "start": "example"
+      },
+      "method": "POST",
+      "url": "https://graph.microsoft.com/v1.0/me/calendar/events"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "graph.calendar.event.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "microsoft-365"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "graph.calendar.event.create",
+        "provider": "microsoft-365",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "outreach.sequence_state.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "outreach",
+    "data": {
+      "mailbox_id": "123",
+      "prospect_id": "123",
+      "sequence_id": "123"
+    },
+    "operation": "sequence_state.create",
+    "request": {
+      "content": "{\"data\":{\"type\":\"sequenceState\",\"relationships\":{\"sequence\":{\"data\":{\"type\":\"sequence\",\"id\":\"123\"}},\"prospect\":{\"data\":{\"type\":\"prospect\",\"id\":\"123\"}},\"mailbox\":{\"data\":{\"type\":\"mailbox\",\"id\":\"123\"}}}}}",
+      "form": null,
+      "headers": {
+        "Accept": "application/vnd.api+json",
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/vnd.api+json"
+      },
+      "json": {
+        "data": {
+          "relationships": {
+            "mailbox": {
+              "data": {
+                "id": "123",
+                "type": "mailbox"
+              }
+            },
+            "prospect": {
+              "data": {
+                "id": "123",
+                "type": "prospect"
+              }
+            },
+            "sequence": {
+              "data": {
+                "id": "123",
+                "type": "sequence"
+              }
+            }
+          },
+          "type": "sequenceState"
+        }
+      },
+      "method": "POST",
+      "url": "https://api.outreach.io/api/v2/sequenceStates"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "sequence_state.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "outreach"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "sequence_state.create",
+        "provider": "outreach",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "pipedrive.deals.list",
+    "auth": {
+      "config": {
+        "api_domain": "https://acme.pipedrive.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "pipedrive",
+    "data": {
+      "cursor": "cursor",
+      "limit": 2,
+      "organization_id": "43",
+      "owner_id": "44",
+      "person_id": "42",
+      "pipeline_id": "45",
+      "stage_id": "46",
+      "status": "open"
+    },
+    "operation": "deals.list",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://acme.pipedrive.com/api/v2/deals?owner_id=44&person_id=42&org_id=43&pipeline_id=45&stage_id=46&status=open&limit=2&cursor=cursor"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "deals.list",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "pipedrive"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "deals.list",
+        "provider": "pipedrive",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "pipedrive.deals.search",
+    "auth": {
+      "config": {
+        "api_domain": "https://acme.pipedrive.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "pipedrive",
+    "data": {
+      "cursor": "cursor",
+      "limit": 2,
+      "organization_id": "43",
+      "person_id": "42",
+      "term": "example"
+    },
+    "operation": "deals.search",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://acme.pipedrive.com/api/v2/deals/search?term=example&organization_id=43&person_id=42&limit=2&cursor=cursor"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "deals.search",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "pipedrive"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "deals.search",
+        "provider": "pipedrive",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesforce.account.upsert_by_external_id",
+    "auth": {
+      "config": {
+        "instance_url": "https://acme.salesforce.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesforce",
+    "data": {
+      "account": {
+        "properties": {
+          "External_Id__c": "external/123",
+          "Name": "Example"
+        }
+      },
+      "external_id_field": "External_Id__c",
+      "external_id_value": "external/123",
+      "update_only": true
+    },
+    "operation": "account.upsert_by_external_id",
+    "request": {
+      "content": "{\"Name\":\"Example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "Name": "Example"
+      },
+      "method": "PATCH",
+      "url": "https://acme.salesforce.com/services/data/v61.0/sobjects/Account/External_Id__c/external%2F123?updateOnly=true"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "account.upsert_by_external_id",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesforce"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "account.upsert_by_external_id",
+        "provider": "salesforce",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesforce.lead.upsert_by_external_id",
+    "auth": {
+      "config": {
+        "instance_url": "https://acme.salesforce.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesforce",
+    "data": {
+      "external_id_field": "External_Id__c",
+      "external_id_value": "external/123",
+      "lead": {
+        "properties": {
+          "External_Id__c": "external/123",
+          "Name": "Example"
+        }
+      },
+      "update_only": true
+    },
+    "operation": "lead.upsert_by_external_id",
+    "request": {
+      "content": "{\"Name\":\"Example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "Name": "Example"
+      },
+      "method": "PATCH",
+      "url": "https://acme.salesforce.com/services/data/v61.0/sobjects/Lead/External_Id__c/external%2F123?updateOnly=true"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "lead.upsert_by_external_id",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesforce"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "lead.upsert_by_external_id",
+        "provider": "salesforce",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesforce.contact.upsert_by_external_id",
+    "auth": {
+      "config": {
+        "instance_url": "https://acme.salesforce.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesforce",
+    "data": {
+      "contact": {
+        "properties": {
+          "External_Id__c": "external/123",
+          "Name": "Example"
+        }
+      },
+      "external_id_field": "External_Id__c",
+      "external_id_value": "external/123",
+      "update_only": true
+    },
+    "operation": "contact.upsert_by_external_id",
+    "request": {
+      "content": "{\"Name\":\"Example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "Name": "Example"
+      },
+      "method": "PATCH",
+      "url": "https://acme.salesforce.com/services/data/v61.0/sobjects/Contact/External_Id__c/external%2F123?updateOnly=true"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "contact.upsert_by_external_id",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesforce"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "contact.upsert_by_external_id",
+        "provider": "salesforce",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesforce.task.create",
+    "auth": {
+      "config": {
+        "instance_url": "https://acme.salesforce.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesforce",
+    "data": {
+      "task": {
+        "Subject": "example"
+      }
+    },
+    "operation": "task.create",
+    "request": {
+      "content": "{\"Subject\":\"example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "Subject": "example"
+      },
+      "method": "POST",
+      "url": "https://acme.salesforce.com/services/data/v61.0/sobjects/Task"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "task.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesforce"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "task.create",
+        "provider": "salesforce",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesforce.opportunities.query",
+    "auth": {
+      "config": {
+        "instance_url": "https://acme.salesforce.com"
+      },
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesforce",
+    "data": {
+      "query": "SELECT Id FROM Opportunity"
+    },
+    "operation": "opportunities.query",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://acme.salesforce.com/services/data/v61.0/query?q=SELECT+Id+FROM+Opportunity"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "opportunities.query",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesforce"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "opportunities.query",
+        "provider": "salesforce",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "salesloft.cadence_membership.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "oauth2_authorization_code"
+    },
+    "connector": "salesloft",
+    "data": {
+      "cadence_id": "123",
+      "person_id": "123"
+    },
+    "operation": "cadence_membership.create",
+    "request": {
+      "content": "{\"cadence_id\":\"123\",\"person_id\":\"123\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "cadence_id": "123",
+        "person_id": "123"
+      },
+      "method": "POST",
+      "url": "https://api.salesloft.com/v2/cadence_memberships"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "cadence_membership.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "salesloft"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "cadence_membership.create",
+        "provider": "salesloft",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.campaign.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign": {
+        "name": "example"
+      }
+    },
+    "operation": "campaign.create",
+    "request": {
+      "content": "{\"name\":\"example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "name": "example"
+      },
+      "method": "POST",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.create",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.campaign.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign_id": "123",
+      "changes": {}
+    },
+    "operation": "campaign.update",
+    "request": {
+      "content": "{}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {},
+      "method": "PUT",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.update",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.campaign.pause",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign_id": "123"
+    },
+    "operation": "campaign.pause",
+    "request": {
+      "content": "{\"is_active\":false}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "is_active": false
+      },
+      "method": "PUT",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.pause",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.pause",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.campaign.resume",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign_id": "123"
+    },
+    "operation": "campaign.resume",
+    "request": {
+      "content": "{\"is_active\":true}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "is_active": true
+      },
+      "method": "PUT",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "campaign.resume",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "campaign.resume",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.account.get",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {},
+    "operation": "account.get",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/users/current/account"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "account.get",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "account.get",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.item.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign_id": "123",
+      "item": {
+        "url": "https://example.test/item"
+      }
+    },
+    "operation": "item.create",
+    "request": {
+      "content": "{\"url\":\"https://example.test/item\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "url": "https://example.test/item"
+      },
+      "method": "POST",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/123/items/"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "item.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "item.create",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.item.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "campaign_id": "123",
+      "changes": {},
+      "item_id": "123"
+    },
+    "operation": "item.update",
+    "request": {
+      "content": "{}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {},
+      "method": "POST",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/campaigns/123/items/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "item.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "item.update",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.report.fetch",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "dimension": "day",
+      "end_date": "2026-01-02",
+      "start_date": "2026-01-01"
+    },
+    "operation": "report.fetch",
+    "request": {
+      "content": "",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": null,
+      "method": "GET",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/reports/campaign-summary/dimensions/day?start_date=2026-01-01&end_date=2026-01-02"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "report.fetch",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "report.fetch",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.conversion_rule.create",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "conversion_rule": {
+        "display_name": "example"
+      }
+    },
+    "operation": "conversion_rule.create",
+    "request": {
+      "content": "{\"display_name\":\"example\"}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {
+        "display_name": "example"
+      },
+      "method": "POST",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/universal_pixel/conversion_rule"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "conversion_rule.create",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "conversion_rule.create",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  },
+  {
+    "action": "taboola.conversion_rule.update",
+    "auth": {
+      "config": {},
+      "fields": {
+        "access_token": "canary-access_token"
+      },
+      "method": "client_credentials"
+    },
+    "connector": "taboola",
+    "data": {
+      "account_id": "123",
+      "changes": {},
+      "conversion_rule_id": "123"
+    },
+    "operation": "conversion_rule.update",
+    "request": {
+      "content": "{}",
+      "form": null,
+      "headers": {
+        "Authorization": "Bearer canary-access_token",
+        "Content-Type": "application/json"
+      },
+      "json": {},
+      "method": "PUT",
+      "url": "https://backstage.taboola.com/backstage/api/1.0/123/universal_pixel/conversion_rule/123"
+    },
+    "response": {
+      "id": "provider-result"
+    },
+    "result": {
+      "cost_cents": 0,
+      "metadata_json": {
+        "operation": "conversion_rule.update",
+        "request_id": "request-fixture",
+        "status_code": 200,
+        "vendor": "taboola"
+      },
+      "output_json": {
+        "body": {
+          "id": "provider-result"
+        },
+        "operation": "conversion_rule.update",
+        "provider": "taboola",
+        "status_code": 200
+      }
+    }
+  }
+]

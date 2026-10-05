@@ -1,0 +1,239 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token",
+        "api_key"
+      ],
+      "config": {},
+      "description": "Add an explicit person ID to a Salesloft cadence ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cadence_id": {
+            "description": "Provider-native cadence id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "person_id": {
+            "description": "Provider-native person id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "user_id": {
+            "description": "Provider-native user id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "cadence_id",
+          "person_id"
+        ],
+        "type": "object"
+      },
+      "key": "salesloft.cadence_membership.create",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Create Salesloft Cadence Membership",
+        "required_scopes": [
+          "cadences:write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "cadence_membership.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "base_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Register a Salesloft OAuth app with your callback and cadences:write scope. Supply the resulting access token. Customer API keys are also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Salesloft"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "base_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Register a Salesloft OAuth app with your callback and cadences:write scope. Supply the resulting access token. Customer API keys are also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "base_url": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a customer api_key for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "key": "api_key",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "api-key",
+        "description": "Register a Salesloft OAuth app with your callback and cadences:write scope. Supply the resulting access token. Customer API keys are also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "API key"
+      }
+    }
+  ],
+  "auth_type": "oauth-or-api-key",
+  "config": {
+    "setup": {
+      "billing_url": "https://www.salesloft.com/pricing",
+      "console_url": "https://accounts.salesloft.com/oauth/applications",
+      "credential_label": "Salesloft OAuth credential or API key",
+      "credential_url": "https://accounts.salesloft.com/oauth/applications",
+      "docs_url": "https://developers.salesloft.com/",
+      "homepage_url": "https://www.salesloft.com/",
+      "setup_note": "Register a Salesloft OAuth app with your callback and cadences:write scope. Supply the resulting access token. Customer API keys are also supported.",
+      "signup_url": "https://www.salesloft.com/talk-to-sales",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "salesloft",
+  "description": "Salesloft cadence provider contract.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/jpeg",
+    "path": "connectors/salesloft/assets/icon.jpeg"
+  },
+  "implementation": "stackos_connectors.connectors.salesloft.actions:SalesloftActionConnector",
+  "name": "Salesloft",
+  "schema_version": "stackos.connector.v1"
+}

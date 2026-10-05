@@ -1,0 +1,302 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Send a Gmail message for an explicit user ID and mail payload.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "additionalProperties": false,
+            "properties": {
+              "raw": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "raw"
+            ],
+            "type": "object"
+          },
+          "user_id": {
+            "description": "Provider-native user id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "type": "object"
+      },
+      "key": "google-workspace.gmail.message.send",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Send Google Workspace Gmail Message",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/gmail.send"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "gmail.message.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token",
+        "service-account"
+      ],
+      "config": {},
+      "description": "Create a Google Calendar event for an explicit calendar ID and event payload.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "calendar_id": {
+            "description": "Provider-native calendar id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "conference_data_version": {
+            "type": "integer"
+          },
+          "event": {
+            "additionalProperties": true,
+            "required": [
+              "start",
+              "end"
+            ],
+            "type": "object"
+          },
+          "send_updates": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "calendar_id",
+          "event"
+        ],
+        "type": "object"
+      },
+      "key": "google-workspace.calendar.event.create",
+      "metadata": {
+        "capability": "outbound-operations",
+        "name": "Create Google Workspace Calendar Event",
+        "required_scopes": [
+          "https://www.googleapis.com/auth/calendar.events"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "calendar.event.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "delegated_subject": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain a Google OAuth access token or use a service-account JSON key to acquire one. Without a delegated user, share a calendar with the service-account email and use its explicit calendar ID. Gmail, primary calendar, and attendee invitations require a Workspace administrator to authorize domain-wide delegation and an explicit delegated_subject. Personal Gmail requires OAuth.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Google"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "delegated_subject": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Obtain a Google OAuth access token or use a service-account JSON key to acquire one. Without a delegated user, share a calendar with the service-account email and use its explicit calendar ID. Gmail, primary calendar, and attendee invitations require a Workspace administrator to authorize domain-wide delegation and an explicit delegated_subject. Personal Gmail requires OAuth.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "delegated_subject": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication. Supply delegated_subject when using domain-wide delegation.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "service-account",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Use a Google service-account JSON key to acquire an access token. Obtain a Google OAuth access token or use a service-account JSON key to acquire one. Without a delegated user, share a calendar with the service-account email and use its explicit calendar ID. Gmail, primary calendar, and attendee invitations require a Workspace administrator to authorize domain-wide delegation and an explicit delegated_subject. Personal Gmail requires OAuth.",
+        "fields": [
+          {
+            "description": null,
+            "key": "service_account_json",
+            "label": "Service-account JSON key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "delegated_subject",
+            "label": "Delegated Workspace user",
+            "options": null,
+            "placeholder": "authorized-user@example.com",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "Service account"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "setup": {
+      "billing_url": "https://support.google.com/a/answer/1230658",
+      "console_url": "https://console.cloud.google.com/",
+      "credential_label": "Google Workspace credential",
+      "credential_url": "https://console.cloud.google.com/apis/credentials",
+      "docs_url": "https://developers.google.com/workspace",
+      "homepage_url": "https://workspace.google.com/",
+      "setup_note": "Obtain a Google OAuth access token or use a service-account JSON key to acquire one. Without a delegated user, share a calendar with the service-account email and use its explicit calendar ID. Gmail, primary calendar, and attendee invitations require a Workspace administrator to authorize domain-wide delegation and an explicit delegated_subject. Personal Gmail requires OAuth.",
+      "signup_url": "https://workspace.google.com/business/signup/welcome",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "google-workspace",
+  "description": "Gmail send and Google Calendar event provider contract.",
+  "icon": {
+    "kind": "wordmark",
+    "media_type": "image/png",
+    "path": "connectors/google_workspace/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.google_workspace.actions:GoogleWorkspaceActionConnector",
+  "name": "Google Workspace",
+  "schema_version": "stackos.connector.v1"
+}

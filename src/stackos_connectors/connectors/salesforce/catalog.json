@@ -1,0 +1,490 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Upsert a Salesforce Account using an explicit external ID field and value.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account": {
+            "additionalProperties": true,
+            "properties": {
+              "properties": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "properties"
+            ],
+            "type": "object"
+          },
+          "external_id_field": {
+            "description": "Provider-native external id field.",
+            "type": "string"
+          },
+          "external_id_value": {
+            "type": "string"
+          },
+          "update_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "external_id_field",
+          "account",
+          "update_only"
+        ],
+        "type": "object"
+      },
+      "key": "salesforce.account.upsert_by_external_id",
+      "metadata": {
+        "capability": "crm-operations",
+        "name": "Upsert Salesforce Account By External ID",
+        "required_scopes": [
+          "api"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "account.upsert_by_external_id",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Upsert a Salesforce Lead using an explicit external ID field and value.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "external_id_field": {
+            "description": "Provider-native external id field.",
+            "type": "string"
+          },
+          "external_id_value": {
+            "type": "string"
+          },
+          "lead": {
+            "additionalProperties": true,
+            "properties": {
+              "properties": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "properties"
+            ],
+            "type": "object"
+          },
+          "update_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "external_id_field",
+          "lead",
+          "update_only"
+        ],
+        "type": "object"
+      },
+      "key": "salesforce.lead.upsert_by_external_id",
+      "metadata": {
+        "capability": "lead-management",
+        "name": "Upsert Salesforce Lead By External ID",
+        "required_scopes": [
+          "api"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "lead.upsert_by_external_id",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Upsert a Salesforce Contact using an explicit external ID field and value.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "contact": {
+            "additionalProperties": true,
+            "properties": {
+              "properties": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "properties"
+            ],
+            "type": "object"
+          },
+          "external_id_field": {
+            "description": "Provider-native external id field.",
+            "type": "string"
+          },
+          "external_id_value": {
+            "type": "string"
+          },
+          "update_only": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "external_id_field",
+          "contact",
+          "update_only"
+        ],
+        "type": "object"
+      },
+      "key": "salesforce.contact.upsert_by_external_id",
+      "metadata": {
+        "capability": "crm-operations",
+        "name": "Upsert Salesforce Contact By External ID",
+        "required_scopes": [
+          "api"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "contact.upsert_by_external_id",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Salesforce task from explicit task input.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "task": {
+            "additionalProperties": true,
+            "properties": {
+              "ActivityDate": {
+                "type": "string"
+              },
+              "Description": {
+                "type": "string"
+              },
+              "OwnerId": {
+                "type": "string"
+              },
+              "Priority": {
+                "type": "string"
+              },
+              "Status": {
+                "type": "string"
+              },
+              "Subject": {
+                "type": "string"
+              },
+              "WhatId": {
+                "type": "string"
+              },
+              "WhoId": {
+                "type": "string"
+              },
+              "properties": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "Subject"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "task"
+        ],
+        "type": "object"
+      },
+      "key": "salesforce.task.create",
+      "metadata": {
+        "capability": "crm-operations",
+        "name": "Create Salesforce Task",
+        "required_scopes": [
+          "api"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "task.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Query Salesforce Opportunity records with an explicit SOQL query.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "description": "Provider-native query.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "key": "salesforce.opportunities.query",
+      "metadata": {
+        "capability": "pipeline-management",
+        "name": "Query Salesforce Opportunities",
+        "required_scopes": [
+          "api"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "opportunities.query",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          },
+          "instance_url": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance_url"
+        ],
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Create or use a Salesforce connected app with your OAuth callback and api and refresh_token scopes. Supply the resulting access token and instance URL.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Connected App Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Connected App Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "environment",
+            "label": "Login Environment",
+            "options": null,
+            "placeholder": "production, sandbox, or my-domain",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": null,
+            "key": "login_domain",
+            "label": "Salesforce My Domain",
+            "options": null,
+            "placeholder": "company.my.salesforce.com",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": null,
+            "key": "api_version",
+            "label": "REST API Version",
+            "options": null,
+            "placeholder": "v61.0",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Salesforce"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          },
+          "instance_url": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance_url"
+        ],
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Create or use a Salesforce connected app with your OAuth callback and api and refresh_token scopes. Supply the resulting access token and instance URL.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "instance_url",
+            "label": "Salesforce Instance URL",
+            "options": null,
+            "placeholder": "https://company.my.salesforce.com",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": null,
+            "key": "api_version",
+            "label": "REST API Version",
+            "options": null,
+            "placeholder": "v61.0",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "scopes": [
+      "api",
+      "refresh_token"
+    ],
+    "setup": {
+      "billing_url": "https://www.salesforce.com/pricing/",
+      "console_url": "https://login.salesforce.com/",
+      "credential_label": "Salesforce OAuth access token",
+      "credential_url": "https://help.salesforce.com/s/articleView?id=sf.connected_app_create.htm&type=5",
+      "docs_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
+      "fallback_reason": "Salesforce credential setup is org-specific; connected-app creation is the closest official public setup page.",
+      "fallback_url": "https://help.salesforce.com/s/articleView?id=sf.connected_app_create.htm&type=5",
+      "homepage_url": "https://www.salesforce.com/",
+      "setup_note": "Create or use a Salesforce connected app with your OAuth callback and api and refresh_token scopes. Supply the resulting access token and instance URL.",
+      "signup_url": "https://developer.salesforce.com/signup",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "directional",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "salesforce",
+  "description": "Salesforce provider contract for accounts, leads, contacts, opportunities, notes, tasks, and pipeline reads.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/salesforce/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.salesforce.actions:SalesforceActionConnector",
+  "name": "Salesforce",
+  "schema_version": "stackos.connector.v1"
+}

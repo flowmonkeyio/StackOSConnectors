@@ -1,0 +1,449 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token",
+        "api_token"
+      ],
+      "config": {},
+      "description": "List bounded Pipedrive deal context for pipeline review.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "custom_fields": {
+            "type": "string"
+          },
+          "filter_id": {
+            "type": "integer"
+          },
+          "include_fields": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "organization_id": {
+            "description": "Provider-native organization id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "owner_id": {
+            "description": "Provider-native owner id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "person_id": {
+            "description": "Provider-native person id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "pipeline_id": {
+            "description": "Provider-native pipeline id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "sort_by": {
+            "type": "string"
+          },
+          "sort_direction": {
+            "type": "string"
+          },
+          "stage_id": {
+            "description": "Provider-native stage id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "updated_since": {
+            "type": "string"
+          },
+          "updated_until": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "pipedrive.deals.list",
+      "metadata": {
+        "capability": "pipeline-management",
+        "name": "List Pipedrive Deals",
+        "required_scopes": [
+          "deals:read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "deals.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token",
+        "api_token"
+      ],
+      "config": {},
+      "description": "Search bounded Pipedrive deal context for pipeline review.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "exact_match": {
+            "type": "boolean"
+          },
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "include_fields": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "organization_id": {
+            "description": "Provider-native organization id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "person_id": {
+            "description": "Provider-native person id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "term": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "term"
+        ],
+        "type": "object"
+      },
+      "key": "pipedrive.deals.search",
+      "metadata": {
+        "capability": "pipeline-management",
+        "name": "Search Pipedrive Deals",
+        "required_scopes": [
+          "search:read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "deals.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "anyOf": [
+          {
+            "required": [
+              "api_domain"
+            ]
+          },
+          {
+            "required": [
+              "base_url"
+            ]
+          },
+          {
+            "required": [
+              "company_domain"
+            ]
+          }
+        ],
+        "properties": {
+          "api_domain": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "base_url": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "company_domain": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Register a Pipedrive app with your OAuth callback and deals:read plus search:read scopes. Supply its access token and tenant API domain. A personal API token is also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Pipedrive"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "anyOf": [
+          {
+            "required": [
+              "api_domain"
+            ]
+          },
+          {
+            "required": [
+              "base_url"
+            ]
+          },
+          {
+            "required": [
+              "company_domain"
+            ]
+          }
+        ],
+        "properties": {
+          "api_domain": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "base_url": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "company_domain": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Register a Pipedrive app with your OAuth callback and deals:read plus search:read scopes. Supply its access token and tenant API domain. A personal API token is also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "company_domain",
+            "label": "Company Domain",
+            "options": null,
+            "placeholder": "company-subdomain",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "OAuth2 access token"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "anyOf": [
+          {
+            "required": [
+              "api_domain"
+            ]
+          },
+          {
+            "required": [
+              "base_url"
+            ]
+          },
+          {
+            "required": [
+              "company_domain"
+            ]
+          }
+        ],
+        "properties": {
+          "api_domain": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "base_url": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "company_domain": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a personal api_token for the x-api-token header and the tenant API domain.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_token"
+        ],
+        "type": "object"
+      },
+      "key": "api_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "api-token",
+        "description": "Register a Pipedrive app with your OAuth callback and deals:read plus search:read scopes. Supply its access token and tenant API domain. A personal API token is also supported.",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_token",
+            "label": "Personal API Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "company_domain",
+            "label": "Company Domain",
+            "options": null,
+            "placeholder": "company-subdomain",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "Personal API token"
+      }
+    }
+  ],
+  "auth_type": "oauth-or-api-token",
+  "config": {
+    "setup": {
+      "billing_url": "https://www.pipedrive.com/en/pricing",
+      "console_url": "https://app.pipedrive.com/",
+      "credential_label": "Pipedrive OAuth credential or personal API token",
+      "credential_url": "https://support.pipedrive.com/en/article/how-can-i-find-my-personal-api-key",
+      "docs_url": "https://developers.pipedrive.com/docs/api/v1",
+      "homepage_url": "https://www.pipedrive.com/",
+      "setup_note": "Register a Pipedrive app with your OAuth callback and deals:read plus search:read scopes. Supply its access token and tenant API domain. A personal API token is also supported.",
+      "signup_url": "https://www.pipedrive.com/en/register",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "pipedrive",
+  "description": "Pipedrive CRM provider contract for organizations, people, deals, activities, and notes.",
+  "icon": {
+    "kind": "wordmark",
+    "media_type": "image/png",
+    "path": "connectors/pipedrive/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.pipedrive.actions:PipedriveActionConnector",
+  "name": "Pipedrive",
+  "schema_version": "stackos.connector.v1"
+}

@@ -1,0 +1,316 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Search Apollo people from explicit criteria. Requires an Apollo master API key.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "filters": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "page": {
+            "type": "integer"
+          },
+          "per_page": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "key": "apollo.people.search",
+      "metadata": {
+        "capability": "lead-management",
+        "name": "Search Apollo People",
+        "risk_level": "cost"
+      },
+      "operation": "people.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Enrich one person using explicit contact details.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "record": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "reveal_personal_emails": {
+            "type": "boolean"
+          },
+          "reveal_phone_number": {
+            "type": "boolean"
+          },
+          "run_waterfall_email": {
+            "type": "boolean"
+          },
+          "run_waterfall_phone": {
+            "type": "boolean"
+          },
+          "webhook_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "record"
+        ],
+        "type": "object"
+      },
+      "key": "apollo.people.enrich",
+      "metadata": {
+        "capability": "enrichment",
+        "name": "Enrich Apollo Person",
+        "risk_level": "cost"
+      },
+      "operation": "people.enrich",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Enrich multiple people using explicit contact details.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "details": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array"
+          },
+          "reveal_personal_emails": {
+            "type": "boolean"
+          },
+          "reveal_phone_number": {
+            "type": "boolean"
+          },
+          "run_waterfall_email": {
+            "type": "boolean"
+          },
+          "run_waterfall_phone": {
+            "type": "boolean"
+          },
+          "webhook_url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "details"
+        ],
+        "type": "object"
+      },
+      "key": "apollo.people.bulk_enrich",
+      "metadata": {
+        "capability": "enrichment",
+        "name": "Bulk Enrich Apollo People",
+        "risk_level": "cost"
+      },
+      "operation": "people.bulk_enrich",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Enrich one organization using explicit company details.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "domain": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "type": "object"
+      },
+      "key": "apollo.organization.enrich",
+      "metadata": {
+        "capability": "enrichment",
+        "name": "Enrich Apollo Organization",
+        "risk_level": "cost"
+      },
+      "operation": "organization.enrich",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {},
+      "description": "Enrich multiple organizations using explicit company details.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "domains": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 10,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "domains"
+        ],
+        "type": "object"
+      },
+      "key": "apollo.organization.bulk_enrich",
+      "metadata": {
+        "capability": "enrichment",
+        "name": "Bulk Enrich Apollo Organizations",
+        "risk_level": "cost"
+      },
+      "operation": "organization.bulk_enrich",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_scope": {
+            "enum": [
+              "master",
+              "endpoint"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_scope"
+        ],
+        "type": "object"
+      },
+      "description": "People API Search requires an Apollo master API key; enrichment can use endpoint-specific keys when Apollo allows them.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "key": "api_key",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "api-key",
+        "description": "Create an Apollo API key. People API Search requires a master API key; set access_scope to master only for such a key.",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": "Select master only when this credential is allowed to call Apollo People API Search.",
+            "key": "access_scope",
+            "label": "Access Scope",
+            "options": [
+              {
+                "label": "Master API key",
+                "value": "master"
+              },
+              {
+                "label": "Endpoint-specific key",
+                "value": "endpoint"
+              }
+            ],
+            "placeholder": null,
+            "required": true,
+            "secret": false,
+            "type": "select"
+          }
+        ],
+        "interactive": false,
+        "label": "API key"
+      }
+    }
+  ],
+  "auth_type": "api-key",
+  "config": {
+    "setup": {
+      "billing_url": "https://www.apollo.io/pricing",
+      "console_url": "https://app.apollo.io/",
+      "credential_label": "Apollo API key",
+      "credential_url": "https://docs.apollo.io/docs/create-api-key",
+      "docs_url": "https://docs.apollo.io/",
+      "homepage_url": "https://www.apollo.io/",
+      "setup_note": "Create an Apollo API key. People API Search requires a master API key; set access_scope to master only for such a key.",
+      "signup_url": "https://app.apollo.io/#/signup",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Create an Apollo API key. People API Search requires a master API key; set access_scope to master only for such a key."
+  },
+  "connector": "apollo",
+  "description": "Apollo provider contract for people search and endpoint-specific enrichment.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/apollo/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.apollo.actions:ApolloActionConnector",
+  "name": "Apollo",
+  "schema_version": "stackos.connector.v1"
+}

@@ -1,0 +1,593 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Create a Taboola account-scoped campaign from an explicit campaign object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign": {
+            "additionalProperties": true,
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.campaign.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Taboola Campaign",
+        "risk_level": "write"
+      },
+      "operation": "campaign.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Update a Taboola campaign from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.campaign.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Taboola Campaign",
+        "risk_level": "write"
+      },
+      "operation": "campaign.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Pause a Taboola campaign by setting the provider-supported active state.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.campaign.pause",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Pause Taboola Campaign",
+        "risk_level": "write"
+      },
+      "operation": "campaign.pause",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Resume a Taboola campaign by setting the provider-supported active state.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.campaign.resume",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Resume Taboola Campaign",
+        "risk_level": "write"
+      },
+      "operation": "campaign.resume",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Read Taboola account metadata for a provider account ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "filters": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "key": "taboola.account.get",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Get Taboola Account",
+        "risk_level": "read"
+      },
+      "operation": "account.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Create a Taboola campaign item from explicit creative and destination data.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "item": {
+            "additionalProperties": false,
+            "properties": {
+              "url": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id",
+          "item"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.item.create",
+      "metadata": {
+        "capability": "creative-operations",
+        "name": "Create Taboola Item",
+        "risk_level": "write"
+      },
+      "operation": "item.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Update a Taboola campaign item from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "item_id": {
+            "description": "Provider-native item id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id",
+          "item_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.item.update",
+      "metadata": {
+        "capability": "creative-operations",
+        "name": "Update Taboola Item",
+        "risk_level": "write"
+      },
+      "operation": "item.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Fetch a bounded Taboola performance snapshot for an agent-selected scope.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "country": {
+            "type": "string"
+          },
+          "dimension": {
+            "type": "string"
+          },
+          "end_date": {
+            "type": "string"
+          },
+          "partner_name": {
+            "type": "string"
+          },
+          "platform": {
+            "type": "string"
+          },
+          "site": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "account_id",
+          "dimension",
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.report.fetch",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Fetch Taboola Report",
+        "risk_level": "read"
+      },
+      "operation": "report.fetch",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Create a Taboola conversion rule from explicit conversion event and attribution fields.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "conversion_rule": {
+            "additionalProperties": true,
+            "required": [
+              "display_name"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "conversion_rule"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.conversion_rule.create",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Create Taboola Conversion Rule",
+        "risk_level": "write"
+      },
+      "operation": "conversion_rule.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "config": {},
+      "description": "Update a Taboola conversion rule from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "conversion_rule_id": {
+            "description": "Provider-native conversion rule id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "account_id",
+          "conversion_rule_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "taboola.conversion_rule.update",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Update Taboola Conversion Rule",
+        "risk_level": "write"
+      },
+      "operation": "conversion_rule.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "client_credentials",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth-client-credentials",
+        "description": "Register or sign in to Taboola Realize/Backstage and create client credentials for the account. Exchange the client ID and secret for an access token before executing actions.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "Client credentials"
+      }
+    }
+  ],
+  "auth_type": "oauth-client-credentials",
+  "config": {
+    "setup": {
+      "console_url": "https://developers.taboola.com/backstage-api/reference/welcome",
+      "credential_label": "Taboola Backstage client credentials",
+      "credential_url": "https://developers.taboola.com/backstage-api/reference/welcome",
+      "docs_url": "https://developers.taboola.com/backstage-api/reference/welcome",
+      "fallback_reason": "Exact client-credential and billing pages can be account-gated; official Backstage docs are the closest public setup path.",
+      "fallback_url": "https://developers.taboola.com/backstage-api/reference/welcome",
+      "homepage_url": "https://www.taboola.com/",
+      "setup_note": "Register or sign in to Taboola Realize/Backstage and create client credentials for the account. Exchange the client ID and secret for an access token before executing actions.",
+      "signup_url": "https://signup.realize.com/",
+      "url_confidence": {
+        "console_url": "verified",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "taboola",
+  "description": "Taboola Backstage API provider contract for account-scoped campaigns, items, reports, and conversion rules.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/svg+xml",
+    "path": "connectors/taboola/assets/icon.svg"
+  },
+  "implementation": "stackos_connectors.connectors.taboola.actions:TaboolaActionConnector",
+  "name": "Taboola",
+  "schema_version": "stackos.connector.v1"
+}

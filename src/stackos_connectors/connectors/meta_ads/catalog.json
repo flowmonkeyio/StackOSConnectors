@@ -1,0 +1,977 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Read Meta ad account metadata available to the configured credential.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "filters": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "key": "meta.account.list",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "List Meta Ad Accounts",
+        "required_scopes": [
+          "ads_read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "account.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Meta campaign from an explicit agent-supplied campaign object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign": {
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "objective": {
+                "type": "string"
+              },
+              "special_ad_categories": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "objective",
+              "special_ad_categories"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign"
+        ],
+        "type": "object"
+      },
+      "key": "meta.campaign.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Meta Campaign",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Update a Meta campaign from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "campaign_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "meta.campaign.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Meta Campaign",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Pause a Meta campaign by its provider ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "meta.campaign.pause",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Pause Meta Campaign",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign.pause",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Resume a Meta campaign by its provider ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "meta.campaign.resume",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Resume Meta Campaign",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign.resume",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Meta ad set from explicit targeting, placement, budget, and schedule input.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "ad_set": {
+            "additionalProperties": true,
+            "properties": {
+              "budget": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "name": {
+                "type": "string"
+              },
+              "placements": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "schedule": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "targeting": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "account_id",
+          "campaign_id",
+          "ad_set"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad_set.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Meta Ad Set",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_set.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Update a Meta ad set from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_set_id": {
+            "description": "Provider-native ad set id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "ad_set_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad_set.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Meta Ad Set",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_set.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Meta AdCreative from explicit copy, provider asset IDs, and destination metadata.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "creative": {
+            "additionalProperties": true,
+            "properties": {
+              "asset_refs": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "destination": {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              "name": {
+                "type": "string"
+              },
+              "review_notes": {
+                "type": "string"
+              },
+              "text": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "account_id",
+          "creative"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad_creative.create",
+      "metadata": {
+        "capability": "creative-operations",
+        "name": "Create Meta Ad Creative",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_creative.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Create a Meta ad by connecting an ad set ID and creative ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "account_id": {
+            "description": "Provider-native account id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "ad": {
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "tracking": {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "type": "object"
+          },
+          "ad_set_id": {
+            "description": "Provider-native ad set id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "creative_id": {
+            "description": "Provider-native creative id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          }
+        },
+        "required": [
+          "account_id",
+          "ad_set_id",
+          "creative_id",
+          "ad"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad.create",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Create Meta Ad",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Update a Meta ad from an explicit change object.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_id": {
+            "description": "Provider-native ad id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "changes": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "ad_id",
+          "changes"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Meta Ad",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Fetch a bounded Meta performance snapshot for an agent-selected scope.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "breakdowns": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "date_preset": {
+            "type": "string"
+          },
+          "fields": {
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "level": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "scope_id": {
+            "description": "Provider-native scope id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "time_increment": {
+            "type": "string"
+          },
+          "time_range": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "scope_id",
+          "fields"
+        ],
+        "type": "object"
+      },
+      "key": "meta.insights.fetch",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Fetch Meta Insights",
+        "required_scopes": [
+          "ads_read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "insights.fetch",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Apply an explicit campaign-budget-optimization budget change to a Meta campaign ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "budget": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "campaign_id": {
+            "description": "Provider-native campaign id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "campaign_id",
+          "budget"
+        ],
+        "type": "object"
+      },
+      "key": "meta.campaign_budget.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Meta Campaign Budget",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "campaign_budget.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Apply an explicit ad set budget change to a Meta ad set ID.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ad_set_id": {
+            "description": "Provider-native ad set id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "budget": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ad_set_id",
+          "budget"
+        ],
+        "type": "object"
+      },
+      "key": "meta.ad_set_budget.update",
+      "metadata": {
+        "capability": "campaign-management",
+        "name": "Update Meta Ad Set Budget",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "ad_set_budget.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_token"
+      ],
+      "config": {},
+      "description": "Send explicit conversion events already normalized for the Meta Conversions API.",
+      "examples": [],
+      "guidance": "Pass provider-native data and resolved authentication fields for the selected method.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "consent": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "dataset_id": {
+            "description": "Provider-native dataset id.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "events": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "action_source": {
+                  "type": "string"
+                },
+                "event_name": {
+                  "type": "string"
+                },
+                "event_time": {
+                  "type": "integer"
+                },
+                "user_data": {
+                  "additionalProperties": true,
+                  "type": "object"
+                }
+              },
+              "required": [
+                "event_name",
+                "event_time",
+                "action_source",
+                "user_data"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "test_event_code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "dataset_id",
+          "events"
+        ],
+        "type": "object"
+      },
+      "key": "meta.conversions.send",
+      "metadata": {
+        "capability": "media-measurement",
+        "name": "Send Meta Conversion Events",
+        "required_scopes": [
+          "ads_management"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "conversions.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Create or select a Meta developer app and Business portfolio, register your OAuth callback, and request the declared Marketing API permissions. Meta supports exchanging a short-lived login token for a long-lived user token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Meta App ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Meta App Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "api_version",
+            "label": "API Version",
+            "options": null,
+            "placeholder": "v25.0",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": true,
+        "label": "Connect with Meta"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_version": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply a resolved access_token for bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "description": "Obtain an OAuth access token with the provider permissions required by the selected action. Create or select a Meta developer app and Business portfolio, register your OAuth callback, and request the declared Marketing API permissions. Meta supports exchanging a short-lived login token for a long-lived user token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "api_version",
+            "label": "API Version",
+            "options": null,
+            "placeholder": "v25.0",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "Existing OAuth access token"
+      }
+    }
+  ],
+  "auth_type": "oauth",
+  "config": {
+    "scopes": [
+      "ads_management",
+      "ads_read",
+      "business_management"
+    ],
+    "setup": {
+      "billing_url": "https://business.facebook.com/billing_hub",
+      "console_url": "https://developers.facebook.com/apps/",
+      "credential_label": "Meta Marketing API OAuth access token",
+      "credential_url": "https://developers.facebook.com/apps/",
+      "docs_url": "https://developers.facebook.com/docs/marketing-api",
+      "fallback_reason": "Token generation is app/business/account specific; use the official developer app console.",
+      "fallback_url": "https://developers.facebook.com/docs/marketing-api",
+      "homepage_url": "https://www.facebook.com/business/ads",
+      "setup_note": "Create or select a Meta developer app and Business portfolio, register your OAuth callback, and request the declared Marketing API permissions. Meta supports exchanging a short-lived login token for a long-lived user token.",
+      "signup_url": "https://www.facebook.com/business/tools/ads-manager",
+      "url_confidence": {
+        "billing_url": "directional",
+        "console_url": "verified",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "meta-ads",
+  "description": "Meta Marketing API provider contract for ad accounts, campaigns, ad sets, ads, creatives, and insights.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/meta_ads/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.meta_ads.actions:MetaAdsActionConnector",
+  "name": "Meta Ads",
+  "schema_version": "stackos.connector.v1"
+}
