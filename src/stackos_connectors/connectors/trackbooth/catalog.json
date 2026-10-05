@@ -1,0 +1,168 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "api-key"
+      ],
+      "config": {},
+      "description": "Fetch the live catalog visible to the supplied account and acting-account context.",
+      "examples": [],
+      "guidance": "Pass resolved authentication. Optional acting_as_account is provider context; descriptors can be registered as explicit named actions before execution.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "key": "trackbooth.catalog.list",
+      "metadata": {
+        "capability": "agent-api",
+        "name": "List Trackbooth Operations",
+        "risk_level": "read"
+      },
+      "operation": "catalog.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api-key"
+      ],
+      "config": {},
+      "description": "Fetch the bulk live endpoint catalog with version, hash and schema descriptors.",
+      "examples": [],
+      "guidance": "Pass resolved authentication. Optional acting_as_account is provider context; descriptors can be registered as explicit named actions before execution.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "key": "trackbooth.catalog.export",
+      "metadata": {
+        "capability": "agent-api",
+        "name": "Export Trackbooth Catalog",
+        "risk_level": "read"
+      },
+      "operation": "catalog.export",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api-key"
+      ],
+      "config": {},
+      "description": "Fetch one live operation and expand its canonical request and response schemas.",
+      "examples": [],
+      "guidance": "Pass resolved authentication. Optional acting_as_account is provider context; descriptors can be registered as explicit named actions before execution.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "operation_id": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "operation_id"
+        ],
+        "type": "object"
+      },
+      "key": "trackbooth.operation.describe",
+      "metadata": {
+        "capability": "agent-api",
+        "name": "Describe Trackbooth Operation",
+        "risk_level": "read"
+      },
+      "operation": "operation.describe",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_base_url": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Supply the resolved Trackbooth account API key and optional API base URL.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "key": "api-key",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "api-key",
+        "description": "Obtain an account API key with access to the required Agent API operations.",
+        "fields": [
+          {
+            "key": "api_key",
+            "label": "API Key",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "key": "api_base_url",
+            "label": "API URL",
+            "placeholder": "https://apis.trackbooth.com",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "label": "Trackbooth API key"
+      }
+    }
+  ],
+  "auth_type": "api-key",
+  "config": {
+    "auth_header": "X-API-Key",
+    "default_api_base_url": "https://apis.trackbooth.com",
+    "optional_on_behalf_header": "X-Acting-As-Account",
+    "setup": {
+      "credential_label": "Trackbooth API key",
+      "credential_url": "https://apis.trackbooth.com",
+      "fallback_reason": "Account-specific API-key setup; no public self-service API-key page is verified.",
+      "homepage_url": "https://trackbooth.com/",
+      "setup_note": "Use an account API key and its API base URL. The server enforces account permissions and on-behalf authority.",
+      "url_confidence": {
+        "credential_url": "directional",
+        "homepage_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "trackbooth",
+  "description": "Discover Trackbooth Agent API operations and execute explicitly registered native routes.",
+  "icon": {
+    "kind": "wordmark",
+    "media_type": "image/png",
+    "path": "connectors/trackbooth/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.trackbooth.actions:TrackboothActionConnector",
+  "name": "Trackbooth",
+  "schema_version": "stackos.connector.v1"
+}
