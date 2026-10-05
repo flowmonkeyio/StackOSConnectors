@@ -12,6 +12,7 @@ dependencies = [
     "httpx>=0.27",
     "jsonschema>=4.23",
     "pydantic>=2.6",
+    "cryptography>=43",
     "boto3>=1.43.51,<1.44",
     "botocore>=1.43.51,<1.44",
     "s3transfer>=0.19.1,<0.20",

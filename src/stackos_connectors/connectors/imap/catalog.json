@@ -1,0 +1,520 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "List server mailboxes and their flags.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "key": "imap.mailbox.list",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "List IMAP Mailboxes",
+        "risk_level": "read"
+      },
+      "operation": "mailbox.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "Search message UIDs in one mailbox and return an explicit bounded page with UIDVALIDITY.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after_uid": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "criteria": {
+            "additionalProperties": false,
+            "properties": {
+              "before": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "from": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "seen": {
+                "type": "boolean"
+              },
+              "since": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "subject": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "text": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "to": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "uid_from": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "uid_to": {
+                "oneOf": [
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "const": "*"
+                  }
+                ]
+              },
+              "unseen": {
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "expected_uidvalidity": {
+            "description": "UIDVALIDITY epoch observed on a prior mailbox selection.",
+            "minLength": 1,
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "limit": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "mailbox": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "mailbox",
+          "limit"
+        ],
+        "type": "object"
+      },
+      "key": "imap.messages.search",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "Search IMAP Messages",
+        "risk_level": "read"
+      },
+      "operation": "messages.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "Fetch a bounded MIME prefix with BODY.PEEK and return selected fields and completeness facts.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "fields": {
+            "items": {
+              "enum": [
+                "subject",
+                "from",
+                "to",
+                "cc",
+                "date",
+                "message_id",
+                "text_preview",
+                "html_preview",
+                "body_text",
+                "body_html",
+                "flags",
+                "headers"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "mailbox": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "max_body_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "preview_chars": {
+            "description": "Caller-selected character limit for requested preview fields.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "uid": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mailbox",
+          "uid",
+          "max_body_bytes",
+          "fields",
+          "preview_chars"
+        ],
+        "type": "object"
+      },
+      "key": "imap.message.fetch",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "Fetch IMAP Message",
+        "risk_level": "read"
+      },
+      "operation": "message.fetch",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "Fetch one exact RFC822 message read-only and write its MIME and decoded attachments to an empty caller directory under explicit limits.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limits": {
+            "additionalProperties": false,
+            "properties": {
+              "attachment_bytes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "attachment_total_bytes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "attachments": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "message_bytes": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "mime_depth": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "mime_parts": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "message_bytes",
+              "attachments",
+              "attachment_bytes",
+              "attachment_total_bytes",
+              "mime_parts",
+              "mime_depth"
+            ],
+            "type": "object"
+          },
+          "mailbox": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "uid": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mailbox",
+          "uid",
+          "limits"
+        ],
+        "type": "object"
+      },
+      "key": "imap.message.export",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "Export IMAP Message Evidence",
+        "risk_level": "write"
+      },
+      "operation": "message.export",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "Set the Seen flag for one UID and confirm it with exact UID flag readback.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_uidvalidity": {
+            "description": "UIDVALIDITY epoch observed on a prior mailbox selection.",
+            "minLength": 1,
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "mailbox": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "uid": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mailbox",
+          "uid"
+        ],
+        "type": "object"
+      },
+      "key": "imap.message.mark_seen",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "Mark IMAP Message Seen",
+        "risk_level": "write"
+      },
+      "operation": "message.mark_seen",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "imap-password"
+      ],
+      "config": {},
+      "description": "Remove the Seen flag for one UID and confirm it with exact UID flag readback.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "expected_uidvalidity": {
+            "description": "UIDVALIDITY epoch observed on a prior mailbox selection.",
+            "minLength": 1,
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "mailbox": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "uid": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "mailbox",
+          "uid"
+        ],
+        "type": "object"
+      },
+      "key": "imap.message.mark_unseen",
+      "metadata": {
+        "capability": "email-inbox",
+        "name": "Mark IMAP Message Unseen",
+        "risk_level": "write"
+      },
+      "operation": "message.mark_unseen",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "host": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "port": {
+            "maximum": 65535,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "timeout_s": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "tls_ca_pem": {
+            "type": "string"
+          },
+          "tls_mode": {
+            "enum": [
+              "ssl",
+              "starttls",
+              "none"
+            ],
+            "type": "string"
+          },
+          "username": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "host",
+          "port",
+          "username",
+          "tls_mode"
+        ],
+        "type": "object"
+      },
+      "description": "Use the mailbox provider's IMAP host, port, TLS mode, username and password or app password.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "password"
+        ],
+        "type": "object"
+      },
+      "key": "imap-password",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "imap-password",
+        "description": "Use the mailbox provider's IMAP host, port, TLS mode, username and password or app password.",
+        "fields": [
+          {
+            "key": "password",
+            "label": "Password",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "key": "host",
+            "label": "Host",
+            "placeholder": "imap.example.com",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "key": "port",
+            "label": "Port",
+            "placeholder": "993",
+            "required": true,
+            "secret": false,
+            "type": "number"
+          },
+          {
+            "key": "tls_mode",
+            "label": "TLS Mode",
+            "options": [
+              {
+                "label": "SSL",
+                "value": "ssl"
+              },
+              {
+                "label": "STARTTLS",
+                "value": "starttls"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "required": true,
+            "secret": false,
+            "type": "select"
+          },
+          {
+            "key": "username",
+            "label": "Username",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": "Optional public CA certificate bundle, added to default roots with hostname and certificate verification retained.",
+            "key": "tls_ca_pem",
+            "label": "Additional trusted CA certificates (PEM)",
+            "placeholder": "-----BEGIN CERTIFICATE-----",
+            "required": false,
+            "secret": false,
+            "type": "textarea"
+          }
+        ],
+        "interactive": false,
+        "label": "IMAP password"
+      }
+    }
+  ],
+  "auth_type": "imap-password",
+  "config": {
+    "docs": [
+      "https://www.rfc-editor.org/rfc/rfc9051.html"
+    ],
+    "setup": {
+      "credential_label": "IMAP host, username, and password or app password",
+      "docs_url": "https://www.rfc-editor.org/rfc/rfc9051.html",
+      "fallback_reason": "Exact registration, billing, and password pages are mailbox-provider specific.",
+      "fallback_url": "https://www.rfc-editor.org/rfc/rfc9051.html",
+      "setup_note": "Use the mailbox provider's IMAP host, port, TLS mode, username and password or app password.",
+      "url_confidence": {
+        "docs_url": "verified",
+        "fallback_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "imap",
+  "description": "List mailboxes, search and fetch UID-qualified messages, export exact MIME to caller files, and update message flags.",
+  "icon": {
+    "kind": "wordmark-dark",
+    "media_type": "image/svg+xml",
+    "path": "connectors/imap/assets/icon.svg"
+  },
+  "implementation": "stackos_connectors.connectors.imap.actions:ImapActionConnector",
+  "name": "IMAP",
+  "schema_version": "stackos.connector.v1"
+}

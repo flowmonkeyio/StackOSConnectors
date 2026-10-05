@@ -1,0 +1,238 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "smtp-password"
+      ],
+      "config": {},
+      "description": "Submit one MIME email to explicit recipients and return per-recipient SMTP relay acceptance.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "bcc": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "cc": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "from_email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "from_name": {
+            "type": "string"
+          },
+          "headers": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "html": {
+            "type": "string"
+          },
+          "recipients": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "reply_to": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "subject": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "recipients",
+          "from_email",
+          "subject"
+        ],
+        "type": "object"
+      },
+      "key": "smtp.email.send",
+      "metadata": {
+        "capability": "email-send",
+        "name": "Send SMTP Email",
+        "risk_level": "write"
+      },
+      "operation": "email.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "host": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "port": {
+            "maximum": 65535,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "timeout_s": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "tls_mode": {
+            "enum": [
+              "ssl",
+              "starttls",
+              "none"
+            ],
+            "type": "string"
+          },
+          "username": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "host",
+          "port",
+          "username",
+          "tls_mode"
+        ],
+        "type": "object"
+      },
+      "description": "Use the mailbox provider's SMTP host, port, TLS mode, username and password or app password.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "password"
+        ],
+        "type": "object"
+      },
+      "key": "smtp-password",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "smtp-password",
+        "description": "Use the mailbox provider's SMTP host, port, TLS mode, username and password or app password.",
+        "fields": [
+          {
+            "key": "password",
+            "label": "Password",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "key": "host",
+            "label": "Host",
+            "placeholder": "smtp.example.com",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "key": "port",
+            "label": "Port",
+            "placeholder": "587",
+            "required": true,
+            "secret": false,
+            "type": "number"
+          },
+          {
+            "key": "tls_mode",
+            "label": "TLS Mode",
+            "options": [
+              {
+                "label": "STARTTLS",
+                "value": "starttls"
+              },
+              {
+                "label": "SSL",
+                "value": "ssl"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "required": true,
+            "secret": false,
+            "type": "select"
+          },
+          {
+            "key": "username",
+            "label": "Username",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "key": "timeout_s",
+            "label": "Timeout Seconds",
+            "required": false,
+            "secret": false,
+            "type": "number"
+          }
+        ],
+        "interactive": false,
+        "label": "SMTP password"
+      }
+    }
+  ],
+  "auth_type": "smtp-password",
+  "config": {
+    "docs": [
+      "https://www.rfc-editor.org/rfc/rfc5321.html",
+      "https://www.rfc-editor.org/rfc/rfc4954"
+    ],
+    "setup": {
+      "credential_label": "SMTP host, username, and password or app password",
+      "docs_url": "https://www.rfc-editor.org/rfc/rfc5321.html",
+      "fallback_reason": "Exact registration, billing, and password pages are mailbox-provider specific.",
+      "fallback_url": "https://www.rfc-editor.org/rfc/rfc5321.html",
+      "setup_note": "Use the mailbox provider's SMTP host, port, TLS mode, username and password or app password.",
+      "url_confidence": {
+        "docs_url": "verified",
+        "fallback_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "smtp",
+  "description": "Submit email through SMTP and report relay acceptance or recipient rejection; acceptance is not delivery confirmation.",
+  "icon": {
+    "kind": "wordmark-dark",
+    "media_type": "image/svg+xml",
+    "path": "connectors/smtp/assets/icon.svg"
+  },
+  "implementation": "stackos_connectors.connectors.smtp.actions:SmtpActionConnector",
+  "name": "SMTP",
+  "schema_version": "stackos.connector.v1"
+}

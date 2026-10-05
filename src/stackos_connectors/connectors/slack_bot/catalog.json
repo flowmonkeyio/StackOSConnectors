@@ -1,0 +1,557 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Read the bot token identity and workspace through auth.test.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "key": "slack-bot.identity.get",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Get Slack Bot Identity",
+        "risk_level": "read"
+      },
+      "operation": "identity.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Send a message with optional Block Kit content and thread timestamp.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "blocks": {
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 50,
+            "type": "array"
+          },
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "reply_broadcast": {
+            "type": "boolean"
+          },
+          "text": {
+            "maxLength": 40000,
+            "type": "string"
+          },
+          "thread_ts": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "unfurl_links": {
+            "type": "boolean"
+          },
+          "unfurl_media": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.message.send",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Send Slack Message",
+        "risk_level": "write"
+      },
+      "operation": "message.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Upload caller files and complete their publication with an optional comment and thread timestamp.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "files": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filename": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "mime_type": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "path": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "title": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "path",
+                "filename"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "initial_comment": {
+            "type": "string"
+          },
+          "thread_ts": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "channel",
+          "files"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.file.upload",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Upload Slack File",
+        "risk_level": "write"
+      },
+      "operation": "file.upload",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Add a named emoji reaction to a channel and message timestamp.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "timestamp": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "channel",
+          "timestamp",
+          "name"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.reaction.add",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Add Slack Message Reaction",
+        "risk_level": "write"
+      },
+      "operation": "reaction.add",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Delete a message by channel and timestamp when permitted by Slack.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "ts": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "channel",
+          "ts"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.message.delete",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Delete Slack Message",
+        "risk_level": "destructive"
+      },
+      "operation": "message.delete",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Open a conversation for explicit user IDs or a channel ID.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "return_im": {
+            "type": "boolean"
+          },
+          "users": {
+            "oneOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "key": "slack-bot.conversation.open",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Open Slack Conversation",
+        "risk_level": "write"
+      },
+      "operation": "conversation.open",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Read conversation details by channel ID.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "include_num_members": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.conversation.info",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Get Slack Conversation Info",
+        "risk_level": "read"
+      },
+      "operation": "conversation.info",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "List conversations with explicit pagination and type filters.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "exclude_archived": {
+            "type": "boolean"
+          },
+          "limit": {
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "team_id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "types": {
+            "oneOf": [
+              {
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            ]
+          }
+        },
+        "type": "object"
+      },
+      "key": "slack-bot.conversation.list",
+      "metadata": {
+        "capability": "messaging",
+        "name": "List Slack Conversations",
+        "risk_level": "read"
+      },
+      "operation": "conversation.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "List one conversation member page with its continuation cursor.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cursor": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.conversation.members",
+      "metadata": {
+        "capability": "messaging",
+        "name": "List Slack Conversation Members",
+        "risk_level": "read"
+      },
+      "operation": "conversation.members",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "bot-token"
+      ],
+      "config": {},
+      "description": "Fetch a conversation history page with native message content and pagination facts.",
+      "examples": [],
+      "guidance": "Pass native identifiers and resolved authentication. Inspect returned receipts before retrying a mutation.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cursor": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "inclusive": {
+            "type": "boolean"
+          },
+          "latest": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "limit": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "oldest": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "channel"
+        ],
+        "type": "object"
+      },
+      "key": "slack-bot.conversation.history",
+      "metadata": {
+        "capability": "messaging",
+        "name": "Inspect Slack Conversation History",
+        "risk_level": "read"
+      },
+      "operation": "conversation.history",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "api_base_url": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "description": "Install a Slack app with the scopes required by the selected API method and supply its bot token.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "bot_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "bot_token"
+        ],
+        "type": "object"
+      },
+      "key": "bot-token",
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "bot-token",
+        "description": "Install a Slack app with the scopes required by the selected API method and supply its bot token.",
+        "fields": [
+          {
+            "key": "bot_token",
+            "label": "Bot Token",
+            "placeholder": "xoxb-...",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "label": "Slack bot token"
+      }
+    }
+  ],
+  "auth_type": "bot-token",
+  "config": {
+    "docs": [
+      "https://docs.slack.dev/reference/methods/chat.postMessage/"
+    ],
+    "setup": {
+      "billing_url": "https://slack.com/pricing",
+      "console_url": "https://api.slack.com/apps",
+      "credential_label": "Slack bot token",
+      "credential_url": "https://api.slack.com/apps",
+      "docs_url": "https://docs.slack.dev/",
+      "homepage_url": "https://slack.com/",
+      "setup_note": "Install a Slack app with the scopes required by the selected API method and supply its bot token.",
+      "signup_url": "https://slack.com/get-started",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    }
+  },
+  "connector": "slack-bot",
+  "description": "Call Slack Web API methods for identity, messages, conversations, reactions and external file uploads.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/png",
+    "path": "connectors/slack_bot/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.slack_bot.actions:SlackBotActionConnector",
+  "name": "Slack Bot",
+  "schema_version": "stackos.connector.v1"
+}
