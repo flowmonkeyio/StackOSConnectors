@@ -10,8 +10,8 @@ def fast_protocol_waits(monkeypatch):
     async def no_wait(*args, **kwargs):
         return None
 
-    monkeypatch.setattr("stackos_connectors.integrations._base.asyncio.sleep", no_wait)
-    monkeypatch.setattr("stackos_connectors.integrations._rate_limit.TokenBucket.acquire", no_wait)
+    monkeypatch.setattr("stackos_connectors.shared.base.asyncio.sleep", no_wait)
+    monkeypatch.setattr("stackos_connectors.shared.rate_limit.TokenBucket.acquire", no_wait)
 
 
 @pytest.fixture(autouse=True)

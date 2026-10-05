@@ -10,8 +10,8 @@ from typing import Any, ClassVar
 import httpx
 import pytest
 
+from stackos_connectors.connectors.ftp.integration import FtpIntegration
 from stackos_connectors.errors import IntegrationDownError
-from stackos_connectors.integrations.ftp import FtpIntegration
 
 
 class _AuthFTP:
@@ -80,7 +80,7 @@ def test_ftp_auth_probe_rejects_url_in_host() -> None:
 def test_ftp_auth_probe_protects_ftps_data_and_returns_safe_metadata(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.integrations.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.integration as ftp_module
 
     _AuthFTP.instances.clear()
     _AuthFTP.pwd_value = "/"
@@ -120,7 +120,7 @@ def test_ftp_auth_probe_protects_ftps_data_and_returns_safe_metadata(
 def test_ftp_auth_probe_exact_redacts_password_echoed_by_pwd(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.integrations.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.integration as ftp_module
 
     _AuthFTP.instances.clear()
     _AuthFTP.pwd_value = "/server/ftp-secret\r\n"
@@ -143,7 +143,7 @@ def test_ftp_auth_probe_exact_redacts_password_echoed_by_pwd(
 
 
 def test_ftp_auth_probe_reports_sanitized_login_rejection(monkeypatch: pytest.MonkeyPatch) -> None:
-    import stackos_connectors.integrations.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.integration as ftp_module
 
     _RejectingAuthFTP.instances.clear()
     monkeypatch.setattr(ftp_module.ftplib, "FTP", _RejectingAuthFTP)

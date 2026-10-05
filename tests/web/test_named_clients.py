@@ -264,7 +264,9 @@ async def test_http_received_response_is_never_reported_as_no_dispatch(status, b
     client = ConnectorClient(
         registry=ConnectorRegistry(
             actions=[definition],
-            implementations={"http": "stackos_connectors.actions.http:HttpActionConnector"},
+            implementations={
+                "http": "stackos_connectors.connectors.http.actions:HttpActionConnector"
+            },
         )
     )
     async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:

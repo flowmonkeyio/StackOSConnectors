@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.integrations.jina_reader import JinaReaderIntegration
+from stackos_connectors.connectors.jina.integration import JinaReaderIntegration
 
 
 def test_read_returns_markdown(httpx_mock: HTTPXMock) -> None:

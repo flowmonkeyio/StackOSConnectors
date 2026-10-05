@@ -10,9 +10,11 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
+from stackos_connectors.connectors.google_search_console.integration import (
+    GoogleSearchConsoleIntegration,
+)
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations._base import MAX_LOG_BYTES
-from stackos_connectors.integrations.google_search_console import GoogleSearchConsoleIntegration
+from stackos_connectors.shared.base import MAX_LOG_BYTES
 
 
 def _payload() -> bytes:

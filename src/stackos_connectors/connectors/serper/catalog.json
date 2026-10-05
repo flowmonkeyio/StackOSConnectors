@@ -1,0 +1,139 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "serper",
+  "name": "Serper.dev",
+  "description": "Google Search/SERP provider for compact live search-result evidence.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "Serper API Key",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "auth_type": "api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Serper API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "api_key",
+        "label": "API key",
+        "payload_field": "api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "serper.search",
+      "operation": "search",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "country": {
+            "description": "Optional Google country code sent as gl.",
+            "type": "string"
+          },
+          "language": {
+            "description": "Optional Google language code sent as hl.",
+            "type": "string"
+          },
+          "num": {
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page": {
+            "maximum": 10,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "tbs": {
+            "description": "Optional Google time/filter expression.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Fetch live Google Search result evidence through Serper.dev using bounded query and locale inputs.",
+      "metadata": {
+        "capability": "seo-research",
+        "name": "Search Google With Serper",
+        "risk_level": "cost"
+      }
+    }
+  ],
+  "setup": {
+    "docs": [
+      "https://serper.dev/"
+    ],
+    "setup": {
+      "billing_url": "https://serper.dev/pricing",
+      "console_url": "https://serper.dev/",
+      "credential_label": "Serper API key",
+      "credential_url": "https://serper.dev/api-key",
+      "docs_url": "https://serper.dev/api",
+      "fallback_reason": "Exact dashboard routes can change; the official site is the fallback for key and usage setup.",
+      "fallback_url": "https://serper.dev/",
+      "homepage_url": "https://serper.dev/",
+      "setup_note": "Register with Serper, create or copy the API key, and store it in StackOS.",
+      "signup_url": "https://serper.dev/signup",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Serper.dev Google Search requests use a daemon-held key in the provider header and consume provider credits. Keep searches bounded with explicit query, locale, page, and result-count inputs."
+  },
+  "implementation": "stackos_connectors.connectors.serper.actions:SerperActionConnector"
+}

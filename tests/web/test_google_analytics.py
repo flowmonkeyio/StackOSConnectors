@@ -10,8 +10,8 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
+from stackos_connectors.connectors.google_analytics.integration import GoogleAnalyticsIntegration
 from stackos_connectors.errors import ValidationError
-from stackos_connectors.integrations.google_analytics import GoogleAnalyticsIntegration
 
 
 def _access_payload() -> bytes:

@@ -7,9 +7,9 @@ from unittest.mock import Mock
 import httpx
 import pytest
 
+from stackos_connectors.connectors.google_indexing.integration import GoogleIndexingIntegration
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations.google_batch import encode_http_request
-from stackos_connectors.integrations.google_indexing import GoogleIndexingIntegration
+from stackos_connectors.shared.google.batch import encode_http_request
 
 from .test_google_search_console_batch import multipart
 

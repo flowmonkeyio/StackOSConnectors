@@ -13,8 +13,8 @@ from stackos_connectors import (
     ConnectorResult,
 )
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations._base import BaseIntegration
-from stackos_connectors.integrations._rate_limit import TokenBucket
+from stackos_connectors.shared.base import BaseIntegration
+from stackos_connectors.shared.rate_limit import TokenBucket
 
 
 class CounterLimiter:
@@ -32,7 +32,7 @@ async def test_existing_retry_policy_with_caller_limiter(monkeypatch):
     async def no_sleep(delay):
         sleeps.append(delay)
 
-    monkeypatch.setattr("stackos_connectors.integrations._base.asyncio.sleep", no_sleep)
+    monkeypatch.setattr("stackos_connectors.shared.base.asyncio.sleep", no_sleep)
     attempts = []
 
     def respond(request):

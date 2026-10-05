@@ -152,21 +152,27 @@ def test_duplicate_connector_rejected(document):
 
 
 def test_resource_index_and_explicit_provider_loading(tmp_path: Path, document):
-    (tmp_path / "fixture.json").write_text(json.dumps(document))
-    (tmp_path / "index.json").write_text(
+    (tmp_path / "connectors/fixture").mkdir(parents=True)
+    (tmp_path / "catalog").mkdir()
+    (tmp_path / "connectors/fixture/catalog.json").write_text(json.dumps(document))
+    (tmp_path / "catalog/index.json").write_text(
         json.dumps(
             {
                 "schema_version": "stackos.connectors.index.v1",
-                "connectors": ["fixture.json"],
+                "connectors": ["connectors/fixture/catalog.json"],
             }
         )
     )
     indexed = ConnectorClient(registry=load_registry(root=tmp_path))
-    explicit = ConnectorClient(registry=load_registry("fixture.json", root=tmp_path))
+    explicit = ConnectorClient(
+        registry=load_registry("connectors/fixture/catalog.json", root=tmp_path)
+    )
     assert indexed.describe("fixture") == explicit.describe("fixture")
 
 
-@pytest.mark.parametrize("filename", ["../fixture.json", "/fixture.json", "a/b.json", "index.json"])
+@pytest.mark.parametrize(
+    "filename", ["../fixture.json", "/fixture.json", "a/../b.json", "index.json"]
+)
 def test_resource_names_cannot_escape_catalog(tmp_path: Path, filename: str):
     with pytest.raises(ValueError):
         load_registry(filename, root=tmp_path)

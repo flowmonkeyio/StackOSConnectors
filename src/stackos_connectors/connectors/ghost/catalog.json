@@ -1,0 +1,223 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "ghost",
+  "name": "Ghost",
+  "description": "Ghost Admin API publishing provider using an Admin API key.",
+  "auth_methods": [
+    {
+      "key": "admin_api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "admin_api_key": {
+            "description": "Admin API Key",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "admin_api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "ghost_url": {
+            "description": "Site/Admin Root URL",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "api_version": {
+            "description": "Admin API Version",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "ghost_url"
+        ]
+      },
+      "payload_format": "raw",
+      "payload_field": "admin_api_key",
+      "setup": {
+        "auth_type": "admin-api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "admin_api_key",
+            "label": "Admin API Key",
+            "options": null,
+            "placeholder": "id:hex_secret",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "ghost_url",
+            "label": "Site/Admin Root URL",
+            "options": null,
+            "placeholder": "https://example.com",
+            "required": true,
+            "secret": false,
+            "type": "url"
+          },
+          {
+            "description": null,
+            "key": "api_version",
+            "label": "Admin API Version",
+            "options": null,
+            "placeholder": "v5.0",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "admin_api_key",
+        "label": "Admin API key",
+        "payload_field": "admin_api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "ghost.post.create",
+      "operation": "post.create",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "post": {
+            "additionalProperties": true,
+            "properties": {
+              "authors": {
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              "custom_excerpt": {
+                "type": "string"
+              },
+              "feature_image": {
+                "type": "string"
+              },
+              "html": {
+                "type": "string"
+              },
+              "published_at": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "tags": {
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "html"
+            ],
+            "type": "object"
+          },
+          "source": {
+            "enum": [
+              "html"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "post"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin_api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Create a Ghost post from an explicit Admin API post payload.",
+      "metadata": {
+        "capability": "cms-publishing",
+        "name": "Create Ghost Post",
+        "risk_level": "write"
+      }
+    }
+  ],
+  "setup": {
+    "setup": {
+      "billing_url": "https://ghost.org/pricing/",
+      "console_url": "https://ghost.org/docs/admin-api/",
+      "credential_label": "Ghost Admin API key",
+      "credential_url": "https://ghost.org/docs/admin-api/",
+      "docs_url": "https://ghost.org/docs/admin-api/",
+      "fallback_reason": "The exact Admin settings URL depends on the Ghost site domain; use Ghost Admin Settings -> Integrations.",
+      "fallback_url": "https://ghost.org/docs/admin-api/",
+      "homepage_url": "https://ghost.org/",
+      "setup_note": "In Ghost Admin, open Settings, Integrations, create or select a custom integration, then copy the Admin API key into StackOS.",
+      "signup_url": "https://ghost.org/pricing/",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Enter the Ghost site/admin domain root; the connector appends /ghost/api/admin/ paths and pins Accept-Version."
+  },
+  "implementation": "stackos_connectors.connectors.ghost.actions:GhostActionConnector"
+}

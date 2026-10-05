@@ -8,7 +8,7 @@ from typing import Any
 import httpx
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.integrations.openrouter import OpenRouterIntegration
+from stackos_connectors.connectors.openrouter.integration import OpenRouterIntegration
 
 
 def test_models_uses_bearer_and_attribution_headers(httpx_mock: HTTPXMock) -> None:

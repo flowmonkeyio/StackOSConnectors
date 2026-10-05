@@ -9,10 +9,13 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.actions.ahrefs import AhrefsActionConnector, row_limit_for_subscription
+from stackos_connectors.connectors.ahrefs.actions import (
+    AhrefsActionConnector,
+    row_limit_for_subscription,
+)
+from stackos_connectors.connectors.ahrefs.integration import AhrefsIntegration
 from stackos_connectors.contracts import ConnectorAuth, ConnectorRequest
 from stackos_connectors.errors import IntegrationDownError, ValidationError
-from stackos_connectors.integrations.ahrefs import AhrefsIntegration
 
 
 def test_keywords_for_site_with_key(httpx_mock: HTTPXMock) -> None:

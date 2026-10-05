@@ -10,8 +10,8 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
+from stackos_connectors.connectors.firecrawl.integration import FirecrawlIntegration
 from stackos_connectors.errors import IntegrationDownError
-from stackos_connectors.integrations.firecrawl import FirecrawlIntegration
 
 
 def _json_body(request: httpx.Request) -> Any:

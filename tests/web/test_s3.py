@@ -11,13 +11,13 @@ import pytest
 from botocore.exceptions import ClientError
 from botocore.session import get_session
 
-from stackos_connectors.errors import IntegrationDownError
-from stackos_connectors.integrations.s3 import (
+from stackos_connectors.connectors.aws_s3.integration import (
     AWS_S3_REGIONS,
     S3Integration,
     normalize_s3_prefix,
     validate_s3_credential_config,
 )
+from stackos_connectors.errors import IntegrationDownError
 
 
 class _S3Client:
@@ -133,7 +133,7 @@ def test_s3_config_rejects_invalid_bucket_region_and_prefix() -> None:
 def test_s3_auth_probe_lists_configured_prefix_with_only_explicit_credentials(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.integrations.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.integration as s3_module
 
     _reset_fakes()
     monkeypatch.setattr(s3_module.boto3.session, "Session", _Session)
@@ -185,7 +185,7 @@ def test_s3_auth_probe_lists_configured_prefix_with_only_explicit_credentials(
 def test_s3_auth_probe_keeps_legacy_bucket_root_as_empty_prefix(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.integrations.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.integration as s3_module
 
     _reset_fakes()
     monkeypatch.setattr(s3_module.boto3.session, "Session", _Session)
@@ -215,7 +215,7 @@ def test_s3_auth_probe_keeps_legacy_bucket_root_as_empty_prefix(
 def test_s3_auth_probe_returns_sanitized_provider_guidance(
     monkeypatch: pytest.MonkeyPatch, code: str, status: int, reason_code: str
 ) -> None:
-    import stackos_connectors.integrations.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.integration as s3_module
 
     _reset_fakes()
     monkeypatch.setattr(s3_module.boto3.session, "Session", _Session)
@@ -264,7 +264,7 @@ def test_s3_auth_probe_returns_sanitized_provider_guidance(
 def test_s3_auth_probe_rejects_invalid_payload_without_creating_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.integrations.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.integration as s3_module
 
     _reset_fakes()
     monkeypatch.setattr(s3_module.boto3.session, "Session", _Session)

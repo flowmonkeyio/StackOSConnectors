@@ -1,0 +1,191 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "wordpress",
+  "name": "WordPress",
+  "description": "WordPress REST API publishing provider using Application Passwords.",
+  "auth_methods": [
+    {
+      "key": "application_password",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "description": "Username",
+            "type": "string",
+            "minLength": 1
+          },
+          "application_password": {
+            "description": "Application Password",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "username",
+          "application_password"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "wp_url": {
+            "description": "HTTPS Site URL",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "wp_url"
+        ]
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "application-password",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "username",
+            "label": "Username",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "application_password",
+            "label": "Application Password",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "wp_url",
+            "label": "HTTPS Site URL",
+            "options": null,
+            "placeholder": "https://example.com",
+            "required": true,
+            "secret": false,
+            "type": "url"
+          }
+        ],
+        "interactive": false,
+        "key": "application_password",
+        "label": "Application password",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "wordpress.post.create",
+      "operation": "post.create",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "post": {
+            "additionalProperties": true,
+            "properties": {
+              "categories": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              "content": {
+                "type": "string"
+              },
+              "excerpt": {
+                "type": "string"
+              },
+              "featured_media": {
+                "type": "integer"
+              },
+              "slug": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "tags": {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "content"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "post"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "application_password"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Create a WordPress post from an explicit REST API post payload.",
+      "metadata": {
+        "capability": "cms-publishing",
+        "name": "Create WordPress Post",
+        "risk_level": "write"
+      }
+    }
+  ],
+  "setup": {
+    "setup": {
+      "billing_url": "https://wordpress.com/me/purchases",
+      "console_url": "https://wordpress.com/me/security",
+      "credential_label": "WordPress username and application password",
+      "credential_url": "https://wordpress.com/me/security",
+      "docs_url": "https://developer.wordpress.com/docs/api/",
+      "fallback_reason": "WordPress.com and self-hosted WordPress expose application passwords in different admin screens.",
+      "fallback_url": "https://wordpress.org/documentation/article/application-passwords/",
+      "homepage_url": "https://wordpress.com/",
+      "setup_note": "Use the target WordPress site URL and create an Application Password for a user with post permissions, then store the username and password in StackOS.",
+      "signup_url": "https://wordpress.com/start",
+      "url_confidence": {
+        "billing_url": "directional",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Use the HTTPS WordPress site root and a user with permission to create posts."
+  },
+  "implementation": "stackos_connectors.connectors.wordpress.actions:WordPressActionConnector"
+}

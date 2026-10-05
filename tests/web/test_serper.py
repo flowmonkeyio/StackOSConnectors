@@ -9,7 +9,7 @@ from typing import Any
 import httpx
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.integrations.serper import SerperIntegration
+from stackos_connectors.connectors.serper.integration import SerperIntegration
 
 
 def _json_body(request: httpx.Request) -> Any:

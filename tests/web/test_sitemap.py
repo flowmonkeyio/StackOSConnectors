@@ -19,7 +19,7 @@ import asyncio
 import httpx
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.integrations.sitemap import SitemapEntry, fetch_sitemap_entries
+from stackos_connectors.connectors.sitemap.integration import SitemapEntry, fetch_sitemap_entries
 
 URLSET_BODY = (
     '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xml'

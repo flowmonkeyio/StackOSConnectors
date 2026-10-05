@@ -14,13 +14,13 @@ from typing import Any, ClassVar
 import pytest
 
 from stackos_connectors import CallOptions, ConnectorAuth, ConnectorError, ConnectorRequest
-from stackos_connectors.actions.ftp import FtpActionConnector
+from stackos_connectors.connectors.ftp.actions import FtpActionConnector
 
 from .catalog_fixture import client_for
 
 
 def test_ftp_later_path_validation_preserves_completed_transfer(monkeypatch, tmp_path):
-    import stackos_connectors.actions.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.actions as ftp_module
 
     class MissingPwdAfterDownload(_FakeFTPTLS):
         instances: ClassVar[list] = []
@@ -487,7 +487,7 @@ class _FailingDownloadFTPTLS(_FakeFTPTLS):
 
 
 def _patch_ftps(monkeypatch: pytest.MonkeyPatch) -> None:
-    import stackos_connectors.actions.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.actions as ftp_module
 
     _FakeFTPTLS.reset()
     monkeypatch.setattr(ftp_module.ftplib, "FTP_TLS", _FakeFTPTLS)
@@ -512,7 +512,7 @@ def _assert_transfer_progress(
 def test_ftp_upload_progress_waits_for_final_server_reply(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import stackos_connectors.actions.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.actions as ftp_module
 
     class _FinalReplyFTPTLS(_FakeFTPTLS):
         instances: ClassVar[list[_FinalReplyFTPTLS]] = []
@@ -610,7 +610,7 @@ def test_ftp_download_reports_sanitized_monotonic_progress_and_keeps_atomic_plac
 def test_ftp_upload_full_bytes_then_final_error_remains_outcome_unknown(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import stackos_connectors.actions.ftp as ftp_module
+    import stackos_connectors.connectors.ftp.actions as ftp_module
 
     class _FinalErrorFTPTLS(_FakeFTPTLS):
         instances: ClassVar[list[_FinalErrorFTPTLS]] = []

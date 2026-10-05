@@ -32,7 +32,9 @@ PROVIDERS = [
 
 def document(provider):
     return json.loads(
-        resources.files("stackos_connectors").joinpath("catalog", f"{provider}.json").read_text()
+        resources.files("stackos_connectors")
+        .joinpath("connectors", provider.replace("-", "_"), "catalog.json")
+        .read_text()
     )
 
 

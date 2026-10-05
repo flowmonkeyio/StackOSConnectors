@@ -10,8 +10,8 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
+from stackos_connectors.connectors.dataforseo.integration import DataForSeoIntegration
 from stackos_connectors.errors import RateLimitedError
-from stackos_connectors.integrations.dataforseo import DataForSeoIntegration
 
 
 def _make(*, http: httpx.AsyncClient) -> DataForSeoIntegration:

@@ -1,0 +1,3157 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "shopify",
+  "name": "Shopify Admin API",
+  "description": "Static-token Shopify Admin GraphQL provider. Tokens stay daemon-held; agents can only run curated action catalog operations.",
+  "auth_methods": [
+    {
+      "key": "admin-api-token",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "admin_api_access_token": {
+            "description": "Admin API access token",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "admin_api_access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "store_domain": {
+            "description": "The store myshopify.com domain used in the Admin GraphQL endpoint.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "api_version": {
+            "description": "Defaults to the official 2026-07 stable Admin API version.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "store_domain"
+        ]
+      },
+      "payload_format": "raw",
+      "payload_field": "admin_api_access_token",
+      "setup": {
+        "auth_type": "api-token",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "admin_api_access_token",
+            "label": "Admin API access token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": "The store myshopify.com domain used in the Admin GraphQL endpoint.",
+            "key": "store_domain",
+            "label": "Store domain",
+            "options": null,
+            "placeholder": "example.myshopify.com",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": "Defaults to the official 2026-07 stable Admin API version.",
+            "key": "api_version",
+            "label": "Admin API version",
+            "options": null,
+            "placeholder": "2026-07",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "admin-api-token",
+        "label": "Shopify Admin API access token",
+        "payload_field": "admin_api_access_token",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "conversion_funnel",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "conversion_funnel",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/conversion-funnel.tool.ts"
+        }
+      },
+      "description": "Conversion funnel metrics: sessions, orders, customers, and ShopifyQL conversion_rate (values in shop currency)",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Conversion Funnel",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "customer_cohort_analysis",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "group_by": {
+            "description": "Time grouping for cohorts",
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "customer_cohort_analysis",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/customer-cohort-analysis.tool.ts"
+        }
+      },
+      "description": "Customer cohort analysis showing customers, orders, and sales grouped by time period",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Customer Cohort Analysis",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "customer_lifetime_value",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "description": "Number of customers to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sort_by": {
+            "description": "Sort by total spend or order count",
+            "enum": [
+              "amount",
+              "orders"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "customer_lifetime_value",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/customer-lifetime-value.tool.ts"
+        }
+      },
+      "description": "Customer lifetime value report from the ShopifyQL customers dataset showing customer_name, total_amount_spent, and total_orders. Note: groups by customer_name, which may not be unique across customers with the same name.",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Customer Lifetime Value",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "discount_performance",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "discount_performance",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/discount-performance.tool.ts"
+        }
+      },
+      "description": "Analyze discount impact on sales: discounted vs total revenue, discount percentage, and total discount amount",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Discount Performance",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "inventory_risk_report",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "days_of_stock_threshold": {
+            "description": "Days of stock threshold for risk classification",
+            "type": "integer"
+          },
+          "limit": {
+            "description": "Number of items to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "inventory_risk_report",
+          "domain": "analytics",
+          "graphql_file": "graphql/analytics/inventory-risk-report.graphql",
+          "mode": "inventory_risk",
+          "scopes": [
+            "read_inventory",
+            "read_products",
+            "read_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/inventory-risk-report.tool.ts"
+        }
+      },
+      "description": "Products at overstock or understock risk based on sales velocity",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Inventory Risk Report",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "orders_by_date_range",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "group_by": {
+            "description": "Group orders by day, week, or month",
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "orders_by_date_range",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/orders-by-date-range.tool.ts"
+        }
+      },
+      "description": "Order count and metrics grouped by day/week/month (values in shop currency)",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Orders By Date Range",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "product_vendor_performance",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Number of vendors to return",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sort_by": {
+            "description": "Sort vendors by: revenue or orders",
+            "enum": [
+              "revenue",
+              "orders"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "product_vendor_performance",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/product-vendor-performance.tool.ts"
+        }
+      },
+      "description": "Revenue and orders broken down by product vendor",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Product Vendor Performance",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "refund_rate_summary",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "refund_rate_summary",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/refund-rate-summary.tool.ts"
+        }
+      },
+      "description": "Sales reversal summary for a date range using documented Shopify sales metrics (orders, sales_reversals, gross_sales, net_sales, discounts; values in shop currency). Does not compute a physical-return rate.",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Refund Rate Summary",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "repeat_customer_rate",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "repeat_customer_rate",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/repeat-customer-rate.tool.ts"
+        }
+      },
+      "description": "Approximate repeat customer rate for a date range. Uses ShopifyQL customers vs orders count to estimate repeat purchasing behavior.",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Repeat Customer Rate",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "sales_by_channel",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Number of channels to return",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "sales_by_channel",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/sales-by-channel.tool.ts"
+        }
+      },
+      "description": "Revenue and orders broken down by sales channel",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Sales By Channel",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "sales_by_geography",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "group_by": {
+            "description": "Group sales by country or region",
+            "enum": [
+              "country",
+              "region"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "description": "Number of locations to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "sales_by_geography",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/sales-by-geography.tool.ts"
+        }
+      },
+      "description": "Sales breakdown by geographic region (country or region) using ShopifyQL",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Sales By Geography",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "sales_comparison",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "compare_to": {
+            "description": "Compare against the previous period of equal length, or the same period last year",
+            "enum": [
+              "previous_period",
+              "previous_year"
+            ],
+            "type": "string"
+          },
+          "end_date": {
+            "description": "ISO 8601 date for the end of the period, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "group_by": {
+            "description": "Time granularity for the comparison breakdown",
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date for the start of the period, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "sales_comparison",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/sales-comparison.tool.ts"
+        }
+      },
+      "description": "Compare sales metrics across time periods using ShopifyQL COMPARE TO. Returns current and comparison period data with percent changes - ideal for period-over-period analysis.",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Sales Comparison",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "sales_summary",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "sales_summary",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/sales-summary.tool.ts"
+        }
+      },
+      "description": "Sales total/average by date range (values in shop currency)",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Sales Summary",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "top_products",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "limit": {
+            "description": "Number of products to return",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sort_by": {
+            "description": "Sort by revenue or order count",
+            "enum": [
+              "revenue",
+              "orders"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "top_products",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/top-products.tool.ts"
+        }
+      },
+      "description": "Best-selling products by revenue or order count in a date range (values in shop currency)",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Top Products",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "traffic_analytics",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "end_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-31",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          },
+          "group_by": {
+            "description": "Time grouping for traffic data",
+            "enum": [
+              "day",
+              "week",
+              "month"
+            ],
+            "type": "string"
+          },
+          "start_date": {
+            "description": "ISO 8601 date, e.g. 2026-01-01",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "traffic_analytics",
+          "domain": "analytics",
+          "graphql_file": "graphql/shopifyql.graphql",
+          "mode": "shopifyql",
+          "scopes": [
+            "read_reports"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/analytics/traffic-analytics.tool.ts"
+        }
+      },
+      "description": "Session traffic analytics over time, grouped by day, week, or month",
+      "metadata": {
+        "capability": "analytics",
+        "name": "Traffic Analytics",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "add_customer_tag",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tags"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "add_customer_tag",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/add-customer-tag.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/add-customer-tag.tool.ts"
+        }
+      },
+      "description": "Add one or more tags to a customer using the tagsAdd mutation.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Add Customer Tag",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "create_customer",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "firstName"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "create_customer",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/create-customer.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/create-customer.tool.ts"
+        }
+      },
+      "description": "Create a new customer with firstName, lastName, email, phone, tags, and note.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Create Customer",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "get_customer",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_customer",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/get-customer.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/get-customer.tool.ts"
+        }
+      },
+      "description": "Get a single customer by ID with full detail including addresses, note, state, and createdAt.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Get Customer",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_customer_lifetime_value",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_customer_lifetime_value",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/get-customer-lifetime-value.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_customers",
+            "read_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/get-customer-lifetime-value.tool.ts"
+        }
+      },
+      "description": "Get customer amountSpent, numberOfOrders, and first/last visible order dates. True first/last order history can require Shopify read_all_orders access beyond the default order window.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Get Customer Lifetime Value",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_customer_orders",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "customer_id": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "customer_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_customer_orders",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/get-customer-orders.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_customers",
+            "read_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/get-customer-orders.tool.ts"
+        }
+      },
+      "description": "List visible orders for a specific customer. Historical orders beyond Shopify's default order window can require read_all_orders access.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Get Customer Orders",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_customers",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_customers",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/list-customers.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/list-customers.tool.ts"
+        }
+      },
+      "description": "List customers with cursor pagination. Returns displayName, email, ordersCount, totalSpent, tags, and state.",
+      "metadata": {
+        "capability": "customers",
+        "name": "List Customers",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "remove_customer_tag",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tags"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "remove_customer_tag",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/remove-customer-tag.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/remove-customer-tag.tool.ts"
+        }
+      },
+      "description": "Remove one or more tags from a customer using the tagsRemove mutation.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Remove Customer Tag",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "search_customers",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "search_customers",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/search-customers.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/search-customers.tool.ts"
+        }
+      },
+      "description": "Search customers by email, name, phone, or tag. Uses the Shopify customers(query:) filter syntax.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Search Customers",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "update_customer",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_customer",
+          "domain": "customers",
+          "graphql_file": "graphql/customers/update-customer.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/customers/update-customer.tool.ts"
+        }
+      },
+      "description": "Update customer fields such as name, email, phone, and note.",
+      "metadata": {
+        "capability": "customers",
+        "name": "Update Customer",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "adjust_inventory",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "change_from_quantity": {
+            "description": "Optional compare-and-swap expected current quantity. Omit to send explicit null and skip the CAS check.",
+            "type": "integer"
+          },
+          "delta": {
+            "description": "Quantity change - positive to add, negative to subtract",
+            "type": "integer"
+          },
+          "inventory_item_id": {
+            "description": "Shopify GID of the inventory item",
+            "type": "string"
+          },
+          "location_id": {
+            "description": "Shopify GID of the location",
+            "type": "string"
+          },
+          "reason": {
+            "description": "Reason for adjustment (e.g.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "inventory_item_id",
+          "location_id",
+          "delta"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "adjust_inventory",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/adjust-inventory.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_inventory"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/adjust-inventory.tool.ts"
+        }
+      },
+      "description": "Adjust inventory quantity by a delta (positive to add, negative to subtract) at a specific location. Uses the inventoryAdjustQuantities mutation.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Adjust Inventory",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "get_inventory_by_sku",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "sku": {
+            "description": "SKU string to search for",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sku"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_inventory_by_sku",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/get-inventory-by-sku.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_inventory"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/get-inventory-by-sku.tool.ts"
+        }
+      },
+      "description": "Look up inventory items by SKU string. Uses the inventoryItems query with a SKU filter.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Get Inventory By Sku",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_inventory_item",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Shopify GID of the inventory item",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_inventory_item",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/get-inventory-item.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_inventory"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/get-inventory-item.tool.ts"
+        }
+      },
+      "description": "Get an inventory item by its Shopify GID. Returns SKU, tracked status, and inventory levels per location with quantities.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Get Inventory Item",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_location_inventory",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor",
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "location_id": {
+            "description": "Shopify GID of the location",
+            "type": "string"
+          }
+        },
+        "required": [
+          "location_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_location_inventory",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/get-location-inventory.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_inventory",
+            "read_locations"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/get-location-inventory.tool.ts"
+        }
+      },
+      "description": "Get all inventory items at a specific location. Returns items with SKU, available, and incoming quantities.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Get Location Inventory",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_inventory_levels",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "description": "Pagination cursor",
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_inventory_levels",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/list-inventory-levels.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_inventory",
+            "read_locations"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/list-inventory-levels.tool.ts"
+        }
+      },
+      "description": "List inventory levels across all locations. Returns location name and available/committed/on_hand quantities. Supports cursor pagination.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "List Inventory Levels",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "low_stock_report",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "description": "Maximum number of low-stock items to return",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "threshold": {
+            "description": "Stock threshold - items with available quantity below this are included",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "low_stock_report",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/low-stock-report.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_inventory",
+            "read_products",
+            "read_locations"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/low-stock-report.tool.ts"
+        }
+      },
+      "description": "Get a report of inventory items below a specified stock threshold. Queries all inventory, filters items with available quantity below threshold, and returns a sorted list with product name, variant title, SKU, available quantity, and location.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Low Stock Report",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "set_inventory_level",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "change_from_quantity": {
+            "description": "Optional compare-and-swap expected current quantity. Omit to send explicit null and skip the CAS check.",
+            "type": "integer"
+          },
+          "inventory_item_id": {
+            "description": "Shopify GID of the inventory item",
+            "type": "string"
+          },
+          "location_id": {
+            "description": "Shopify GID of the location",
+            "type": "string"
+          },
+          "quantity": {
+            "description": "Exact quantity to set",
+            "type": "integer"
+          },
+          "reason": {
+            "description": "Reason for setting quantity (e.g.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "inventory_item_id",
+          "location_id",
+          "quantity"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "set_inventory_level",
+          "domain": "inventory",
+          "graphql_file": "graphql/inventory/set-inventory-level.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_inventory"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/inventory/set-inventory-level.tool.ts"
+        }
+      },
+      "description": "Set inventory to an exact quantity at a specific location. Uses the inventorySetQuantities mutation.",
+      "metadata": {
+        "capability": "inventory",
+        "name": "Set Inventory Level",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "add_order_note",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "note"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "add_order_note",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/add-order-note.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/add-order-note.tool.ts"
+        }
+      },
+      "description": "Add or update a private note on an order.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Add Order Note",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "add_order_tag",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tags"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "add_order_tag",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/add-order-tag.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/add-order-tag.tool.ts"
+        }
+      },
+      "description": "Add one or more tags to an order.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Add Order Tag",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "create_draft_order",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "line_items": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "note": {
+            "type": "string"
+          },
+          "shipping_address": {
+            "additionalProperties": true,
+            "type": "object"
+          }
+        },
+        "required": [
+          "line_items"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "create_draft_order",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/create-draft-order.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_draft_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/create-draft-order.tool.ts"
+        }
+      },
+      "description": "Create a draft order with line items, optional customer, shipping address, and note. Returns draft order with calculated totals.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Create Draft Order",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "get_order",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_order",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/get-order.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders",
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/get-order.tool.ts"
+        }
+      },
+      "description": "Get a single order by ID with customer, addresses, notes, tags, fulfillments, and the first 50 line items plus pagination metadata.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Get Order",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_order_by_name",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_order_by_name",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/get-order-by-name.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders",
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/get-order-by-name.tool.ts"
+        }
+      },
+      "description": "Get an order by its exact Shopify order name (for example, #1001 or a custom prefixed name). Uses Shopify order search by name.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Get Order By Name",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_order_fulfillment_status",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_order_fulfillment_status",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/get-order-fulfillment-status.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/get-order-fulfillment-status.tool.ts"
+        }
+      },
+      "description": "Get the fulfillment status of an order with tracking numbers, carrier, and tracking URLs for each fulfillment.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Get Order Fulfillment Status",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_order_timeline",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_order_timeline",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/get-order-timeline.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/get-order-timeline.tool.ts"
+        }
+      },
+      "description": "Get the event timeline for an order (comments, status changes, fulfillments, refunds).",
+      "metadata": {
+        "capability": "orders",
+        "name": "Get Order Timeline",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_orders",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "financial_status": {
+            "type": "string"
+          },
+          "fulfillment_status": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_orders",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/list-orders.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders",
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/list-orders.tool.ts"
+        }
+      },
+      "description": "List visible orders with optional filtering by status, financial status, and fulfillment status. Returns order details including first-page line items, customer summary, and fulfillment tracking.",
+      "metadata": {
+        "capability": "orders",
+        "name": "List Orders",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "mark_order_paid",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "mark_order_paid",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/mark-order-paid.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/mark-order-paid.tool.ts"
+        }
+      },
+      "description": "Mark an order as paid using the orderMarkAsPaid mutation. Shopify also requires the acting staff user to have the mark_orders_as_paid permission.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Mark Order Paid",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "search_orders",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "search_orders",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/search-orders.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_orders",
+            "read_customers"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/search-orders.tool.ts"
+        }
+      },
+      "description": "Search orders by query string (customer name, email, order number, date range). Uses Shopify's order search syntax.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Search Orders",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "update_order_note",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "note"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_order_note",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/update-order-note.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/update-order-note.tool.ts"
+        }
+      },
+      "description": "Update an existing note on an order.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Update Order Note",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "update_order_tags",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tags"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_order_tags",
+          "domain": "orders",
+          "graphql_file": "graphql/orders/update-order-tags.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_orders"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/orders/update-order-tags.tool.ts"
+        }
+      },
+      "description": "Set or replace tags on an order using orderUpdate; supplied tags overwrite the order's tag list.",
+      "metadata": {
+        "capability": "orders",
+        "name": "Update Order Tags",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "create_collection",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "create_collection",
+          "domain": "products",
+          "graphql_file": "graphql/products/create-collection.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/create-collection.tool.ts"
+        }
+      },
+      "description": "Create a new collection with title and optional description.",
+      "metadata": {
+        "capability": "products",
+        "name": "Create Collection",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "create_product",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "product_type": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "UNLISTED"
+            ],
+            "type": "string"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": {
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "create_product",
+          "domain": "products",
+          "graphql_file": "graphql/products/create-product.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/create-product.tool.ts"
+        }
+      },
+      "description": "Create a new product with title, description, vendor, product type, status, and tags.",
+      "metadata": {
+        "capability": "products",
+        "name": "Create Product",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "create_product_variant",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "price": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_id",
+          "price"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "create_product_variant",
+          "domain": "products",
+          "graphql_file": "graphql/products/create-product-variant.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/create-product-variant.tool.ts"
+        }
+      },
+      "description": "Add a variant to an existing product with price, SKU, and options. Options format: \"OptionName:Value\" (e.g. \"Size:Large,Color:Red\").",
+      "metadata": {
+        "capability": "products",
+        "name": "Create Product Variant",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "get_collection",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_collection",
+          "domain": "products",
+          "graphql_file": "graphql/products/get-collection.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/get-collection.tool.ts"
+        }
+      },
+      "description": "Get a single collection by its Shopify GID. Returns collection details with its products.",
+      "metadata": {
+        "capability": "products",
+        "name": "Get Collection",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_product",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_product",
+          "domain": "products",
+          "graphql_file": "graphql/products/get-product.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/get-product.tool.ts"
+        }
+      },
+      "description": "Get a single product by its Shopify GID. Returns product detail with first 10 media and first 100 variants plus pagination metadata.",
+      "metadata": {
+        "capability": "products",
+        "name": "Get Product",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_product_by_handle",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "handle": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "handle"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_product_by_handle",
+          "domain": "products",
+          "graphql_file": "graphql/products/get-product-by-handle.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/get-product-by-handle.tool.ts"
+        }
+      },
+      "description": "Get a product by its URL handle (slug). Returns product detail with first 10 media and first 100 variants plus pagination metadata.",
+      "metadata": {
+        "capability": "products",
+        "name": "Get Product By Handle",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "get_product_variant",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "get_product_variant",
+          "domain": "products",
+          "graphql_file": "graphql/products/get-product-variant.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/get-product-variant.tool.ts"
+        }
+      },
+      "description": "Get a single product variant by its Shopify GID. Returns full variant detail including price, SKU, and selected options.",
+      "metadata": {
+        "capability": "products",
+        "name": "Get Product Variant",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_collections",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_collections",
+          "domain": "products",
+          "graphql_file": "graphql/products/list-collections.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/list-collections.tool.ts"
+        }
+      },
+      "description": "List collections with cursor pagination. Returns collection title, handle, products count, and image.",
+      "metadata": {
+        "capability": "products",
+        "name": "List Collections",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_product_variants",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "product_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_product_variants",
+          "domain": "products",
+          "graphql_file": "graphql/products/list-product-variants.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/list-product-variants.tool.ts"
+        }
+      },
+      "description": "List variants for a product with cursor pagination. Returns variant details including price, SKU, inventory, and selected options.",
+      "metadata": {
+        "capability": "products",
+        "name": "List Product Variants",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "list_products",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "product_type": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "UNLISTED"
+            ],
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "list_products",
+          "domain": "products",
+          "graphql_file": "graphql/products/list-products.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/list-products.tool.ts"
+        }
+      },
+      "description": "List products with optional filtering by status, vendor, and product type. Supports cursor pagination.",
+      "metadata": {
+        "capability": "products",
+        "name": "List Products",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "manage_product_tags",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "add": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "type": "string"
+          },
+          "remove": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "manage_product_tags",
+          "domain": "products",
+          "mode": "tag_mutations",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/manage-product-tags.tool.ts"
+        }
+      },
+      "description": "Add or remove tags on a product. Provide arrays of tags to add and/or remove.",
+      "metadata": {
+        "capability": "products",
+        "name": "Manage Product Tags",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "search_products",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "maximum": 250,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "search_products",
+          "domain": "products",
+          "graphql_file": "graphql/products/search-products.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "read_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/search-products.tool.ts"
+        }
+      },
+      "description": "Search products by keyword query string using Shopify full-text search. Supports cursor pagination.",
+      "metadata": {
+        "capability": "products",
+        "name": "Search Products",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "update_product",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "product_type": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "UNLISTED"
+            ],
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "vendor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_product",
+          "domain": "products",
+          "graphql_file": "graphql/products/update-product.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/update-product.tool.ts"
+        }
+      },
+      "description": "Update product fields such as title, description, vendor, product type, and status.",
+      "metadata": {
+        "capability": "products",
+        "name": "Update Product",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "update_product_status",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "DRAFT",
+              "ARCHIVED",
+              "UNLISTED"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_product_status",
+          "domain": "products",
+          "graphql_file": "graphql/products/update-product-status.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/update-product-status.tool.ts"
+        }
+      },
+      "description": "Change a product's status to ACTIVE, DRAFT, ARCHIVED, or UNLISTED.",
+      "metadata": {
+        "capability": "products",
+        "name": "Update Product Status",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "update_product_variant",
+      "operation": "admin.graphql",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "barcode": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "product_id": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "product_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "admin-api-token"
+      ],
+      "auth_optional": false,
+      "config": {
+        "shopify": {
+          "action_name": "update_product_variant",
+          "domain": "products",
+          "graphql_file": "graphql/products/update-product-variant.graphql",
+          "mode": "graphql",
+          "scopes": [
+            "write_products"
+          ],
+          "source": "cob-shopify-mcp",
+          "source_path": "src/shopify/tools/products/update-product-variant.tool.ts"
+        }
+      },
+      "description": "Update variant fields such as price and SKU.",
+      "metadata": {
+        "capability": "products",
+        "name": "Update Product Variant",
+        "risk_level": "write"
+      }
+    }
+  ],
+  "setup": {
+    "connection_category": "Commerce",
+    "default_api_version": "2026-07",
+    "endpoint_template": "https://{store_domain}/admin/api/{api_version}/graphql.json",
+    "setup": {
+      "console_url": "https://admin.shopify.com/",
+      "credential_label": "Shopify Admin API access token",
+      "credential_url": "https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens",
+      "docs_url": "https://shopify.dev/docs/api/admin-graphql/latest",
+      "fallback_reason": "Static-token setup requires an operator-supplied Admin API access token; OAuth/token acquisition is deliberately out of scope.",
+      "fallback_url": "https://shopify.dev/docs/api/admin-graphql/latest",
+      "homepage_url": "https://shopify.dev/docs/api/admin-graphql",
+      "setup_note": "Use an existing token from a Shopify custom app with only the scopes needed for the enabled actions.",
+      "support_url": "https://help.shopify.com/",
+      "url_confidence": {
+        "console_url": "directional",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "support_url": "verified"
+      },
+      "verified_at": "2026-07-08"
+    },
+    "setup_note": "Store an existing Shopify Admin API access token and the store myshopify.com domain. StackOS does not create tokens or run OAuth for this provider."
+  },
+  "implementation": "stackos_connectors.connectors.shopify.actions:ShopifyActionConnector"
+}

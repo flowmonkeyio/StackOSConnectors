@@ -1,6 +1,6 @@
 """Load portable connector descriptions and lazy bindings from packaged JSON.
 
-Provider packages use ``load_registry("provider.json")`` during development;
+Provider packages use ``load_registry("connectors/provider/catalog.json")``;
 the default registry reads the reviewed resource list in ``catalog/index.json``.
 Execution auth schemas describe resolved credentials, while setup metadata is
 retained separately for discovery and never used as an execution schema.
@@ -21,7 +21,7 @@ from jsonschema.exceptions import SchemaError
 from .contracts import ActionDefinition, AuthMethodDefinition, freeze, thaw
 from .registry import ConnectorRegistry
 
-_RESOURCE_NAME = re.compile(r"[a-z0-9][a-z0-9_-]*\.json\Z")
+_RESOURCE_PATH = re.compile(r"(?:[a-z0-9][a-z0-9_-]*/)*[a-z0-9][a-z0-9_-]*\.json\Z")
 _ACTION_FIELDS = {
     "key",
     "operation",
@@ -127,17 +127,25 @@ def load_registry(*resource_names: str, root: Traversable | None = None) -> Conn
     """Read explicit provider resources, or the index when none are named.
 
     ``root`` is an explicit local resource root, useful for a consumer's declared
-    catalog and for deterministic tests. Resource names are flat JSON filenames.
+    catalog and for deterministic tests. Resource names are package-relative JSON
+    paths; absolute paths, empty segments and traversal are rejected.
     """
-    source = root if root is not None else files("stackos_connectors").joinpath("catalog")
+    source = root if root is not None else files("stackos_connectors")
     if not resource_names:
-        index = _read(source.joinpath("index.json"))
+        index = _read(source.joinpath("catalog", "index.json"))
         _validate(index, "index")
         resource_names = tuple(index["connectors"])
     for name in resource_names:
-        if not _RESOURCE_NAME.fullmatch(name) or name in {"index.json", "schema.json"}:
+        if not _RESOURCE_PATH.fullmatch(name) or name.rsplit("/", 1)[-1] in {
+            "index.json",
+            "schema.json",
+        }:
             raise ValueError("invalid connector catalog resource name")
-    return registry_from_documents(_read(source.joinpath(name)) for name in resource_names)
+    if len(set(resource_names)) != len(resource_names):
+        raise ValueError("duplicate connector catalog resource name")
+    return registry_from_documents(
+        _read(source.joinpath(*name.split("/"))) for name in resource_names
+    )
 
 
 def default_registry() -> ConnectorRegistry:

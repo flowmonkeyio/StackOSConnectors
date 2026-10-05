@@ -1,0 +1,1101 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "ftp",
+  "name": "FTP / Explicit FTPS",
+  "description": "Protocol connection for stateless remote browsing, recursive agent-selected transfers, and exact remote path management.",
+  "auth_methods": [
+    {
+      "key": "ftp-password",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "description": "Password",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "description": "Hostname or IP address only; do not include ftp://, a path, or credentials.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "port": {
+            "description": "Defaults to 21 when omitted.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "tls_mode": {
+            "description": "Explicit uses AUTH TLS and protects data transfers with PROT P. None deliberately selects plain FTP.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "username": {
+            "description": "Username",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "passive_mode": {
+            "description": "Defaults to enabled when omitted.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "timeout_s": {
+            "description": "Per-connection timeout; defaults to 30 seconds.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "encoding": {
+            "description": "Defaults to UTF-8.",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "host",
+          "username"
+        ]
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "ftp-password",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "password",
+            "label": "Password",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": "Hostname or IP address only; do not include ftp://, a path, or credentials.",
+            "key": "host",
+            "label": "Host",
+            "options": null,
+            "placeholder": "ftp.example.com",
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": "Defaults to 21 when omitted.",
+            "key": "port",
+            "label": "Port",
+            "options": null,
+            "placeholder": "21",
+            "required": false,
+            "secret": false,
+            "type": "number"
+          },
+          {
+            "description": "Explicit uses AUTH TLS and protects data transfers with PROT P. None deliberately selects plain FTP.",
+            "key": "tls_mode",
+            "label": "Transport security",
+            "options": [
+              {
+                "label": "Explicit FTPS",
+                "value": "explicit"
+              },
+              {
+                "label": "Plain FTP",
+                "value": "none"
+              }
+            ],
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "select"
+          },
+          {
+            "description": null,
+            "key": "username",
+            "label": "Username",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": "Defaults to enabled when omitted.",
+            "key": "passive_mode",
+            "label": "Passive mode",
+            "options": [
+              {
+                "label": "Enabled (default)",
+                "value": "true"
+              },
+              {
+                "label": "Disabled",
+                "value": "false"
+              }
+            ],
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "select"
+          },
+          {
+            "description": "Per-connection timeout; defaults to 30 seconds.",
+            "key": "timeout_s",
+            "label": "Timeout seconds",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "number"
+          },
+          {
+            "description": "Defaults to UTF-8.",
+            "key": "encoding",
+            "label": "Filename encoding",
+            "options": null,
+            "placeholder": "utf-8",
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "ftp-password",
+        "label": "FTP password",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "ftp.directory.list",
+      "operation": "directory.list",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "remote_path": {
+            "description": "Absolute or current-directory-relative remote FTP directory selected by the agent. Each call opens a fresh connection.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "remote_path"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "directory_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "entries": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "modified": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "name": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "remote_path": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "safe_to_traverse": {
+                  "type": "boolean"
+                },
+                "size": {
+                  "anyOf": [
+                    {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": {
+                  "enum": [
+                    "directory",
+                    "file",
+                    "symlink",
+                    "unknown"
+                  ],
+                  "type": "string"
+                },
+                "unique": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "remote_path",
+                "type",
+                "safe_to_traverse"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "entry_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "file_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "directory.list",
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "remote_path": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success",
+            "type": "string"
+          },
+          "symlink_count": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "remote_path",
+          "entry_count",
+          "directory_count",
+          "file_count",
+          "symlink_count",
+          "entries"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Pass the remote directory selected by the user or agent. The action opens a fresh connection and returns metadata only; it does not retain a hidden working-directory session or download.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc3659"
+        ]
+      },
+      "description": "List one remote FTP directory without downloading its files; returned child paths can be reused in later actions.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "List FTP Directory",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "ftp.file.upload",
+      "operation": "file.upload",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "conflict_policy": {
+            "description": "Agent-selected handling when the destination already exists.",
+            "enum": [
+              "overwrite",
+              "skip",
+              "fail"
+            ],
+            "type": "string"
+          },
+          "error_policy": {
+            "description": "Stop at the first failed path or continue the remaining batch.",
+            "enum": [
+              "stop",
+              "continue"
+            ],
+            "type": "string"
+          },
+          "follow_symlinks": {
+            "default": false,
+            "description": "Follow local symlinks under their link names with cycle detection. False skips and reports symlinks.",
+            "type": "boolean"
+          },
+          "items": {
+            "description": "One or more explicit local/remote path mappings.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "local_path": {
+                  "description": "Agent-selected daemon-local file or directory path. StackOS does not restrict transfers to generated assets.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "remote_path": {
+                  "description": "Exact remote file or directory root for this mapping.",
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "local_path",
+                "remote_path"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "conflict_policy",
+          "error_policy"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes_transferred": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "completed": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "completed_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "completed_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "created_directories": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "created_directory_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "failed": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "failed_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "failed_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "operation": {
+            "enum": [
+              "file.upload",
+              "file.download"
+            ],
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "skipped": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "skipped_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "skipped_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "success",
+              "partial",
+              "failed"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "completed_count",
+          "skipped_count",
+          "failed_count",
+          "created_directory_count",
+          "bytes_transferred",
+          "completed",
+          "skipped",
+          "failed",
+          "created_directories",
+          "completed_paths",
+          "skipped_paths",
+          "failed_paths"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Choose any daemon-readable local path or paths and exact remote targets. StackOS does not require generated assets or another FTP-specific path gate. Select overwrite, skip, or fail and stop or continue explicitly for each call.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://www.rfc-editor.org/rfc/rfc4217"
+        ],
+        "execution_mode": "background"
+      },
+      "description": "Upload one or more agent-selected local files or directories; directories recurse automatically and preserve their relative tree.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Upload Files Or Directories To FTP",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "ftp.file.download",
+      "operation": "file.download",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "conflict_policy": {
+            "description": "Agent-selected handling when the destination already exists.",
+            "enum": [
+              "overwrite",
+              "skip",
+              "fail"
+            ],
+            "type": "string"
+          },
+          "error_policy": {
+            "description": "Stop at the first failed path or continue the remaining batch.",
+            "enum": [
+              "stop",
+              "continue"
+            ],
+            "type": "string"
+          },
+          "items": {
+            "description": "One or more explicit local/remote path mappings.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "local_path": {
+                  "description": "Agent-selected daemon-local file or directory path. StackOS does not restrict transfers to generated assets.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "remote_path": {
+                  "description": "Exact remote file or directory root for this mapping.",
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "local_path",
+                "remote_path"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "conflict_policy",
+          "error_policy"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "bytes_transferred": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "completed": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "completed_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "completed_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "created_directories": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "created_directory_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "failed": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "failed_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "failed_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "operation": {
+            "enum": [
+              "file.upload",
+              "file.download"
+            ],
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "skipped": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "skipped_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "skipped_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "status": {
+            "enum": [
+              "success",
+              "partial",
+              "failed"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "completed_count",
+          "skipped_count",
+          "failed_count",
+          "created_directory_count",
+          "bytes_transferred",
+          "completed",
+          "skipped",
+          "failed",
+          "created_directories",
+          "completed_paths",
+          "skipped_paths",
+          "failed_paths"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Choose any daemon-writable local destination path or paths. Directories recurse automatically; select overwrite, skip, or fail and stop or continue explicitly. Remote child names are kept inside the selected destination tree.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://www.rfc-editor.org/rfc/rfc3659",
+          "https://www.rfc-editor.org/rfc/rfc4217"
+        ],
+        "execution_mode": "background"
+      },
+      "description": "Download one or more remote FTP files or directories to exact agent-selected local destinations with recursive tree preservation.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Download Files Or Directories From FTP",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "ftp.file.delete",
+      "operation": "file.delete",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "remote_path": {
+            "description": "Exact remote FTP path selected by the agent.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "remote_path"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "const": "file.delete",
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "remote_path": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "remote_path"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Pass the exact remote file path selected by the user or agent. StackOS sends DELE without another FTP-specific confirmation or path gate; missing paths and permission failures remain provider errors.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://docs.python.org/3/library/ftplib.html#ftplib.FTP.delete"
+        ]
+      },
+      "description": "Delete one exact agent-selected remote file with FTP DELE.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Delete FTP File",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "ftp.directory.create",
+      "operation": "directory.create",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "remote_path": {
+            "description": "Exact remote FTP path selected by the agent.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "remote_path"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "operation": {
+            "const": "directory.create",
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "remote_path": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "remote_path"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Pass one exact remote directory path. This action sends one MKD; it does not silently create missing parents or convert an existing-path provider rejection into success.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://docs.python.org/3/library/ftplib.html#ftplib.FTP.mkd"
+        ]
+      },
+      "description": "Create one exact agent-selected remote directory with FTP MKD.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Create FTP Directory",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "ftp.directory.delete",
+      "operation": "directory.delete",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "recursive": {
+            "description": "False sends one RMD for the selected directory. True deletes its machine-readable child tree post-order before removing the root.",
+            "type": "boolean"
+          },
+          "remote_path": {
+            "description": "Exact remote FTP directory selected by the agent.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "remote_path",
+          "recursive"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "deleted_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "deleted_paths": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "remote_path": {
+                  "type": "string"
+                },
+                "type": {
+                  "enum": [
+                    "file",
+                    "directory",
+                    "symlink"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "remote_path",
+                "type"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "directory_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "file_count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "operation": {
+            "const": "directory.delete",
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "recursive": {
+            "type": "boolean"
+          },
+          "remote_path": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success",
+            "type": "string"
+          },
+          "symlink_count": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "remote_path",
+          "recursive",
+          "deleted_count",
+          "file_count",
+          "directory_count",
+          "symlink_count",
+          "deleted_paths"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Set recursive explicitly. False sends one RMD and lets the server reject non-empty directories. True plans the selected tree from machine-readable MLSx facts, deletes files and identified links with DELE, then removes directories post-order. Partial effects are returned if a later mutation fails.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://www.rfc-editor.org/rfc/rfc3659",
+          "https://docs.python.org/3/library/ftplib.html#ftplib.FTP.rmd"
+        ]
+      },
+      "description": "Delete one exact remote directory, either with one RMD or with an agent-selected recursive post-order deletion.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Delete FTP Directory",
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "ftp.path.rename",
+      "operation": "path.rename",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "destination_path": {
+            "description": "Exact new remote FTP path selected by the agent.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "source_path": {
+            "description": "Exact existing remote FTP path selected by the agent.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_path",
+          "destination_path"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "destination_path": {
+            "type": "string"
+          },
+          "operation": {
+            "const": "path.rename",
+            "type": "string"
+          },
+          "provider": {
+            "const": "ftp",
+            "type": "string"
+          },
+          "source_path": {
+            "type": "string"
+          },
+          "status": {
+            "const": "success",
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider",
+          "operation",
+          "status",
+          "source_path",
+          "destination_path"
+        ],
+        "type": "object"
+      },
+      "auth_methods": [
+        "ftp-password"
+      ],
+      "auth_optional": false,
+      "config": {
+        "agent_guidance": "Pass exact source and destination paths. StackOS does not pre-delete a destination, force replacement, create destination parents, or emulate rejected directory moves. Existing-target and directory support remain server-defined.",
+        "docs": [
+          "docs/integration-contracts/ftp.md",
+          "https://www.rfc-editor.org/rfc/rfc959",
+          "https://docs.python.org/3/library/ftplib.html#ftplib.FTP.rename"
+        ]
+      },
+      "description": "Ask the FTP server to rename or move one exact remote file or directory path with RNFR followed by RNTO.",
+      "metadata": {
+        "capability": "file-transfer",
+        "name": "Rename Or Move FTP Path",
+        "risk_level": "write"
+      }
+    }
+  ],
+  "setup": {
+    "docs": [
+      "docs/integration-contracts/ftp.md",
+      "https://www.rfc-editor.org/rfc/rfc959",
+      "https://www.rfc-editor.org/rfc/rfc3659",
+      "https://www.rfc-editor.org/rfc/rfc4217"
+    ],
+    "setup": {
+      "credential_label": "FTP host, username, and password",
+      "docs_url": "https://www.rfc-editor.org/rfc/rfc4217",
+      "fallback_reason": "Server provisioning and credential pages are provider-specific.",
+      "fallback_url": "https://docs.python.org/3/library/ftplib.html",
+      "setup_note": "FTP is a protocol, not one vendor. Obtain connection settings from the server operator and store the password only in StackOS.",
+      "url_confidence": {
+        "docs_url": "verified",
+        "fallback_url": "verified"
+      },
+      "verified_at": "2026-07-15"
+    },
+    "setup_note": "Use the FTP server's host, username, password, and transport settings. Explicit FTPS is the default; plain FTP is available when deliberately selected."
+  },
+  "implementation": "stackos_connectors.connectors.ftp.actions:FtpActionConnector"
+}

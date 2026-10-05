@@ -12,7 +12,11 @@ from typing import Any
 import pytest
 from botocore.exceptions import ClientError, EndpointConnectionError
 
-from stackos_connectors.actions.s3 import S3ActionConnector, _multipart_part_size, _ScopedS3Client
+from stackos_connectors.connectors.aws_s3.actions import (
+    S3ActionConnector,
+    _multipart_part_size,
+    _ScopedS3Client,
+)
 from stackos_connectors.contracts import CallOptions, ConnectorAuth, ConnectorRequest
 from stackos_connectors.errors import ConnectorError, ValidationError
 
@@ -25,7 +29,7 @@ from stackos_connectors.errors import ConnectorError, ValidationError
     ],
 )
 def test_s3_missing_etag_preserves_abort_and_copy_receipt(monkeypatch, broken_operation, response):
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["head_object"] = [{"ETag": '"head-etag"', "ContentLength": 8}]
@@ -342,7 +346,7 @@ def _request(*, operation, input_json, progress_callback=None, prefix=None):
 
 
 def _patch_client(monkeypatch: pytest.MonkeyPatch, client: _FakeS3) -> list[dict[str, Any]]:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     factory_calls: list[dict[str, Any]] = []
 
@@ -751,7 +755,7 @@ def test_s3_upload_continue_records_missing_mapping_and_uploads_later_item(
 def test_s3_upload_global_object_bound_fails_before_any_provider_mutation(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     _patch_client(monkeypatch, client)
@@ -829,7 +833,7 @@ def test_s3_upload_rejects_an_oversized_derived_key_before_mutation(
 def test_s3_multipart_upload_conditions_completion_and_reports_parts(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     _patch_client(monkeypatch, client)
@@ -878,7 +882,7 @@ def test_s3_multipart_upload_conditions_completion_and_reports_parts(
 def test_s3_multipart_upload_skip_aborts_after_destination_race(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["complete_multipart_upload"] = [
@@ -965,7 +969,7 @@ def test_s3_single_put_skip_is_race_safe_without_preflight(
 def test_s3_known_multipart_failure_aborts_and_reports_cleanup(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["upload_part"] = [
@@ -1013,7 +1017,7 @@ def test_s3_known_multipart_failure_aborts_and_reports_cleanup(
 def test_s3_multipart_upload_part_transport_failure_keeps_cleanup_unverified(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["upload_part"] = [
@@ -1055,7 +1059,7 @@ def test_s3_multipart_upload_part_transport_failure_keeps_cleanup_unverified(
 def test_s3_ambiguous_multipart_completion_is_not_aborted_or_retried(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["complete_multipart_upload"] = [
@@ -1466,7 +1470,7 @@ def test_s3_move_copy_success_delete_failure_is_explicit_partial_without_rollbac
 def test_s3_multipart_move_uses_conditional_part_copy_and_completion(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["head_object"] = [
@@ -1526,7 +1530,7 @@ def test_s3_multipart_move_uses_conditional_part_copy_and_completion(
 def test_s3_move_uses_multipart_copy_immediately_above_five_decimal_gigabytes(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["head_object"] = [
@@ -1591,7 +1595,7 @@ def test_s3_move_uses_single_copy_at_five_decimal_gigabytes(
 def test_s3_multipart_copy_part_transport_failure_preserves_abort_provider_receipt(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["head_object"] = [
@@ -1649,7 +1653,7 @@ def test_s3_multipart_copy_part_transport_failure_preserves_abort_provider_recei
 def test_s3_ambiguous_multipart_copy_completion_does_not_abort_or_delete_source(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    import stackos_connectors.actions.s3 as s3_module
+    import stackos_connectors.connectors.aws_s3.actions as s3_module
 
     client = _FakeS3()
     client.operation_outcomes["head_object"] = [

@@ -1,0 +1,519 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "google-analytics",
+  "name": "Google Analytics 4",
+  "description": "GA4 account discovery, metadata, standard reports, and realtime report reads.",
+  "auth_methods": [
+    {
+      "key": "oauth2_authorization_code",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          }
+        },
+        "required": [
+          "access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "default_property_ref",
+            "label": "Default GA4 Property",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": true,
+        "key": "oauth2_authorization_code",
+        "label": "Connect with Google",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    },
+    {
+      "key": "oauth2_access_token",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          }
+        },
+        "required": [
+          "access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "default_property_ref",
+            "label": "Default GA4 Property",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "oauth2_access_token",
+        "label": "OAuth2 access token",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    },
+    {
+      "key": "oauth2_refresh_token",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          }
+        },
+        "required": [
+          "access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "refresh_token",
+            "label": "Refresh Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "default_property_ref",
+            "label": "Default GA4 Property",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "oauth2_refresh_token",
+        "label": "OAuth2 refresh token",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    },
+    {
+      "key": "service-account",
+      "description": "Use a Google service-account JSON key granted access to the GA4 account or property. No user consent redirect.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          }
+        },
+        "required": [
+          "access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "config": null,
+        "description": "Use a Google service-account JSON key granted access to the GA4 account or property. No user consent redirect.",
+        "fields": [
+          {
+            "description": null,
+            "key": "service_account_json",
+            "label": "Service-account JSON key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "default_property_ref",
+            "label": "Default GA4 Property",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "service-account",
+        "label": "Service account",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": {
+          "enforcement": "local_required",
+          "evidence_source": "oauth_response"
+        }
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "ga4.account_summaries.list",
+      "operation": "account_summaries.list",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "page_cursor": {
+            "type": "string"
+          },
+          "page_size": {
+            "maximum": 200,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "required": []
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_access_token",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "List GA4 account and property summaries visible to the connected Google account.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "List GA4 Account Summaries",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "ga4.properties.metadata.get",
+      "operation": "properties.metadata.get",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "property_id": {
+            "description": "Native provider property ID or resource path. Resolve application aliases before calling.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "property_id"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_access_token",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Read available GA4 dimensions, metrics, and comparisons for a property.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Get GA4 Property Metadata",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "ga4.properties.run_report",
+      "operation": "properties.run_report",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "additionalProperties": true,
+            "properties": {
+              "dateRanges": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "dimensions": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "limit": {
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "offset": {
+                "type": "string"
+              },
+              "returnPropertyQuota": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "dateRanges",
+              "metrics"
+            ],
+            "type": "object"
+          },
+          "property_id": {
+            "type": "string",
+            "description": "Native provider property ID or resource path. Resolve application aliases before calling."
+          }
+        },
+        "required": [
+          "property_id",
+          "request"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_access_token",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Run a GA4 Data API report with a provider property_id and Google-native request body.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Run GA4 Report",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "ga4.properties.run_realtime_report",
+      "operation": "properties.run_realtime_report",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "request": {
+            "additionalProperties": true,
+            "properties": {
+              "dimensions": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "limit": {
+                "type": "string"
+              },
+              "metrics": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "minuteRanges": {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "returnPropertyQuota": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "metrics"
+            ],
+            "type": "object"
+          },
+          "property_id": {
+            "type": "string",
+            "description": "Native provider property ID or resource path. Resolve application aliases before calling."
+          }
+        },
+        "required": [
+          "property_id",
+          "request"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "oauth2_access_token",
+        "oauth2_refresh_token",
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Run a GA4 realtime report with a provider property_id and Google-native request body.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Run GA4 Realtime Report",
+        "risk_level": "read"
+      }
+    }
+  ],
+  "setup": {
+    "docs": [
+      "https://developers.google.com/analytics/devguides/reporting/data/v1",
+      "https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runReport",
+      "https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/getMetadata",
+      "https://developers.google.com/analytics/devguides/reporting/data/v1/rest/v1beta/properties/runRealtimeReport",
+      "https://developers.google.com/analytics/devguides/config/admin/v1/rest/v1beta/accountSummaries/list"
+    ],
+    "scopes": [
+      "https://www.googleapis.com/auth/analytics.readonly"
+    ],
+    "setup": {
+      "console_url": "https://analytics.google.com/analytics/web/",
+      "credential_label": "Google Analytics credential",
+      "credential_url": "https://console.cloud.google.com/apis/credentials",
+      "docs_url": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+      "fallback_reason": "OAuth consent, account access, and GA4 property ids are account-specific; the official Data API docs are the stable setup reference.",
+      "fallback_url": "https://developers.google.com/analytics/devguides/reporting/data/v1",
+      "homepage_url": "https://marketingplatform.google.com/about/analytics/",
+      "setup_note": "Enable Analytics Admin and Data APIs. For service-account setup, grant the key's client_email Viewer access to the GA4 property or account, then enter the JSON key locally. Cloud IAM alone does not grant Analytics access. OAuth remains available.",
+      "url_confidence": {
+        "console_url": "verified",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified"
+      },
+      "verified_at": "2026-06-17"
+    },
+    "setup_note": "Choose Google OAuth or a service-account JSON key with Analytics read-only access for GA4 Admin/Data API reporting. Measurement Protocol and write/admin scopes remain deferred."
+  },
+  "implementation": "stackos_connectors.connectors.google_analytics.actions:GoogleAnalyticsActionConnector"
+}

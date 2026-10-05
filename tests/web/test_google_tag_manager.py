@@ -9,7 +9,7 @@ from typing import Any
 import httpx
 from pytest_httpx import HTTPXMock
 
-from stackos_connectors.integrations.google_tag_manager import GoogleTagManagerIntegration
+from stackos_connectors.connectors.google_tag_manager.integration import GoogleTagManagerIntegration
 
 
 def _payload() -> bytes:

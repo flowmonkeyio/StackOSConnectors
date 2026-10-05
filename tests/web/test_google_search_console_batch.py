@@ -7,8 +7,10 @@ from unittest.mock import Mock
 import httpx
 import pytest
 
+from stackos_connectors.connectors.google_search_console.integration import (
+    GoogleSearchConsoleIntegration,
+)
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations.google_search_console import GoogleSearchConsoleIntegration
 
 BATCH_URL = "https://searchconsole.googleapis.com/batch"
 TOKEN = "synthetic-batch-token"

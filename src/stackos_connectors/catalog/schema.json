@@ -7,7 +7,7 @@
       "additionalProperties": false,
       "properties": {
         "schema_version": {"const": "stackos.connectors.index.v1"},
-        "connectors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*\\.json$"}}
+        "connectors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:[a-z0-9][a-z0-9_-]*/)*[a-z0-9][a-z0-9_-]*\\.json$"}}
       }
     },
     "auth_method": {

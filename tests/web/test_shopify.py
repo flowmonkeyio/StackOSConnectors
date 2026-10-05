@@ -10,8 +10,8 @@ import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
+from stackos_connectors.connectors.shopify.integration import ShopifyIntegration
 from stackos_connectors.errors import IntegrationDownError
-from stackos_connectors.integrations.shopify import ShopifyIntegration
 
 
 def test_shopify_test_credentials_posts_admin_graphql_with_static_token(

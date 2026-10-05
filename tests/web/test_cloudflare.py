@@ -10,8 +10,8 @@ from typing import Any
 import httpx
 import pytest
 
+from stackos_connectors.connectors.cloudflare.integration import CloudflareIntegration
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations.cloudflare import CloudflareIntegration
 
 _ZONE_ID = "023e105f4ecef8ad9ca31a8372d0c353"
 _RECORD_ID = "372e67954025e0ba6aaa6d586b9e0b59"
@@ -380,7 +380,7 @@ def test_read_retries_transient_failures_then_preserves_success_metadata(
     async def no_wait(delay: float) -> None:
         sleeps.append(delay)
 
-    monkeypatch.setattr("stackos_connectors.integrations._base.asyncio.sleep", no_wait)
+    monkeypatch.setattr("stackos_connectors.shared.base.asyncio.sleep", no_wait)
 
     def handler(request: httpx.Request) -> httpx.Response:
         requests.append(request)

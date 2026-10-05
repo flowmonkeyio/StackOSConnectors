@@ -8,8 +8,8 @@ from urllib.parse import urlencode
 import httpx
 import pytest
 
+from stackos_connectors.connectors.google_indexing.integration import GoogleIndexingIntegration
 from stackos_connectors.errors import IntegrationDownError, RateLimitedError
-from stackos_connectors.integrations.google_indexing import GoogleIndexingIntegration
 
 URL = "https://example.com/jobs/a?x=1&next=/two#part"
 TOKEN = "synthetic-indexing-token"
