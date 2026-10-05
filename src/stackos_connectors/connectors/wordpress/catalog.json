@@ -165,7 +165,14 @@
     "fallback_url": "https://wordpress.org/documentation/article/application-passwords/",
     "homepage_url": "https://wordpress.com/",
     "setup_note": "Use the HTTPS WordPress site root and a user with permission to create posts. Use the target WordPress site URL and create an Application Password for a user with post permissions.",
-    "signup_url": "https://wordpress.com/start"
+    "signup_url": "https://wordpress.com/start",
+    "docs": [
+      "https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/",
+      "https://developer.wordpress.org/rest-api/reference/posts/",
+      "https://developer.wordpress.org/rest-api/reference/application-passwords/",
+      "https://developer.wordpress.org/rest-api/using-the-rest-api/pagination/",
+      "https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/"
+    ]
   },
   "implementation": "stackos_connectors.connectors.wordpress.actions:WordPressActionConnector",
   "icon": {

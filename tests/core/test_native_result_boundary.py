@@ -9,8 +9,11 @@ from stackos_connectors import (
     ConnectorAuth,
     ConnectorClient,
     ConnectorError,
+    ConnectorFile,
     ConnectorRegistry,
     ConnectorResult,
+    ValidationError,
+    ValidationIssue,
 )
 
 SIGNED_URL = "https://provider.example/file?signature=provider-signature"
@@ -85,3 +88,131 @@ def test_provider_failures_keep_full_redaction():
     assert failure.value.output_json["cursor"] != CURSOR
     assert failure.value.output_json["token"] == "[redacted]"
     assert failure.value.output_json["echo"] == "[redacted]"
+
+
+@pytest.mark.parametrize("secret", ["p", "metadata_json", "cost_cents", "path"])
+def test_short_secret_cannot_corrupt_result_or_file_envelope(secret):
+    calls = []
+
+    class Submitted(Fixture):
+        async def execute(self, request):
+            calls.append(request)
+            return ConnectorResult(
+                output_json={"id": "job-42", "state": "done", "echo": secret},
+                metadata_json={
+                    "id": "job-42",
+                    "state": "done",
+                    "echo": secret,
+                    "outcome": "known",
+                    "retry_safe": False,
+                    "provider_executed": True,
+                    "primary_request_executed": True,
+                    "outcome_unknown": False,
+                    "provider_receipt": {"id": "job-42", "echo": secret},
+                },
+                cost_cents=7,
+                files=[ConnectorFile(path=f"/generated/{secret}", name=secret, size_bytes=9)],
+            )
+
+    native = ConnectorClient(
+        registry=ConnectorRegistry(
+            actions=[
+                ActionDefinition(
+                    "facts", "read", "read", auth_methods=(AuthMethodDefinition("key"),)
+                )
+            ],
+            implementations={"facts": Submitted},
+        )
+    )
+    result = asyncio.run(
+        native.execute("facts", "read", {}, ConnectorAuth("key", {"token": secret}))
+    )
+    assert len(calls) == 1
+    assert result.output_json == {"id": "job-42", "state": "done", "echo": "[redacted]"}
+    assert result.metadata_json == {
+        **result.output_json,
+        "outcome": "known",
+        "retry_safe": False,
+        "provider_executed": True,
+        "primary_request_executed": True,
+        "outcome_unknown": False,
+        "provider_receipt": {"id": "job-42", "echo": "[redacted]"},
+    }
+    assert result.cost_cents == 7
+    assert result.files[0].path == "/generated/[redacted]"
+    assert result.files[0].name == "[redacted]"
+    assert result.files[0].size_bytes == 9
+
+
+def test_short_secret_does_not_erase_failure_receipt_controls():
+    class Failed(Fixture):
+        async def execute(self, request):
+            raise ConnectorError(
+                "failed",
+                metadata_json={
+                    "provider_executed": True,
+                    "primary_request_executed": True,
+                    "retry_safe": False,
+                    "outcome_unknown": True,
+                    "provider_receipt": {"id": "job-42", "echo": "p"},
+                },
+            )
+
+    native = ConnectorClient(
+        registry=ConnectorRegistry(
+            actions=[
+                ActionDefinition(
+                    "facts", "read", "read", auth_methods=(AuthMethodDefinition("key"),)
+                )
+            ],
+            implementations={"facts": Failed},
+        )
+    )
+    with pytest.raises(ConnectorError) as error:
+        asyncio.run(native.execute("facts", "read", {}, ConnectorAuth("key", {"token": "p"})))
+    assert error.value.metadata_json == {
+        "provider_executed": True,
+        "primary_request_executed": True,
+        "retry_safe": False,
+        "outcome_unknown": True,
+        "provider_receipt": {"id": "job-42", "echo": "[redacted]"},
+    }
+
+
+@pytest.mark.parametrize("phase", ["validate", "execute"])
+def test_secret_matching_validation_field_preserves_diagnostic_envelope(phase):
+    class Invalid(Fixture):
+        def validate(self, request):
+            if phase == "validate":
+                return [ValidationIssue(path="$.field", message="echo path", code="invalid")]
+            return []
+
+        async def execute(self, request):
+            raise ValidationError(
+                "invalid",
+                issues=[ValidationIssue(path="$.field", message="echo path", code="invalid")],
+            )
+
+    native = ConnectorClient(
+        registry=ConnectorRegistry(
+            actions=[
+                ActionDefinition(
+                    "facts", "read", "read", auth_methods=(AuthMethodDefinition("key"),)
+                )
+            ],
+            implementations={"facts": Invalid},
+        )
+    )
+    auth = ConnectorAuth("key", {"token": "path"})
+    if phase == "validate":
+        issues = native.validate("facts", "read", {}, auth)
+    else:
+        with pytest.raises(ValidationError) as error:
+            asyncio.run(native.execute("facts", "read", {}, auth))
+        issues = error.value.issues
+    assert len(issues) == 1
+    assert issues[0].model_dump() == {
+        "path": "$.field",
+        "message": "echo [redacted]",
+        "code": "invalid",
+    }

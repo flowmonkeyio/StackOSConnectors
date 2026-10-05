@@ -19,16 +19,25 @@ def presentation_document():
             "media_type": "image/svg+xml",
             "kind": "wordmark-inverse",
         },
-        "auth_methods": [{
-            "key": "token", "description": "Resolved bearer token.",
-            "fields_schema": {"type": "object"},
-            "setup": {"description": "Acquire the token in the provider console."},
-        }],
-        "actions": [{
-            "key": "fixture.read", "operation": "read", "description": "Read one object.",
-            "input_schema": {"type": "object"}, "auth_methods": ["token"], "config": {},
-            "metadata": {"name": "Read Object"},
-        }],
+        "auth_methods": [
+            {
+                "key": "token",
+                "description": "Resolved bearer token.",
+                "fields_schema": {"type": "object"},
+                "setup": {"description": "Acquire the token in the provider console."},
+            }
+        ],
+        "actions": [
+            {
+                "key": "fixture.read",
+                "operation": "read",
+                "description": "Read one object.",
+                "input_schema": {"type": "object"},
+                "auth_methods": ["token"],
+                "config": {},
+                "metadata": {"name": "Read Object"},
+            }
+        ],
     }
 
 
@@ -59,12 +68,22 @@ def test_action_specific_icon_overrides_provider_and_preserves_kind(presentation
     assert described["icon"] == presentation_document["icon"]
 
 
-@pytest.mark.parametrize("path", [
-    "/icon.svg", "../icon.svg", "connectors/../icon.svg", "./icon.svg",
-    "connectors//icon.svg", "connectors\\icon.svg", "https://example.com/icon.svg",
-    "connectors/%2e%2e/icon.svg", "connectors/icon.svg?query", "connectors/icon.svg#part",
-    "connectors/icon.svg\n",
-])
+@pytest.mark.parametrize(
+    "path",
+    [
+        "/icon.svg",
+        "../icon.svg",
+        "connectors/../icon.svg",
+        "./icon.svg",
+        "connectors//icon.svg",
+        "connectors\\icon.svg",
+        "https://example.com/icon.svg",
+        "connectors/%2e%2e/icon.svg",
+        "connectors/icon.svg?query",
+        "connectors/icon.svg#part",
+        "connectors/icon.svg\n",
+    ],
+)
 @pytest.mark.parametrize("location", ["provider", "action_metadata"])
 def test_invalid_icon_paths_rejected_before_provider_import(presentation_document, path, location):
     icon = copy.deepcopy(presentation_document["icon"])
@@ -77,15 +96,18 @@ def test_invalid_icon_paths_rejected_before_provider_import(presentation_documen
         registry_from_documents([presentation_document])
 
 
-@pytest.mark.parametrize("icon", [
-    {"path": "a.svg", "media_type": "image/png", "kind": "icon"},
-    {"path": "a.png", "media_type": "image/jpeg", "kind": "icon"},
-    {"path": "a.jpeg", "media_type": "image/webp", "kind": "icon"},
-    {"path": "a.webp", "media_type": "image/svg+xml", "kind": "icon"},
-    {"path": "a.svg", "media_type": "image/svg+xml", "kind": "logo"},
-    {"path": "a.svg", "kind": "icon"},
-    {"path": "a.svg", "media_type": "image/svg+xml", "kind": "icon", "url": "elsewhere"},
-])
+@pytest.mark.parametrize(
+    "icon",
+    [
+        {"path": "a.svg", "media_type": "image/png", "kind": "icon"},
+        {"path": "a.png", "media_type": "image/jpeg", "kind": "icon"},
+        {"path": "a.jpeg", "media_type": "image/webp", "kind": "icon"},
+        {"path": "a.webp", "media_type": "image/svg+xml", "kind": "icon"},
+        {"path": "a.svg", "media_type": "image/svg+xml", "kind": "logo"},
+        {"path": "a.svg", "kind": "icon"},
+        {"path": "a.svg", "media_type": "image/svg+xml", "kind": "icon", "url": "elsewhere"},
+    ],
+)
 def test_invalid_icon_types_are_rejected(presentation_document, icon):
     presentation_document["icon"] = icon
     with pytest.raises(ValueError, match="catalog"):
@@ -114,8 +136,8 @@ def test_search_console_auth_excludes_host_defaults_and_keeps_native_site_inputs
         assert not {"access_mode", "default_site_url"} & config.get("properties", {}).keys()
         assert not {"access_mode", "default_site_url"} & set(config.get("required", []))
         assert method["fields_schema"]["required"] == ["access_token"]
-    selected = [a for a in described["actions"] if "site_url" in a["input_schema"].get(
-        "properties", {}
-    )]
+    selected = [
+        a for a in described["actions"] if "site_url" in a["input_schema"].get("properties", {})
+    ]
     assert selected
     assert all("site_url" in a["input_schema"]["required"] for a in selected)

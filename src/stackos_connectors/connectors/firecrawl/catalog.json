@@ -168,7 +168,17 @@
     "fallback_url": "https://docs.firecrawl.dev/",
     "homepage_url": "https://www.firecrawl.dev/",
     "setup_note": "Supply the Firecrawl API key for scrape, crawl, and map requests. Create or copy an API key in the Firecrawl app; provider plan limits apply.",
-    "signup_url": "https://app.firecrawl.dev/"
+    "signup_url": "https://app.firecrawl.dev/",
+    "docs": [
+      "https://docs.firecrawl.dev/api-reference/v2-introduction",
+      "https://docs.firecrawl.dev/api-reference/v2-endpoint/scrape",
+      "https://docs.firecrawl.dev/api-reference/v2-endpoint/crawl-post",
+      "https://docs.firecrawl.dev/api-reference/v2-endpoint/crawl-get",
+      "https://docs.firecrawl.dev/api-reference/v2-endpoint/map",
+      "https://docs.firecrawl.dev/api-reference/v2-endpoint/extract",
+      "https://docs.firecrawl.dev/api-reference/errors",
+      "https://docs.firecrawl.dev/rate-limits"
+    ]
   },
   "implementation": "stackos_connectors.connectors.firecrawl.actions:FirecrawlActionConnector",
   "icon": {

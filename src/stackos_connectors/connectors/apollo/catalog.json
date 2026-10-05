@@ -220,9 +220,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "access_scope"
-        ],
         "type": "object"
       },
       "description": "People API Search requires an Apollo master API key; enrichment can use endpoint-specific keys when Apollo allows them.",

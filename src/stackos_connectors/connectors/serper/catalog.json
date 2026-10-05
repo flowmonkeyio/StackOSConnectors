@@ -109,7 +109,7 @@
     "fallback_reason": "Exact dashboard routes can change; the official site is the fallback for key and usage setup.",
     "fallback_url": "https://serper.dev/",
     "homepage_url": "https://serper.dev/",
-    "setup_note": "Serper.dev Google Search requests send the API key in the provider header and consume provider credits. Supply the query, locale, page, and result count explicitly. Obtain the API key from the Serper dashboard.",
+    "setup_note": "Serper.dev Google Search requests send the API key in the provider header and consume provider credits. Supply the query, locale, page, and result count explicitly. Obtain the API key from the Serper dashboard. The reviewed endpoint and authentication header come from provider dashboard/playground examples; the public entrypoint is not a stable versioned API specification.",
     "signup_url": "https://serper.dev/signup",
     "docs": [
       "https://serper.dev/"

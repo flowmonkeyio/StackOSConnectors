@@ -337,7 +337,13 @@
     "fallback_url": "https://app.reve.com/",
     "homepage_url": "https://app.reve.com/",
     "signup_url": "https://app.reve.com/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://api.reve.com/console/docs/create",
+      "https://api.reve.com/console/docs/edit",
+      "https://api.reve.com/console/docs/remix",
+      "https://api.reve.com/console/pricing"
+    ]
   },
   "icon": {
     "path": "connectors/reve/assets/icon.png",

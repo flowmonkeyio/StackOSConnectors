@@ -82,7 +82,14 @@
     }
   ],
   "actions": [],
-  "setup": {},
+  "setup": {
+    "docs": [
+      "https://www.rfc-editor.org/rfc/rfc9110",
+      "https://www.rfc-editor.org/rfc/rfc7617",
+      "https://www.rfc-editor.org/rfc/rfc6750",
+      "https://www.rfc-editor.org/rfc/rfc9457"
+    ]
+  },
   "implementation": "stackos_connectors.connectors.http.actions:HttpActionConnector",
   "guidance": "Register named ActionDefinition values with fixed http routing/configuration on an isolated ConnectorClient. No per-call route override is accepted.",
   "icon": {

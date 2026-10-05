@@ -16,6 +16,7 @@ from .contracts import (
     CallOptions,
     Connector,
     ConnectorAuth,
+    ConnectorFile,
     ConnectorRequest,
     ConnectorResult,
     ValidationIssue,
@@ -28,6 +29,26 @@ from .validation import schema_issues
 
 type ConnectorFactory = Callable[[], Connector]
 
+_OUTCOME_FIELDS = frozenset(
+    {
+        "provider_executed",
+        "primary_request_executed",
+        "retry_safe",
+        "outcome",
+        "outcome_unknown",
+        "provider_receipt",
+    }
+)
+
+
+def _clean_metadata(value: Any, clean: Callable[[Any], Any]) -> Any:
+    """Preserve fixed execution-control names, while cleaning every field value."""
+    if not isinstance(value, Mapping):
+        return clean(value)
+    result = clean({key: item for key, item in value.items() if key not in _OUTCOME_FIELDS})
+    result.update({key: clean(item) for key, item in value.items() if key in _OUTCOME_FIELDS})
+    return result
+
 
 def _clean_issues(
     issues: Iterable[ValidationIssue], clean: Callable[[Any], Any]
@@ -36,7 +57,12 @@ def _clean_issues(
     for item in issues:
         try:
             payload = item.model_dump() if isinstance(item, ValidationIssue) else item
-            safe.append(ValidationIssue.model_validate(clean(payload)))
+            issue = ValidationIssue.model_validate(payload)
+            safe.append(
+                ValidationIssue.model_validate(
+                    {key: clean(value) for key, value in issue.model_dump().items()}
+                )
+            )
         except Exception:
             safe.append(
                 ValidationIssue(path="$", message="invalid connector validation diagnostic")
@@ -67,7 +93,7 @@ def _preflight_boundary(
             data=clean(exc.data),
         ) from None
     except ConnectorError as exc:
-        metadata = clean(exc.metadata_json)
+        metadata = _clean_metadata(exc.metadata_json, clean)
         metadata.pop("outcome", None)
         metadata["provider_executed"] = False
         raise ConnectorError(
@@ -78,7 +104,7 @@ def _preflight_boundary(
             metadata_json=metadata,
         ) from None
     except IntegrationDownError as exc:
-        metadata = clean(exc.data)
+        metadata = _clean_metadata(exc.data, clean)
         metadata.pop("outcome", None)
         metadata["provider_executed"] = False
         raise ConnectorError(
@@ -349,25 +375,22 @@ class ConnectorClient:
                 raise ValidationError(
                     clean(exc.detail),
                     data=clean(exc.data),
-                    metadata_json=clean(exc.metadata_json),
-                    issues=[
-                        ValidationIssue.model_validate(clean(item.model_dump()))
-                        for item in exc.issues
-                    ],
+                    metadata_json=_clean_metadata(exc.metadata_json, clean),
+                    issues=_clean_issues(exc.issues, clean),
                 ) from None
             raise ConnectorError(
                 clean(exc.detail),
                 provider_status_code=exc.provider_status_code,
                 provider_error=clean(exc.provider_error),
                 output_json=clean(exc.output_json),
-                metadata_json=clean(exc.metadata_json),
+                metadata_json=_clean_metadata(exc.metadata_json, clean),
             ) from None
         except IntegrationDownError as exc:
             raise ConnectorError(
                 clean(exc.detail),
                 provider_status_code=exc.data.get("status"),
                 provider_error=clean(exc.data.get("provider_error")),
-                metadata_json=clean(exc.data),
+                metadata_json=_clean_metadata(exc.data, clean),
             ) from None
         except Exception:
             # No added retries: a protocol/callback exception may follow an external side effect.
@@ -378,11 +401,19 @@ class ConnectorClient:
                     "retry_safe": False,
                 },
             ) from None
-        payload = clean(result.model_dump())
         # Native response facts may include signed download URLs and opaque next-page
         # tokens. Display/audit projection belongs to the caller; credential echoes
         # remain forbidden even in the in-process response.
-        payload["output_json"] = redact_secret_values(
-            result.output_json, auth_secret_values(request.auth)
+        # Model field names are structural. A short credential must not rename
+        # output_json, cost_cents, or a file's path while scrubbing provider data.
+        return ConnectorResult(
+            output_json=redact_secret_values(result.output_json, auth_secret_values(request.auth)),
+            metadata_json=_clean_metadata(result.metadata_json, clean),
+            cost_cents=result.cost_cents,
+            files=[
+                ConnectorFile.model_validate(
+                    {key: clean(value) for key, value in file.model_dump().items()}
+                )
+                for file in result.files
+            ],
         )
-        return ConnectorResult.model_validate(payload)

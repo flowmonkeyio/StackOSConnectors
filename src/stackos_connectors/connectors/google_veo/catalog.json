@@ -196,7 +196,11 @@
     "fallback_url": "https://ai.google.dev/gemini-api/docs/video",
     "homepage_url": "https://ai.google.dev/",
     "signup_url": "https://aistudio.google.com/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://ai.google.dev/gemini-api/docs/pricing",
+      "https://github.com/googleapis/python-genai"
+    ]
   },
   "icon": {
     "path": "connectors/google_veo/assets/icon.png",

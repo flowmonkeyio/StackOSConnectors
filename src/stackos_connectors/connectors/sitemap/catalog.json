@@ -56,7 +56,12 @@
     }
   ],
   "setup": {
-    "setup_note": "Supply a public sitemap URL. Authentication is not required."
+    "setup_note": "Supply a public sitemap URL. Authentication is not required. The sitemap protocol permits up to 50 MB uncompressed and 50,000 URLs per sitemap; caller-selected byte and entry limits may be lower.",
+    "docs": [
+      "https://www.sitemaps.org/protocol.html",
+      "https://www.sitemaps.org/faq.html",
+      "https://developers.google.com/search/reference/robots_txt"
+    ]
   },
   "implementation": "stackos_connectors.connectors.sitemap.actions:SitemapActionConnector",
   "icon": {

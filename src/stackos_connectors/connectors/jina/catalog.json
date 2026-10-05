@@ -87,7 +87,11 @@
     "fallback_url": "https://jina.ai/api-dashboard/",
     "homepage_url": "https://jina.ai/",
     "setup_note": "The API key is optional; anonymous requests are supported. Jina Reader can run without a key. An API key from the Jina dashboard provides authenticated access with provider quota limits.",
-    "signup_url": "https://jina.ai/"
+    "signup_url": "https://jina.ai/",
+    "docs": [
+      "https://jina.ai/en-US/reader/",
+      "https://github.com/jina-ai/reader"
+    ]
   },
   "implementation": "stackos_connectors.connectors.jina.actions:JinaActionConnector",
   "icon": {

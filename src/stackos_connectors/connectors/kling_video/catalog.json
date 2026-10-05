@@ -216,7 +216,12 @@
     "fallback_url": "https://kling.ai/document-api",
     "homepage_url": "https://klingai.com/",
     "signup_url": "https://app.klingai.com/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://kling.ai/document-api/apiReference%2FcommonInfo",
+      "https://kling.ai/document-api/apiReference%2Fmodel%2FtextToVideo",
+      "https://kling.ai/document-api/apiReference%2Fmodel%2FimageToVideo"
+    ]
   },
   "icon": {
     "path": "connectors/kling_video/assets/icon.png",

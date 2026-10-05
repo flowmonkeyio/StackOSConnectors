@@ -166,7 +166,16 @@
     "fallback_url": "https://docs.ahrefs.com/",
     "homepage_url": "https://ahrefs.com/",
     "setup_note": "Ahrefs API v3 calls consume API units and require eligible Direct API access. Obtain an API key in the Ahrefs app. The limits_and_usage action reads subscription information, including plan and key limits and remaining units.",
-    "signup_url": "https://app.ahrefs.com/user/sign-up"
+    "signup_url": "https://app.ahrefs.com/user/sign-up",
+    "docs": [
+      "https://docs.ahrefs.com/en/api/docs/introduction",
+      "https://docs.ahrefs.com/en/api/docs/api-keys-creation-and-management",
+      "https://docs.ahrefs.com/en/api/docs/limits-consumption",
+      "https://docs.ahrefs.com/en/api/reference/subscription-info/get-limits-and-usage",
+      "https://docs.ahrefs.com/en/api/reference/site-explorer",
+      "https://docs.ahrefs.com/en/api/reference/site-explorer/get-organic-keywords",
+      "https://docs.ahrefs.com/en/api/reference/site-explorer/get-all-backlinks"
+    ]
   },
   "implementation": "stackos_connectors.connectors.ahrefs.actions:AhrefsActionConnector",
   "icon": {

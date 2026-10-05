@@ -3164,7 +3164,10 @@
     "setup_note": "Supply an existing Shopify Admin API access token and the store myshopify.com domain. The token requires the scopes for the selected requests; acquire it outside this library.",
     "support_url": "https://help.shopify.com/",
     "default_api_version": "2026-07",
-    "endpoint_template": "https://{store_domain}/admin/api/{api_version}/graphql.json"
+    "endpoint_template": "https://{store_domain}/admin/api/{api_version}/graphql.json",
+    "docs": [
+      "https://shopify.dev/docs/api/usage/versioning"
+    ]
   },
   "implementation": "stackos_connectors.connectors.shopify.actions:ShopifyActionConnector",
   "icon": {

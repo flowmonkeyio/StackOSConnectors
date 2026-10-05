@@ -275,7 +275,13 @@
     "fallback_url": "https://docs.byteplus.com/en/docs/ModelArk/",
     "homepage_url": "https://www.byteplus.com/en/product/modelark",
     "signup_url": "https://console.byteplus.com/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://docs.byteplus.com/en/docs/ModelArk/1541523",
+      "https://docs.byteplus.com/en/docs/ModelArk/1330310",
+      "https://docs.byteplus.com/en/docs/ModelArk/1544106",
+      "https://docs.byteplus.com/en/docs/ModelArk/1298459"
+    ]
   },
   "icon": {
     "path": "shared/icons/integration.svg",

@@ -266,7 +266,12 @@
     "docs_url": "https://developers.openai.com/api/docs/guides/image-generation",
     "homepage_url": "https://openai.com/api/",
     "signup_url": "https://platform.openai.com/signup",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://developers.openai.com/api/reference/resources/images",
+      "https://platform.openai.com/docs/api-reference/authentication",
+      "https://platform.openai.com/docs/guides/rate-limits"
+    ]
   },
   "icon": {
     "path": "connectors/openai_images/assets/icon.webp",

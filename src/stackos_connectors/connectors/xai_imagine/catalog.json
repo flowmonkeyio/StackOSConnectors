@@ -381,7 +381,17 @@
     "docs_url": "https://docs.x.ai/overview",
     "homepage_url": "https://x.ai/",
     "signup_url": "https://console.x.ai/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://docs.x.ai/developers/model-capabilities/images/generation",
+      "https://docs.x.ai/developers/model-capabilities/images/editing",
+      "https://docs.x.ai/developers/model-capabilities/images/multi-image-editing",
+      "https://docs.x.ai/developers/model-capabilities/video/generation",
+      "https://docs.x.ai/developers/model-capabilities/video/image-to-video",
+      "https://docs.x.ai/developers/model-capabilities/video/reference-to-video",
+      "https://docs.x.ai/developers/models",
+      "https://docs.x.ai/developers/pricing"
+    ]
   },
   "icon": {
     "path": "connectors/xai_imagine/assets/icon.png",

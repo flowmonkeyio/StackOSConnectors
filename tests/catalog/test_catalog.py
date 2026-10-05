@@ -183,8 +183,12 @@ def test_missing_catalog_resource_is_not_silently_skipped(tmp_path: Path):
         load_registry("missing.json", root=tmp_path)
 
 
-def test_default_catalog_is_empty_and_public_functions_use_catalog(monkeypatch, document):
-    assert ConnectorClient(registry=default_registry()).list_connectors() == []
+def test_default_catalog_and_public_functions_use_catalog(monkeypatch, document):
+    default = ConnectorClient(registry=default_registry())
+    assert {"serper", "shopify", "telegram", "trackbooth", "openrouter", "http"} <= set(
+        default.list_connectors()
+    )
+    assert default.describe("serper", "serper.search")["actions"][0]["operation"] == "search"
     registry = registry_from_documents([document])
     monkeypatch.setattr("stackos_connectors.catalog.default_registry", lambda: registry)
     stackos_connectors.get_default_client.cache_clear()

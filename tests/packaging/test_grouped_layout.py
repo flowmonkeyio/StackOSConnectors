@@ -41,9 +41,7 @@ def test_grouped_owners_have_no_old_duplicate_paths():
             assert document["implementation"].startswith(
                 f"stackos_connectors.connectors.{provider.name}."
             )
-        client = ConnectorClient(
-            registry=load_registry(f"connectors/{provider.name}/catalog.json")
-        )
+        client = ConnectorClient(registry=load_registry(f"connectors/{provider.name}/catalog.json"))
         assert document["connector"] in client.list_connectors()
         described = client.describe(document["connector"])
         assert described["name"] and described["description"]
@@ -58,7 +56,7 @@ def test_grouped_owners_have_no_old_duplicate_paths():
         for link in document.get("setup", {}).get("docs", []):
             if not link.startswith("https://"):
                 assert root.joinpath(*link.split("/")).is_file(), link
-    assert ConnectorClient(registry=load_registry()).list_connectors() == []
+    assert ConnectorClient(registry=load_registry()).list_connectors() == sorted(connector_keys)
 
 
 def test_provider_documents_are_colocated_and_local_links_resolve():

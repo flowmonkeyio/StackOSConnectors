@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "stackos-connectors"
 version = "0.1.0"
 description = "Named provider connectors with plain data and caller-owned authentication."
+readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
 dependencies = [

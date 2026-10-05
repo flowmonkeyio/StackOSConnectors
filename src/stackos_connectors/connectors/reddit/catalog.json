@@ -157,7 +157,12 @@
     "docs_url": "https://www.reddit.com/dev/api/",
     "homepage_url": "https://www.reddit.com/",
     "setup_note": "Acquire the client-credentials access token before execution. Pass access_token and user_agent as execution auth fields. Create a Reddit app under developer preferences and use its client ID and client secret to acquire an access token. Supply a descriptive user agent.",
-    "signup_url": "https://www.reddit.com/register/"
+    "signup_url": "https://www.reddit.com/register/",
+    "docs": [
+      "https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki",
+      "https://redditinc.com/policies/data-api-terms",
+      "https://github.com/reddit-archive/reddit/wiki/oauth2"
+    ]
   },
   "implementation": "stackos_connectors.connectors.reddit.actions:RedditActionConnector",
   "icon": {

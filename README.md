@@ -27,15 +27,15 @@ Folder names use Python identifiers, such as `aws_s3`; public connector keys
 remain unchanged, such as `aws-s3`. Provider-only helper modules live beside
 their actions. The root package contains the public contracts and execution API.
 
-This extraction is being assembled. Load the catalog resources you need
-explicitly; the default index is currently empty. A documentation or asset
-directory alone does not imply that an executable connector is installed.
+The default client loads the bundled connector catalogs. Use `list_connectors`
+and `describe` to discover the installed actions and their input/auth schemas.
+Generic HTTP accepts explicitly registered declarations; OpenRouter currently
+provides a credential probe without a text-generation action.
 
 ```python
-from stackos_connectors import ConnectorAuth, ConnectorClient
-from stackos_connectors.catalog import load_registry
+from stackos_connectors import ConnectorAuth, get_default_client
 
-client = ConnectorClient(registry=load_registry("connectors/serper/catalog.json"))
+client = get_default_client()
 result = await client.execute(
     connector="serper",
     action="serper.search",
@@ -54,6 +54,17 @@ execution; existing names cannot be replaced.
 
 `CallOptions.timeout=None` preserves each provider's default. A numeric timeout
 overrides that default. A supplied HTTP client remains caller-owned.
+
+For file-producing actions, pass `CallOptions(output_dir=Path(...))` and consume
+the plain descriptors in `result.files`. The library does not create application
+artifacts or public download URLs. Telegram actions require an already authorized
+session through `CallOptions(native_session=session)`; the caller owns account
+lifecycle, the TDLib binary, receipt persistence and session shutdown.
+
+For a restricted catalog, construct `ConnectorClient(registry=load_registry(...))`
+using `stackos_connectors.catalog.load_registry` and the provider-local resource
+paths above. Register custom HTTP or Trackbooth declarations on that scoped client
+before execution; request data cannot override a declaration's provider or route.
 
 `ConnectorResult.output_json` contains native response data for in-process use,
 including signed download URLs and pagination tokens. Exact resolved credential
@@ -84,3 +95,7 @@ icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read
 ```
 
 Python 3.12 or newer is required.
+
+Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
+build a wheel with `python -m build --wheel` and install that wheel. Runtime use
+needs only the installed package and its declared dependencies.

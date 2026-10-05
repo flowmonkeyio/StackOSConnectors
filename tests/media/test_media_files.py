@@ -7,9 +7,7 @@ from stackos_connectors.shared.media import write_media_file
 
 def test_explicit_directory_and_ordered_files(tmp_path):
     files = []
-    first = write_media_file(
-        b"first", output_dir=tmp_path, prefix="image", ext="png", files=files
-    )
+    first = write_media_file(b"first", output_dir=tmp_path, prefix="image", ext="png", files=files)
     second = write_media_file(
         b"second", output_dir=tmp_path, prefix="video", ext="mp4", files=files
     )
@@ -52,9 +50,7 @@ def test_write_failure_keeps_only_completed_files(tmp_path, monkeypatch):
 
     monkeypatch.setattr(media.os, "replace", fail)
     with pytest.raises(OSError, match="disk full"):
-        write_media_file(
-            b"second", output_dir=tmp_path, prefix="image", ext="png", files=files
-        )
+        write_media_file(b"second", output_dir=tmp_path, prefix="image", ext="png", files=files)
     assert [file.path for file in files] == [completed["path"]]
     assert len(list(tmp_path.iterdir())) == 1
 

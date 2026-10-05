@@ -266,7 +266,12 @@
     "docs_url": "https://developer.ideogram.ai/",
     "homepage_url": "https://ideogram.ai/",
     "signup_url": "https://ideogram.ai/api",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://developer.ideogram.ai/api-reference/api-reference/generate-v4",
+      "https://developer.ideogram.ai/api-reference/api-reference/remix-v4",
+      "https://ideogram.ai/api-pricing/"
+    ]
   },
   "icon": {
     "path": "connectors/ideogram/assets/icon.png",

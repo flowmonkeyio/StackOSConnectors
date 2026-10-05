@@ -42,4 +42,10 @@ Sources: [Admin GraphQL](https://shopify.dev/docs/api/admin-graphql/latest),
 [product filters](https://shopify.dev/docs/api/admin-graphql/latest/queries/products),
 [orderUpdate](https://shopify.dev/docs/api/admin-graphql/latest/mutations/orderUpdate),
 [inventory adjustments](https://shopify.dev/docs/api/admin-graphql/latest/mutations/inventoryAdjustQuantities),
-and [quantity setting](https://shopify.dev/docs/api/admin-graphql/latest/mutations/inventorySetQuantities).
+[quantity setting](https://shopify.dev/docs/api/admin-graphql/latest/mutations/inventorySetQuantities),
+[shop probe](https://shopify.dev/docs/api/admin-graphql/latest/queries/shop),
+[ShopifyQL query](https://shopify.dev/docs/api/admin-graphql/latest/queries/shopifyqlQuery),
+[ShopifyQL language](https://shopify.dev/docs/api/shopifyql),
+[orders](https://shopify.dev/docs/api/admin-graphql/latest/queries/orders),
+[variant create errors](https://shopify.dev/docs/api/admin-graphql/latest/objects/ProductVariantsBulkCreateUserError),
+and [variant update errors](https://shopify.dev/docs/api/admin-graphql/latest/objects/ProductVariantsBulkUpdateUserError).

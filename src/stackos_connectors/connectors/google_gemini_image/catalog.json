@@ -259,7 +259,12 @@
     "docs_url": "https://ai.google.dev/gemini-api/docs/image-generation",
     "homepage_url": "https://ai.google.dev/",
     "signup_url": "https://aistudio.google.com/",
-    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call."
+    "setup_note": "Obtain the provider credentials and supply the resolved execution fields for each call.",
+    "docs": [
+      "https://ai.google.dev/gemini-api/docs/image-understanding",
+      "https://ai.google.dev/api/generate-content",
+      "https://ai.google.dev/gemini-api/docs/pricing"
+    ]
   },
   "icon": {
     "path": "connectors/google_gemini_image/assets/icon.webp",

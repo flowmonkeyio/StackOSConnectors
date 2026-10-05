@@ -99,7 +99,8 @@ class RateLimiter(Protocol):
 class NativeSession(Protocol):
     """Caller-bound native protocol session; account selection remains outside the package."""
 
-    files_directory: Path
+    @property
+    def files_directory(self) -> Path: ...
 
     async def request(self, payload: dict[str, Any], *, timeout: float = 30.0) -> Any: ...
 
