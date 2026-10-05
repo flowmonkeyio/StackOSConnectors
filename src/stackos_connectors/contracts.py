@@ -152,6 +152,13 @@ class ConnectorFile(BaseModel):
 
 
 class ConnectorResult(BaseModel):
+    """Native in-process response facts with resolved credential echoes scrubbed.
+
+    Callers own safe display, persistence and audit projection of output_json,
+    including signed URLs and continuation tokens. Diagnostics and files receive
+    full key/text redaction. Response data stays hidden from the default repr.
+    """
+
     model_config = ConfigDict(extra="forbid")
     output_json: dict[str, Any] = Field(default_factory=dict, repr=False)
     metadata_json: dict[str, Any] | None = Field(default=None, repr=False)

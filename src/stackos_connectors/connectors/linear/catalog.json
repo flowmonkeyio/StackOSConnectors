@@ -1,0 +1,2794 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/viewer/get.graphql",
+        "root": "viewer"
+      },
+      "description": "Execute the fixed viewer GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "key": "viewer.get",
+      "metadata": {
+        "name": "Get Linear Viewer",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/teams/list.graphql",
+        "root": "teams"
+      },
+      "description": "Execute the fixed teams GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "teams.list",
+      "metadata": {
+        "name": "List Linear Teams",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/teams/get.graphql",
+        "root": "team"
+      },
+      "description": "Execute the fixed team GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "teams.get",
+      "metadata": {
+        "name": "Get Linear Team",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/users/list.graphql",
+        "root": "users"
+      },
+      "description": "Execute the fixed users GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "includeDisabled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeDisabled value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "users.list",
+      "metadata": {
+        "name": "List Linear Users",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/users/get.graphql",
+        "root": "user"
+      },
+      "description": "Execute the fixed user GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "users.get",
+      "metadata": {
+        "name": "Get Linear User",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/workflow-states/list.graphql",
+        "root": "workflowStates"
+      },
+      "description": "Execute the fixed workflowStates GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "team": {
+                "additionalProperties": false,
+                "description": "GraphQL team value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "workflow_states.list",
+      "metadata": {
+        "name": "List Linear Workflow States",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/workflow-states/get.graphql",
+        "root": "workflowState"
+      },
+      "description": "Execute the fixed workflowState GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "workflow_states.get",
+      "metadata": {
+        "name": "Get Linear Workflow State",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/projects/list.graphql",
+        "root": "projects"
+      },
+      "description": "Execute the fixed projects GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "accessibleTeams": {
+                "additionalProperties": false,
+                "description": "GraphQL accessibleTeams value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "projects.list",
+      "metadata": {
+        "name": "List Linear Projects",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/projects/get.graphql",
+        "root": "project"
+      },
+      "description": "Execute the fixed project GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "projects.get",
+      "metadata": {
+        "name": "Get Linear Project",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/cycles/list.graphql",
+        "root": "cycles"
+      },
+      "description": "Execute the fixed cycles GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "team": {
+                "additionalProperties": false,
+                "description": "GraphQL team value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "cycles.list",
+      "metadata": {
+        "name": "List Linear Cycles",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/cycles/get.graphql",
+        "root": "cycle"
+      },
+      "description": "Execute the fixed cycle GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "cycles.get",
+      "metadata": {
+        "name": "Get Linear Cycle",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-labels/list.graphql",
+        "root": "issueLabels"
+      },
+      "description": "Execute the fixed issueLabels GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "team": {
+                "additionalProperties": false,
+                "description": "GraphQL team value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "issue_labels.list",
+      "metadata": {
+        "name": "List Linear Issue Labels",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-labels/get.graphql",
+        "root": "issueLabel"
+      },
+      "description": "Execute the fixed issueLabel GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issue_labels.get",
+      "metadata": {
+        "name": "Get Linear Issue Label",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/list.graphql",
+        "root": "issues"
+      },
+      "description": "Execute the fixed issues GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "assignee": {
+                "additionalProperties": false,
+                "description": "GraphQL assignee value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "cycle": {
+                "additionalProperties": false,
+                "description": "GraphQL cycle value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "labels": {
+                "additionalProperties": false,
+                "description": "GraphQL labels value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "project": {
+                "additionalProperties": false,
+                "description": "GraphQL project value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "state": {
+                "additionalProperties": false,
+                "description": "GraphQL state value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "team": {
+                "additionalProperties": false,
+                "description": "GraphQL team value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "issues.list",
+      "metadata": {
+        "name": "List Linear Issues",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/get.graphql",
+        "root": "issue"
+      },
+      "description": "Execute the fixed issue GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issues.get",
+      "metadata": {
+        "name": "Get Linear Issue",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/search.graphql",
+        "root": "searchIssues"
+      },
+      "description": "Execute the fixed searchIssues GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "filter": {
+            "additionalProperties": false,
+            "description": "GraphQL filter value.",
+            "properties": {
+              "assignee": {
+                "additionalProperties": false,
+                "description": "GraphQL assignee value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "createdAt": {
+                "additionalProperties": false,
+                "description": "GraphQL createdAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "cycle": {
+                "additionalProperties": false,
+                "description": "GraphQL cycle value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "labels": {
+                "additionalProperties": false,
+                "description": "GraphQL labels value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "project": {
+                "additionalProperties": false,
+                "description": "GraphQL project value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "state": {
+                "additionalProperties": false,
+                "description": "GraphQL state value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "team": {
+                "additionalProperties": false,
+                "description": "GraphQL team value.",
+                "properties": {
+                  "id": {
+                    "additionalProperties": false,
+                    "description": "Provider-native id identifier.",
+                    "properties": {
+                      "eq": {
+                        "description": "GraphQL eq value.",
+                        "type": [
+                          "string",
+                          "integer"
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  }
+                },
+                "type": "object"
+              },
+              "updatedAt": {
+                "additionalProperties": false,
+                "description": "GraphQL updatedAt value.",
+                "properties": {
+                  "gte": {
+                    "description": "GraphQL gte value.",
+                    "type": "string"
+                  },
+                  "lte": {
+                    "description": "GraphQL lte value.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          },
+          "term": {
+            "description": "GraphQL term value.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "term",
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "issues.search",
+      "metadata": {
+        "name": "Search Linear Issues",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/list.graphql",
+        "root": "comments"
+      },
+      "description": "Execute the fixed comments GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "issueId": {
+            "description": "Provider-native issueId identifier.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "issueId",
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "comments.list",
+      "metadata": {
+        "name": "List Linear Issue Comments",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/get.graphql",
+        "root": "comment"
+      },
+      "description": "Execute the fixed comment GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "comments.get",
+      "metadata": {
+        "name": "Get Linear Comment",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-relations/list.graphql",
+        "root": "issue"
+      },
+      "description": "Execute the fixed issue GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL after value."
+          },
+          "first": {
+            "description": "GraphQL first value.",
+            "type": "integer"
+          },
+          "includeArchived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL includeArchived value."
+          },
+          "issueId": {
+            "description": "Provider-native issueId identifier.",
+            "type": "string"
+          },
+          "orderBy": {
+            "anyOf": [
+              {
+                "enum": [
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "GraphQL orderBy value."
+          }
+        },
+        "required": [
+          "issueId",
+          "first"
+        ],
+        "type": "object"
+      },
+      "key": "issue_relations.list",
+      "metadata": {
+        "name": "List Linear Issue Relations",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-relations/get.graphql",
+        "root": "issueRelation"
+      },
+      "description": "Execute the fixed issueRelation GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issue_relations.get",
+      "metadata": {
+        "name": "Get Linear Issue Relation",
+        "provider_scopes": [
+          "read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/create.graphql",
+        "root": "issueCreate"
+      },
+      "description": "Execute the fixed issueCreate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "IssueCreateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "assigneeId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native assigneeId identifier."
+              },
+              "cycleId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native cycleId identifier."
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL description value."
+              },
+              "dueDate": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL dueDate value."
+              },
+              "estimate": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL estimate value."
+              },
+              "labelIds": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native labelIds identifiers."
+              },
+              "parentId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native parentId identifier."
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL priority value."
+              },
+              "projectId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native projectId identifier."
+              },
+              "stateId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native stateId identifier."
+              },
+              "teamId": {
+                "description": "Provider-native teamId identifier.",
+                "type": "string"
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL title value."
+              }
+            },
+            "required": [
+              "teamId"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "$ref": "#/$defs/IssueCreateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "issues.create",
+      "metadata": {
+        "name": "Create Linear Issue",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/update.graphql",
+        "root": "issueUpdate"
+      },
+      "description": "Execute the fixed issueUpdate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "IssueUpdateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "assigneeId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native assigneeId identifier."
+              },
+              "cycleId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native cycleId identifier."
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL description value."
+              },
+              "dueDate": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL dueDate value."
+              },
+              "estimate": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL estimate value."
+              },
+              "parentId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native parentId identifier."
+              },
+              "priority": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL priority value."
+              },
+              "projectId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native projectId identifier."
+              },
+              "stateId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native stateId identifier."
+              },
+              "title": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL title value."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          },
+          "input": {
+            "$ref": "#/$defs/IssueUpdateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "id",
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "issues.update",
+      "metadata": {
+        "name": "Update Linear Issue",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/archive.graphql",
+        "root": "issueArchive"
+      },
+      "description": "Execute the fixed issueArchive GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issues.archive",
+      "metadata": {
+        "name": "Archive Linear Issue",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/unarchive.graphql",
+        "root": "issueUnarchive"
+      },
+      "description": "Execute the fixed issueUnarchive GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issues.unarchive",
+      "metadata": {
+        "name": "Unarchive Linear Issue",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/add-label.graphql",
+        "root": "issueAddLabel"
+      },
+      "description": "Execute the fixed issueAddLabel GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          },
+          "labelId": {
+            "description": "Provider-native labelId identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "labelId"
+        ],
+        "type": "object"
+      },
+      "key": "issues.labels.add",
+      "metadata": {
+        "name": "Add Linear Issue Label",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issues/remove-label.graphql",
+        "root": "issueRemoveLabel"
+      },
+      "description": "Execute the fixed issueRemoveLabel GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          },
+          "labelId": {
+            "description": "Provider-native labelId identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "labelId"
+        ],
+        "type": "object"
+      },
+      "key": "issues.labels.remove",
+      "metadata": {
+        "name": "Remove Linear Issue Label",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/create.graphql",
+        "root": "commentCreate"
+      },
+      "description": "Execute the fixed commentCreate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "CommentCreateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "body": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL body value."
+              },
+              "issueId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native issueId identifier."
+              },
+              "parentId": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Provider-native parentId identifier."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "$ref": "#/$defs/CommentCreateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "comments.create",
+      "metadata": {
+        "name": "Create Linear Issue Comment",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/update.graphql",
+        "root": "commentUpdate"
+      },
+      "description": "Execute the fixed commentUpdate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "CommentUpdateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "body": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL body value."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          },
+          "input": {
+            "$ref": "#/$defs/CommentUpdateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "id",
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "comments.update",
+      "metadata": {
+        "name": "Update Linear Comment",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/resolve.graphql",
+        "root": "commentResolve"
+      },
+      "description": "Execute the fixed commentResolve GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "comments.resolve",
+      "metadata": {
+        "name": "Resolve Linear Comment",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/unresolve.graphql",
+        "root": "commentUnresolve"
+      },
+      "description": "Execute the fixed commentUnresolve GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "comments.unresolve",
+      "metadata": {
+        "name": "Unresolve Linear Comment",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/comments/delete.graphql",
+        "root": "commentDelete"
+      },
+      "description": "Execute the fixed commentDelete GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "comments.delete",
+      "metadata": {
+        "name": "Delete Linear Comment",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-relations/create.graphql",
+        "root": "issueRelationCreate"
+      },
+      "description": "Execute the fixed issueRelationCreate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "IssueRelationCreateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "issueId": {
+                "description": "Provider-native issueId identifier.",
+                "type": "string"
+              },
+              "relatedIssueId": {
+                "description": "Provider-native relatedIssueId identifier.",
+                "type": "string"
+              },
+              "type": {
+                "description": "GraphQL type value.",
+                "enum": [
+                  "blocks",
+                  "duplicate",
+                  "related",
+                  "similar"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "issueId",
+              "relatedIssueId"
+            ],
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "input": {
+            "$ref": "#/$defs/IssueRelationCreateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "issue_relations.create",
+      "metadata": {
+        "name": "Create Linear Issue Relation",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-relations/update.graphql",
+        "root": "issueRelationUpdate"
+      },
+      "description": "Execute the fixed issueRelationUpdate GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "$defs": {
+          "IssueRelationUpdateInput": {
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "GraphQL type value."
+              }
+            },
+            "type": "object"
+          }
+        },
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          },
+          "input": {
+            "$ref": "#/$defs/IssueRelationUpdateInput",
+            "description": "GraphQL input value."
+          }
+        },
+        "required": [
+          "id",
+          "input"
+        ],
+        "type": "object"
+      },
+      "key": "issue_relations.update",
+      "metadata": {
+        "name": "Update Linear Issue Relation",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "personal_api_key"
+      ],
+      "config": {
+        "document": "graphql/issue-relations/delete.graphql",
+        "root": "issueRelationDelete"
+      },
+      "description": "Execute the fixed issueRelationDelete GraphQL operation with provider-native variables.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. Mutations have no automatic transport retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "description": "Provider-native id identifier.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "key": "issue_relations.delete",
+      "metadata": {
+        "name": "Delete Linear Issue Relation",
+        "provider_scopes": [
+          "write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "graphql.fixed",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply the resolved OAuth access_token for bearer authentication.",
+      "fields_schema": {
+        "properties": {
+          "access_token": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "label": "Connect with Linear"
+      }
+    },
+    {
+      "config_schema": {
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply api_key as the complete Authorization header.",
+      "fields_schema": {
+        "properties": {
+          "api_key": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "key": "personal_api_key",
+      "payload_field": "api_key",
+      "payload_format": "raw",
+      "setup": {
+        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Personal API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "label": "Personal API key"
+      }
+    }
+  ],
+  "config": {
+    "scopes": [
+      "read",
+      "write"
+    ],
+    "setup": {
+      "console_url": "https://linear.app/settings/api/applications",
+      "credential_label": "Linear OAuth application or personal API key",
+      "credential_url": "https://linear.app/settings/api",
+      "docs_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "fallback_reason": "OAuth application creation and callback registration require an authenticated Linear workspace administrator.",
+      "fallback_url": "https://linear.app/developers/oauth-2-0-authentication",
+      "homepage_url": "https://linear.app/",
+      "setup_note": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+      "support_url": "https://linear.app/contact",
+      "url_confidence": {
+        "console_url": "verified",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "support_url": "verified"
+      },
+      "verified_at": "2026-07-23"
+    }
+  },
+  "connector": "linear",
+  "description": "Fixed Linear GraphQL actions for issues, comments, projects, teams, and related workspace objects.",
+  "icon": {
+    "kind": "wordmark-inverse",
+    "media_type": "image/png",
+    "path": "connectors/linear/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.linear.actions:LinearActionConnector",
+  "name": "Linear",
+  "schema_version": "stackos.connector.v1"
+}

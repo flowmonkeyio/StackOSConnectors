@@ -55,6 +55,13 @@ execution; existing names cannot be replaced.
 `CallOptions.timeout=None` preserves each provider's default. A numeric timeout
 overrides that default. A supplied HTTP client remains caller-owned.
 
+`ConnectorResult.output_json` contains native response data for in-process use,
+including signed download URLs and pagination tokens. Exact resolved credential
+values are scrubbed from that data. The consumer must project or redact it before
+display, audit or persistent storage. Errors, progress, metadata and file
+descriptors receive full key and text redaction. Results hide response data in
+their default representation.
+
 Provider protocol notes and source links live in each connector's `docs/`
 directory. They cover authentication transport, requests, pagination, response
 meaning and error handling. Use the executable catalog and `describe` for the

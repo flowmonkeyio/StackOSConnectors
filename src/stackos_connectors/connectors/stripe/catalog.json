@@ -1,0 +1,2315 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/products"
+      },
+      "description": "List Stripe Products. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "active": {
+            "description": "Active.",
+            "type": "boolean"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.products.list",
+      "metadata": {
+        "name": "List Stripe Products",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/products/{product_id}"
+      },
+      "description": "Retrieve Stripe Product. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "product_id": {
+            "description": "Provider-native product ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "product_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.products.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Product",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/prices"
+      },
+      "description": "List Stripe Prices. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "active": {
+            "description": "Active.",
+            "type": "boolean"
+          },
+          "currency": {
+            "description": "Currency.",
+            "pattern": "^[a-z]{3}$",
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "product_id": {
+            "description": "Provider-native product ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "type": {
+            "description": "Type.",
+            "enum": [
+              "one_time",
+              "recurring"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.prices.list",
+      "metadata": {
+        "name": "List Stripe Prices",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/prices/{price_id}"
+      },
+      "description": "Retrieve Stripe Price. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "price_id": {
+            "description": "Provider-native price ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "price_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.prices.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Price",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/customers"
+      },
+      "description": "Create Stripe Customer. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "description": {
+            "description": "Description.",
+            "maxLength": 500,
+            "type": "string"
+          },
+          "email": {
+            "description": "Email.",
+            "format": "email",
+            "maxLength": 512,
+            "type": "string"
+          },
+          "name": {
+            "description": "Name.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.create",
+      "metadata": {
+        "name": "Create Stripe Customer",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/customers/{customer_id}"
+      },
+      "description": "Update Stripe Customer Billing Details. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "email"
+            ]
+          },
+          {
+            "required": [
+              "phone"
+            ]
+          },
+          {
+            "required": [
+              "address"
+            ]
+          },
+          {
+            "required": [
+              "invoice_settings"
+            ]
+          }
+        ],
+        "description": "Native action input.",
+        "properties": {
+          "address": {
+            "additionalProperties": false,
+            "description": "Address.",
+            "minProperties": 1,
+            "properties": {
+              "city": {
+                "description": "City.",
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "country": {
+                "description": "Country.",
+                "type": "string"
+              },
+              "line1": {
+                "description": "Line1.",
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "line2": {
+                "description": "Line2.",
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "postal_code": {
+                "description": "Postal code.",
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              "state": {
+                "description": "State.",
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "email": {
+            "description": "Email.",
+            "format": "email",
+            "maxLength": 512,
+            "type": "string"
+          },
+          "invoice_settings": {
+            "additionalProperties": false,
+            "description": "Invoice settings.",
+            "properties": {
+              "custom_fields": {
+                "description": "Custom fields.",
+                "items": {
+                  "additionalProperties": false,
+                  "description": "Custom fields.",
+                  "properties": {
+                    "name": {
+                      "description": "Name.",
+                      "maxLength": 40,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Value.",
+                      "maxLength": 140,
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "value"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 4,
+                "type": "array"
+              }
+            },
+            "required": [
+              "custom_fields"
+            ],
+            "type": "object"
+          },
+          "name": {
+            "description": "Name.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "phone": {
+            "description": "Phone.",
+            "maxLength": 64,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.update",
+      "metadata": {
+        "name": "Update Stripe Customer Billing Details",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/customers/{customer_id}"
+      },
+      "description": "Retrieve Stripe Customer. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          }
+        },
+        "required": [
+          "customer_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Customer",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/customers"
+      },
+      "description": "List Stripe Customers by Exact Email. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "email": {
+            "description": "Email.",
+            "format": "email",
+            "maxLength": 512,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.list",
+      "metadata": {
+        "name": "List Stripe Customers by Exact Email",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/customers/{customer_id}/tax_ids"
+      },
+      "description": "List Stripe Customer Tax IDs. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.tax-ids.list",
+      "metadata": {
+        "name": "List Stripe Customer Tax IDs",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/customers/{customer_id}/tax_ids"
+      },
+      "description": "Create Stripe Customer Tax ID. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "type": {
+            "description": "Type.",
+            "pattern": "^[a-z][a-z0-9_]{1,39}$",
+            "type": "string"
+          },
+          "value": {
+            "description": "Value.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "type",
+          "value"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.tax-ids.create",
+      "metadata": {
+        "name": "Create Stripe Customer Tax ID",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/customers/{customer_id}/tax_ids/{tax_id_id}"
+      },
+      "description": "Retrieve Stripe Customer Tax ID. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "tax_id_id": {
+            "description": "Provider-native tax id ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "tax_id_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.customers.tax-ids.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Customer Tax ID",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices"
+      },
+      "description": "Stripe Invoice. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "auto_advance": {
+            "description": "Whether Stripe may automatically advance the invoice.",
+            "type": "boolean"
+          },
+          "collection_method": {
+            "description": "Stripe invoice collection method.",
+            "enum": [
+              "send_invoice",
+              "charge_automatically"
+            ],
+            "type": "string"
+          },
+          "currency": {
+            "description": "Currency.",
+            "pattern": "^[a-z]{3}$",
+            "type": "string"
+          },
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "days_until_due": {
+            "description": "Days until due.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "description": {
+            "description": "Description.",
+            "maxLength": 500,
+            "type": "string"
+          },
+          "effective_at": {
+            "description": "Effective at.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Caller-supplied Stripe metadata.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "customer_id",
+          "collection_method",
+          "days_until_due",
+          "currency",
+          "auto_advance"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.create",
+      "metadata": {
+        "name": "Create Draft Stripe Invoice",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices/{invoice_id}"
+      },
+      "description": "Update Stripe Invoice Presentation. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "footer"
+            ]
+          },
+          {
+            "required": [
+              "payment_method_types"
+            ]
+          },
+          {
+            "required": [
+              "description"
+            ]
+          },
+          {
+            "required": [
+              "custom_fields"
+            ]
+          }
+        ],
+        "description": "Native action input.",
+        "properties": {
+          "custom_fields": {
+            "description": "Custom fields.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Custom fields.",
+              "properties": {
+                "name": {
+                  "description": "Name.",
+                  "maxLength": 40,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Value.",
+                  "maxLength": 140,
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "value"
+              ],
+              "type": "object"
+            },
+            "maxItems": 4,
+            "type": "array"
+          },
+          "description": {
+            "description": "Description.",
+            "maxLength": 1500,
+            "type": "string"
+          },
+          "footer": {
+            "description": "Footer.",
+            "maxLength": 500,
+            "minLength": 1,
+            "never plaintext action input.": null,
+            "type": "string"
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "payment_method_types": {
+            "description": "Payment method types.",
+            "items": {
+              "description": "Payment method types.",
+              "enum": [
+                "card",
+                "us_bank_account",
+                "customer_balance"
+              ],
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.update",
+      "metadata": {
+        "name": "Update Stripe Invoice Presentation",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoiceitems"
+      },
+      "description": "Create Stripe Invoice Item. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "oneOf": [
+          {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "price_id"
+                  ]
+                },
+                {
+                  "required": [
+                    "quantity"
+                  ]
+                }
+              ]
+            },
+            "required": [
+              "amount",
+              "currency",
+              "description"
+            ]
+          },
+          {
+            "not": {
+              "required": [
+                "amount"
+              ]
+            },
+            "required": [
+              "price_id",
+              "quantity"
+            ]
+          }
+        ],
+        "properties": {
+          "amount": {
+            "description": "Amount.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "currency": {
+            "description": "Currency.",
+            "pattern": "^[a-z]{3}$",
+            "type": "string"
+          },
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "description": {
+            "description": "Description.",
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "price_id": {
+            "description": "Provider-native price ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "quantity": {
+            "description": "Quantity.",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "customer_id",
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoice-items.create",
+      "metadata": {
+        "name": "Create Stripe Invoice Item",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/invoiceitems"
+      },
+      "description": "List Stripe Invoice Items. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "oneOf": [
+          {
+            "required": [
+              "invoice_id"
+            ]
+          },
+          {
+            "required": [
+              "customer_id"
+            ]
+          }
+        ],
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.invoice-items.list",
+      "metadata": {
+        "name": "List Stripe Invoice Items",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices/{invoice_id}/finalize"
+      },
+      "description": "Finalize Stripe Invoice. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "auto_advance": {
+            "description": "Whether Stripe may automatically advance the invoice after finalization.",
+            "type": "boolean"
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "invoice_id",
+          "auto_advance"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.finalize",
+      "metadata": {
+        "name": "Finalize Stripe Invoice",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices/{invoice_id}/send"
+      },
+      "description": "Send Stripe Invoice. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.send",
+      "metadata": {
+        "name": "Send Stripe Invoice",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices/{invoice_id}/pay"
+      },
+      "description": "Mark Stripe Invoice Paid Out of Band. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.mark-paid-out-of-band",
+      "metadata": {
+        "name": "Mark Stripe Invoice Paid Out of Band",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/invoices/{invoice_id}/attach_payment"
+      },
+      "description": "Attach Stripe Payment to Invoice. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "oneOf": [
+          {
+            "required": [
+              "invoice_id",
+              "payment_intent_id"
+            ]
+          },
+          {
+            "required": [
+              "invoice_id",
+              "payment_record_id"
+            ]
+          }
+        ],
+        "properties": {
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "payment_intent_id": {
+            "description": "Provider-native payment intent ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "payment_record_id": {
+            "description": "Provider-native payment record ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.invoices.attach-payment",
+      "metadata": {
+        "name": "Attach Stripe Payment to Invoice",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/invoices/{invoice_id}"
+      },
+      "description": "Retrieve Stripe Invoice. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoices.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Invoice",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/invoices"
+      },
+      "description": "List Stripe Invoices. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "created_gte": {
+            "description": "Created gte.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "created_lte": {
+            "description": "Created lte.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "status": {
+            "description": "Status.",
+            "enum": [
+              "draft",
+              "open",
+              "paid",
+              "uncollectible",
+              "void"
+            ],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.invoices.list",
+      "metadata": {
+        "name": "List Stripe Invoices",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/invoice_payments"
+      },
+      "description": "List Stripe Invoice Payments. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "invoice_id": {
+            "description": "Provider-native invoice ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "invoice_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.invoice-payments.list",
+      "metadata": {
+        "name": "List Stripe Invoice Payments",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/payment_intents/{payment_intent_id}"
+      },
+      "description": "Retrieve Stripe Payment Intent. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "payment_intent_id": {
+            "description": "Provider-native payment intent ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "payment_intent_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.payment-intents.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Payment Intent",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "POST",
+        "path": "/payment_records/report_payment"
+      },
+      "description": "Report Stripe Payment Record. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "amount": {
+            "description": "Amount.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "currency": {
+            "description": "Currency.",
+            "pattern": "^[a-z]{3}$",
+            "type": "string"
+          },
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "guaranteed_at": {
+            "description": "Guaranteed at.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "initiated_at": {
+            "description": "Initiated at.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "outcome": {
+            "description": "Reported payment outcome.",
+            "enum": [
+              "guaranteed"
+            ],
+            "minLength": 1,
+            "type": "string"
+          },
+          "payment_method_display_name": {
+            "description": "Display name of the custom payment method.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "payment_method_type": {
+            "description": "Reported payment method type.",
+            "enum": [
+              "custom"
+            ],
+            "minLength": 1,
+            "type": "string"
+          },
+          "payment_reference": {
+            "description": "Payment reference.",
+            "maxLength": 512,
+            "minLength": 1,
+            "type": "string"
+          },
+          "processor_type": {
+            "description": "Reported processor type.",
+            "enum": [
+              "custom"
+            ],
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "amount",
+          "currency",
+          "initiated_at",
+          "guaranteed_at",
+          "payment_reference",
+          "outcome",
+          "payment_method_type",
+          "payment_method_display_name",
+          "processor_type"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.payment-records.report",
+      "metadata": {
+        "name": "Report Verified Stripe Payment Record",
+        "risk_level": "write"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/payment_records/{payment_record_id}"
+      },
+      "description": "Retrieve Stripe Payment Record. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "payment_record_id": {
+            "description": "Provider-native payment record ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "payment_record_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.payment-records.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Payment Record",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/payment_records"
+      },
+      "description": "List Stripe Payment Records. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.payment-records.list",
+      "metadata": {
+        "name": "List Stripe Payment Records",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/charges/{charge_id}"
+      },
+      "description": "Retrieve Stripe Charge. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "charge_id": {
+            "description": "Provider-native charge ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          }
+        },
+        "required": [
+          "charge_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.charges.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Charge",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/charges"
+      },
+      "description": "List Stripe Charges. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "customer_id": {
+            "description": "Provider-native customer ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "payment_intent_id": {
+            "description": "Provider-native payment intent ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.charges.list",
+      "metadata": {
+        "name": "List Stripe Charges",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/disputes"
+      },
+      "description": "List Stripe Disputes. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "oneOf": [
+          {
+            "required": [
+              "charge_id"
+            ]
+          },
+          {
+            "required": [
+              "payment_intent_id"
+            ]
+          }
+        ],
+        "properties": {
+          "charge_id": {
+            "description": "Provider-native charge ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "payment_intent_id": {
+            "description": "Provider-native payment intent ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.disputes.list",
+      "metadata": {
+        "name": "List Stripe Disputes",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/disputes/{dispute_id}"
+      },
+      "description": "Retrieve Stripe Dispute. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "dispute_id": {
+            "description": "Provider-native dispute ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          }
+        },
+        "required": [
+          "dispute_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.disputes.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Dispute",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/balance_transactions/{balance_transaction_id}"
+      },
+      "description": "Retrieve Stripe Balance Transaction. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "balance_transaction_id": {
+            "description": "Provider-native balance transaction ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          }
+        },
+        "required": [
+          "balance_transaction_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.balance-transactions.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Balance Transaction",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/balance_transactions"
+      },
+      "description": "List Stripe Balance Transactions. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.balance-transactions.list",
+      "metadata": {
+        "name": "List Stripe Balance Transactions",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/refunds/{refund_id}"
+      },
+      "description": "Retrieve Stripe Refund. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "refund_id": {
+            "description": "Provider-native refund ID.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "required": [
+          "refund_id"
+        ],
+        "type": "object"
+      },
+      "key": "stripe.refunds.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Refund",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/refunds"
+      },
+      "description": "List Stripe Refunds. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "charge_id": {
+            "description": "Provider-native charge ID.",
+            "maxLength": 120,
+            "type": "string"
+          },
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          },
+          "limit": {
+            "default": 25,
+            "description": "Limit.",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "starting_after": {
+            "description": "Provider-native pagination cursor.",
+            "maxLength": 120,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.refunds.list",
+      "metadata": {
+        "name": "List Stripe Refunds",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "api_key"
+      ],
+      "config": {
+        "method": "GET",
+        "path": "/balance"
+      },
+      "description": "Retrieve Stripe Balance. Returns native Stripe response fields.",
+      "examples": [],
+      "guidance": "Supply native IDs and resolved authentication. POST actions require options.idempotency_key and have no automatic retries.",
+      "input_schema": {
+        "additionalProperties": false,
+        "description": "Native action input.",
+        "properties": {
+          "expand": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "description": "Stripe response expansion field names."
+          }
+        },
+        "type": "object"
+      },
+      "key": "stripe.balance.retrieve",
+      "metadata": {
+        "name": "Retrieve Stripe Balance",
+        "risk_level": "read"
+      },
+      "operation": "rest.v1",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply api_key for bearer authentication.",
+      "fields_schema": {
+        "properties": {
+          "api_key": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ],
+        "type": "object"
+      },
+      "key": "api_key",
+      "payload_format": "json",
+      "setup": {
+        "description": "Create a Stripe restricted API key with permissions for the selected API operations. Supply it as api_key. The read-only account probe reports identity; Stripe enforces key permissions on each request.",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "Stripe secret API key",
+            "options": null,
+            "placeholder": "Create a restricted key in the Stripe Dashboard.",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "label": "Stripe API key"
+      }
+    }
+  ],
+  "config": {
+    "setup": {
+      "billing_url": "https://dashboard.stripe.com/settings/billing",
+      "console_url": "https://dashboard.stripe.com/",
+      "credential_label": "Stripe restricted API key",
+      "credential_url": "https://dashboard.stripe.com/apikeys",
+      "docs_url": "https://docs.stripe.com/api",
+      "fallback_reason": "Dashboard key and billing routes are authenticated and may vary by account.",
+      "fallback_url": "https://docs.stripe.com/keys",
+      "homepage_url": "https://stripe.com/",
+      "setup_note": "Create a Stripe restricted API key with permissions for the selected API operations. Supply it as api_key. The read-only account probe reports identity; Stripe enforces key permissions on each request.",
+      "signup_url": "https://dashboard.stripe.com/register",
+      "url_confidence": {
+        "billing_url": "directional",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-09-04"
+    }
+  },
+  "connector": "stripe",
+  "description": "Stripe REST actions for customers, catalog objects, invoices, payments, and balances.",
+  "icon": {
+    "kind": "icon",
+    "media_type": "image/jpeg",
+    "path": "connectors/stripe/assets/icon.jpeg"
+  },
+  "implementation": "stackos_connectors.connectors.stripe.actions:StripeActionConnector",
+  "name": "Stripe",
+  "schema_version": "stackos.connector.v1"
+}

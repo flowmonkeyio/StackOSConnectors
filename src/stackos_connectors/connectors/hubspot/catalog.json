@@ -1,0 +1,4959 @@
+{
+  "actions": [
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/objects/2026-03/contacts/{contact_id}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/objects/2026-03/contacts/{contact_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "contact_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "properties": {
+            "description": "Comma-separated native property names.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "contact_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contacts.get",
+      "metadata": {
+        "name": "Get HubSpot Contact",
+        "provider_scopes": [
+          "crm.objects.contacts.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.contacts.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/exports/2026-03/export/async",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/exports/2026-03/export/async. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "associatedObjectType": {
+            "items": {
+              "description": "Provider field.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "exportInternalValuesOptions": {
+            "items": {
+              "description": "Provider field.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "exportName": {
+            "description": "Provider field.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "exportType": {
+            "description": "Provider field.",
+            "enum": [
+              "VIEW"
+            ],
+            "type": "string"
+          },
+          "format": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "includeLabeledAssociations": {
+            "type": "boolean"
+          },
+          "includePrimaryDisplayPropertyForAssociatedObjects": {
+            "type": "boolean"
+          },
+          "language": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "objectProperties": {
+            "items": {
+              "description": "Provider field.",
+              "type": "string"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "objectType": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "overrideAssociatedObjectsPerDefinitionPerRowLimit": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "exportType",
+          "exportName",
+          "format",
+          "objectType",
+          "objectProperties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.bulk.exports.create",
+      "metadata": {
+        "name": "Start HubSpot CRM Export",
+        "provider_scopes": [
+          "crm.export"
+        ],
+        "risk_level": "high"
+      },
+      "operation": "bulk.exports.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/exports/2026-03/export/{job_id}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/exports/2026-03/export/{job_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.bulk.exports.status",
+      "metadata": {
+        "name": "Get HubSpot CRM Export Status",
+        "provider_scopes": [
+          "crm.export"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "bulk.exports.status",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/exports/2026-03/export/async/tasks/{job_id}/status",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/exports/2026-03/export/async/tasks/{job_id}/status. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "job_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "job_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.bulk.exports.result",
+      "metadata": {
+        "name": "Retrieve HubSpot CRM Export Result",
+        "provider_scopes": [
+          "crm.export"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "bulk.exports.result",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/contacts",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/contacts. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contacts.properties.list",
+      "metadata": {
+        "name": "List HubSpot Contact Properties",
+        "provider_scopes": [
+          "crm.schemas.contacts.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.contacts.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/companies",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/companies. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.companies.properties.list",
+      "metadata": {
+        "name": "List HubSpot Company Properties",
+        "provider_scopes": [
+          "crm.schemas.companies.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.companies.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/deals",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/deals. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.deals.properties.list",
+      "metadata": {
+        "name": "List HubSpot Deal Properties",
+        "provider_scopes": [
+          "crm.schemas.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.deals.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/leads",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/leads. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.leads.properties.list",
+      "metadata": {
+        "name": "List HubSpot Lead Properties",
+        "provider_scopes": [
+          "crm.objects.leads.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.leads.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/products",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/products. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.products.properties.list",
+      "metadata": {
+        "name": "List HubSpot Product Properties",
+        "provider_scopes": [
+          "crm.objects.products.write"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.products.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/line_items",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/line_items. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.line_items.properties.list",
+      "metadata": {
+        "name": "List HubSpot Line Item Properties",
+        "provider_scopes": [
+          "crm.objects.line_items.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.line_items.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/quotes",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/quotes. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.quotes.properties.list",
+      "metadata": {
+        "name": "List HubSpot Quote Properties",
+        "provider_scopes": [
+          "crm.objects.quotes.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.quotes.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/properties/2026-03/goal_targets",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/properties/2026-03/goal_targets. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.goal_targets.properties.list",
+      "metadata": {
+        "name": "List HubSpot Goal Target Properties",
+        "provider_scopes": [
+          "crm.objects.goals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.goal_targets.properties.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/owners/2026-03",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/owners/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.owners.list",
+      "metadata": {
+        "name": "List HubSpot Owners And Teams",
+        "provider_scopes": [
+          "crm.objects.owners.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.owners.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/pipelines/2026-03/deals",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/pipelines/2026-03/deals. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.deals.pipelines.list",
+      "metadata": {
+        "name": "List HubSpot Deal Pipelines",
+        "provider_scopes": [
+          "crm.objects.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.deals.pipelines.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/associations/2026-03/contacts/companies/labels",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/associations/2026-03/contacts/companies/labels. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_company.labels.list",
+      "metadata": {
+        "name": "List HubSpot Contact To Company Labels",
+        "provider_scopes": [
+          "crm.objects.contacts.read",
+          "crm.objects.companies.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.contact_company.labels.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/associations/2026-03/contacts/deals/labels",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/associations/2026-03/contacts/deals/labels. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_deal.labels.list",
+      "metadata": {
+        "name": "List HubSpot Contact To Deal Labels",
+        "provider_scopes": [
+          "crm.objects.contacts.read",
+          "crm.objects.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.contact_deal.labels.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/associations/2026-03/companies/deals/labels",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/associations/2026-03/companies/deals/labels. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.company_deal.labels.list",
+      "metadata": {
+        "name": "List HubSpot Company To Deal Labels",
+        "provider_scopes": [
+          "crm.objects.companies.read",
+          "crm.objects.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.company_deal.labels.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": "types",
+        "has_body": true,
+        "method": "PUT",
+        "path": "/crm/objects/2026-03/contact/{from_id}/associations/company/{to_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/objects/2026-03/contact/{from_id}/associations/company/{to_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "from_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "to_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "types": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "associationCategory": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "HUBSPOT_DEFINED",
+                    "USER_DEFINED"
+                  ],
+                  "type": "string"
+                },
+                "associationTypeId": {
+                  "description": "Provider integer.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "associationCategory",
+                "associationTypeId"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "types",
+          "from_id",
+          "to_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_company.associate",
+      "metadata": {
+        "name": "Associate HubSpot Contact To Company",
+        "provider_scopes": [
+          "crm.objects.contacts.write",
+          "crm.objects.companies.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.contact_company.associate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": "types",
+        "has_body": true,
+        "method": "PUT",
+        "path": "/crm/objects/2026-03/contact/{from_id}/associations/deal/{to_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/objects/2026-03/contact/{from_id}/associations/deal/{to_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "from_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "to_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "types": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "associationCategory": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "HUBSPOT_DEFINED",
+                    "USER_DEFINED"
+                  ],
+                  "type": "string"
+                },
+                "associationTypeId": {
+                  "description": "Provider integer.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "associationCategory",
+                "associationTypeId"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "types",
+          "from_id",
+          "to_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_deal.associate",
+      "metadata": {
+        "name": "Associate HubSpot Contact To Deal",
+        "provider_scopes": [
+          "crm.objects.contacts.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.contact_deal.associate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": "types",
+        "has_body": true,
+        "method": "PUT",
+        "path": "/crm/objects/2026-03/company/{from_id}/associations/deal/{to_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/objects/2026-03/company/{from_id}/associations/deal/{to_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "from_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "to_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "types": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "associationCategory": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "HUBSPOT_DEFINED",
+                    "USER_DEFINED"
+                  ],
+                  "type": "string"
+                },
+                "associationTypeId": {
+                  "description": "Provider integer.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "associationCategory",
+                "associationTypeId"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "types",
+          "from_id",
+          "to_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.company_deal.associate",
+      "metadata": {
+        "name": "Associate HubSpot Company To Deal",
+        "provider_scopes": [
+          "crm.objects.companies.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.company_deal.associate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/associations/2026-03/contacts/companies/batch/labels/archive",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/associations/2026-03/contacts/companies/batch/labels/archive. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "types",
+                "from",
+                "to"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_company.dissociate",
+      "metadata": {
+        "name": "Remove HubSpot Contact To Company Label",
+        "provider_scopes": [
+          "crm.objects.contacts.write",
+          "crm.objects.companies.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.contact_company.dissociate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/associations/2026-03/contacts/deals/batch/labels/archive",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/associations/2026-03/contacts/deals/batch/labels/archive. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "types",
+                "from",
+                "to"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contact_deal.dissociate",
+      "metadata": {
+        "name": "Remove HubSpot Contact To Deal Label",
+        "provider_scopes": [
+          "crm.objects.contacts.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.contact_deal.dissociate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/associations/2026-03/companies/deals/batch/labels/archive",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/associations/2026-03/companies/deals/batch/labels/archive. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "types",
+                "from",
+                "to"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.company_deal.dissociate",
+      "metadata": {
+        "name": "Remove HubSpot Company To Deal Label",
+        "provider_scopes": [
+          "crm.objects.companies.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.company_deal.dissociate",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "PUT",
+        "path": "/crm/objects/2026-03/line_items/{line_item_id}/associations/default/deals/{deal_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/objects/2026-03/line_items/{line_item_id}/associations/default/deals/{deal_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "deal_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "line_item_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "line_item_id",
+          "deal_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.sales.line_items.associate_deal",
+      "metadata": {
+        "name": "Associate HubSpot Line Item With Deal",
+        "provider_scopes": [
+          "crm.objects.line_items.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "sales.line_items.associate_deal",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "DELETE",
+        "path": "/crm/objects/2026-03/line_items/{line_item_id}/associations/deals/{deal_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "DELETE /crm/objects/2026-03/line_items/{line_item_id}/associations/deals/{deal_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "deal_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "line_item_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "line_item_id",
+          "deal_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.sales.line_items.dissociate_deal",
+      "metadata": {
+        "name": "Dissociate HubSpot Line Item From Deal",
+        "provider_scopes": [
+          "crm.objects.line_items.write",
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "sales.line_items.dissociate_deal",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/companies/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/companies/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.companies.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Companies",
+        "provider_scopes": [
+          "crm.objects.companies.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.companies.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/contacts/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/contacts/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contacts.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Contacts",
+        "provider_scopes": [
+          "crm.objects.contacts.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.contacts.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/deals/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/deals/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.deals.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Deals",
+        "provider_scopes": [
+          "crm.objects.deals.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.deals.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/leads/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/leads/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.leads.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Leads",
+        "provider_scopes": [
+          "crm.objects.leads.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.leads.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/products/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/products/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.sales.products.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Products",
+        "provider_scopes": [
+          "crm.objects.products.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "sales.products.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/line_items/batch/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/line_items/batch/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "inputs": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "description": "Provider-native object ID.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "idProperty": {
+                  "description": "Provider unique property name.",
+                  "type": "string"
+                },
+                "objectWriteTraceId": {
+                  "description": "Provider field.",
+                  "type": "string"
+                },
+                "properties": {
+                  "additionalProperties": {
+                    "type": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "description": "Provider property names mapped to native values.",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id",
+                "idProperty",
+                "properties"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "inputs"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.sales.line_items.batch_upsert",
+      "metadata": {
+        "name": "Batch Upsert HubSpot Line Items",
+        "provider_scopes": [
+          "crm.objects.line_items.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "sales.line_items.batch_upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/notes",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/notes. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "associations": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "to",
+                "types"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "properties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.notes.create",
+      "metadata": {
+        "name": "Create HubSpot CRM Note",
+        "provider_scopes": [
+          "crm.objects.contacts.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.notes.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/tasks",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/tasks. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "associations": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "to",
+                "types"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "properties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.tasks.create",
+      "metadata": {
+        "name": "Create HubSpot Task",
+        "provider_scopes": [
+          "crm.objects.contacts.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.tasks.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/calls",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/calls. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "associations": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "to",
+                "types"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "properties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.calls.create",
+      "metadata": {
+        "name": "Create HubSpot Call",
+        "provider_scopes": [
+          "crm.objects.contacts.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.calls.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/meetings",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /crm/objects/2026-03/meetings. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "associations": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "to": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {
+                      "description": "Provider-native object ID.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "type": "object"
+                },
+                "types": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "associationCategory": {
+                        "description": "Provider field.",
+                        "enum": [
+                          "HUBSPOT_DEFINED",
+                          "USER_DEFINED"
+                        ],
+                        "type": "string"
+                      },
+                      "associationTypeId": {
+                        "description": "Provider integer.",
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "associationCategory",
+                      "associationTypeId"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "to",
+                "types"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "properties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.crm.meetings.create",
+      "metadata": {
+        "name": "Create HubSpot Meeting",
+        "provider_scopes": [
+          "crm.objects.contacts.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "crm.meetings.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/contacts/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/contacts/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.contacts.search",
+      "metadata": {
+        "name": "Search HubSpot Contacts",
+        "provider_scopes": [
+          "crm.objects.contacts.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.contacts.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/companies/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/companies/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.companies.search",
+      "metadata": {
+        "name": "Search HubSpot Companies",
+        "provider_scopes": [
+          "crm.objects.companies.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.companies.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/deals/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/deals/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.deals.search",
+      "metadata": {
+        "name": "Search HubSpot Deals",
+        "provider_scopes": [
+          "crm.objects.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.deals.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/leads/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/leads/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.leads.search",
+      "metadata": {
+        "name": "Search HubSpot Leads",
+        "provider_scopes": [
+          "crm.objects.leads.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.leads.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/products/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/products/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.products.search",
+      "metadata": {
+        "name": "Search HubSpot Products",
+        "provider_scopes": [
+          "crm.objects.products.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.products.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/line_items/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/line_items/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.line_items.search",
+      "metadata": {
+        "name": "Search HubSpot Line Items",
+        "provider_scopes": [
+          "crm.objects.line_items.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.line_items.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/objects/2026-03/quotes/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/objects/2026-03/quotes/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "filterGroups": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "filters": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "highValue": {},
+                      "operator": {
+                        "description": "Provider field.",
+                        "type": "string"
+                      },
+                      "propertyName": {
+                        "description": "Provider property name.",
+                        "type": "string"
+                      },
+                      "value": {},
+                      "values": {
+                        "items": {},
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "propertyName",
+                      "operator"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "filters"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "items": {
+              "description": "Provider property name.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Search text.",
+            "type": "string"
+          },
+          "sorts": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "direction": {
+                  "description": "Provider field.",
+                  "enum": [
+                    "ASCENDING",
+                    "DESCENDING"
+                  ],
+                  "type": "string"
+                },
+                "propertyName": {
+                  "description": "Provider field.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "direction"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.quotes.search",
+      "metadata": {
+        "name": "Search HubSpot Quotes",
+        "provider_scopes": [
+          "crm.objects.quotes.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.quotes.search",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/objects/2026-03/goal_targets",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/objects/2026-03/goal_targets. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "description": "Comma-separated native property names.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.sales.goal_targets.list",
+      "metadata": {
+        "name": "List HubSpot Goal Targets",
+        "provider_scopes": [
+          "crm.objects.goals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "sales.goal_targets.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/v3/forms",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/v3/forms. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "formTypes": {
+            "items": {
+              "description": "Provider field.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.forms.list",
+      "metadata": {
+        "name": "List HubSpot Forms",
+        "provider_scopes": [
+          "forms"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.forms.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/form-integrations/v1/submissions/forms/{form_id}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /form-integrations/v1/submissions/forms/{form_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "form_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "form_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.forms.submissions.list",
+      "metadata": {
+        "name": "List HubSpot Form Submissions",
+        "provider_scopes": [
+          "forms"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.forms.submissions.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/crm/lists/2026-03/search",
+        "query": false,
+        "write": false
+      },
+      "description": "POST /crm/lists/2026-03/search. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "description": "Provider integer.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "objectTypeId": {
+            "description": "Provider CRM object type ID.",
+            "type": "string"
+          },
+          "offset": {
+            "description": "Provider integer.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "processingTypes": {
+            "items": {
+              "description": "Provider field.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "query": {
+            "description": "Provider field.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "objectTypeId"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.segments.list",
+      "metadata": {
+        "name": "Search HubSpot Contact Segments",
+        "provider_scopes": [
+          "crm.lists.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.segments.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/lists/2026-03/{segment_id}/memberships",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/lists/2026-03/{segment_id}/memberships. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "segment_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "segment_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.segments.memberships.list",
+      "metadata": {
+        "name": "List HubSpot Contact Segment Memberships",
+        "provider_scopes": [
+          "crm.lists.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.segments.memberships.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": "ids",
+        "has_body": true,
+        "method": "PUT",
+        "path": "/crm/lists/2026-03/{segment_id}/memberships/add",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/lists/2026-03/{segment_id}/memberships/add. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ids": {
+            "items": {
+              "description": "Provider-native object ID.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "segment_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "ids",
+          "segment_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.segments.memberships.add",
+      "metadata": {
+        "name": "Add HubSpot Contact Segment Memberships",
+        "provider_scopes": [
+          "crm.lists.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.segments.memberships.add",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": "ids",
+        "has_body": true,
+        "method": "PUT",
+        "path": "/crm/lists/2026-03/{segment_id}/memberships/remove",
+        "query": false,
+        "write": true
+      },
+      "description": "PUT /crm/lists/2026-03/{segment_id}/memberships/remove. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "ids": {
+            "items": {
+              "description": "Provider-native object ID.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "segment_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "ids",
+          "segment_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.segments.memberships.remove",
+      "metadata": {
+        "name": "Remove HubSpot Contact Segment Memberships",
+        "provider_scopes": [
+          "crm.lists.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.segments.memberships.remove",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/campaigns/2026-03",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/campaigns/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "name": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "properties": {
+            "description": "Comma-separated campaign property names.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.campaigns.list",
+      "metadata": {
+        "name": "List HubSpot Campaigns",
+        "provider_scopes": [
+          "marketing.campaigns.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.campaigns.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/campaigns/2026-03/{campaign_id}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/campaigns/2026-03/{campaign_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "campaign_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "endDate": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "properties": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "startDate": {
+            "description": "Provider field.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.campaigns.get",
+      "metadata": {
+        "name": "Get HubSpot Campaign",
+        "provider_scopes": [
+          "marketing.campaigns.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.campaigns.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/marketing/campaigns/2026-03",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /marketing/campaigns/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "audience": {
+            "description": "Audience.",
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "currency_code": {
+            "description": "Currency code.",
+            "pattern": "^[A-Za-z]{3}$",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End date.",
+            "format": "date",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "notes": {
+            "description": "Notes.",
+            "maxLength": 5000,
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start date.",
+            "format": "date",
+            "type": "string"
+          },
+          "status": {
+            "description": "Status.",
+            "enum": [
+              "planned",
+              "in_progress",
+              "active",
+              "paused",
+              "completed"
+            ],
+            "type": "string"
+          },
+          "utm": {
+            "description": "Utm.",
+            "maxLength": 256,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.campaigns.create",
+      "metadata": {
+        "name": "Create HubSpot Campaign",
+        "provider_scopes": [
+          "marketing.campaigns.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.campaigns.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "PATCH",
+        "path": "/marketing/campaigns/2026-03/{campaign_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PATCH /marketing/campaigns/2026-03/{campaign_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "start_date"
+            ]
+          },
+          {
+            "required": [
+              "end_date"
+            ]
+          },
+          {
+            "required": [
+              "notes"
+            ]
+          },
+          {
+            "required": [
+              "audience"
+            ]
+          },
+          {
+            "required": [
+              "currency_code"
+            ]
+          },
+          {
+            "required": [
+              "status"
+            ]
+          },
+          {
+            "required": [
+              "utm"
+            ]
+          }
+        ],
+        "properties": {
+          "audience": {
+            "description": "Audience.",
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "campaign_id": {
+            "description": "HubSpot campaign object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "currency_code": {
+            "description": "Currency code.",
+            "pattern": "^[A-Za-z]{3}$",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End date.",
+            "format": "date",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name.",
+            "maxLength": 256,
+            "minLength": 1,
+            "type": "string"
+          },
+          "notes": {
+            "description": "Notes.",
+            "maxLength": 5000,
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start date.",
+            "format": "date",
+            "type": "string"
+          },
+          "status": {
+            "description": "Status.",
+            "enum": [
+              "planned",
+              "in_progress",
+              "active",
+              "paused",
+              "completed"
+            ],
+            "type": "string"
+          },
+          "utm": {
+            "description": "Utm.",
+            "maxLength": 256,
+            "type": "string"
+          }
+        },
+        "required": [
+          "campaign_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.campaigns.update",
+      "metadata": {
+        "name": "Update HubSpot Campaign",
+        "provider_scopes": [
+          "marketing.campaigns.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.campaigns.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/emails/2026-03",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/emails/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "includeStats": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "isPublished": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "type": {
+            "description": "Provider field.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.emails.list",
+      "metadata": {
+        "name": "List HubSpot Marketing Email Assets",
+        "provider_scopes": [
+          "marketing-email"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.emails.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/emails/2026-03/{email_id}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/emails/2026-03/{email_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "email_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.emails.get",
+      "metadata": {
+        "name": "Get HubSpot Marketing Email Asset",
+        "provider_scopes": [
+          "marketing-email"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.emails.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/marketing/emails/2026-03",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /marketing/emails/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "businessUnitId": {
+            "description": "Native brand ID.",
+            "type": "integer"
+          },
+          "campaign": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "description": "Email name.",
+            "type": "string"
+          },
+          "subject": {
+            "description": "Email subject.",
+            "type": "string"
+          },
+          "templatePath": {
+            "description": "Provider template path.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "templatePath"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.emails.create",
+      "metadata": {
+        "name": "Create HubSpot Marketing Email Draft",
+        "provider_scopes": [
+          "marketing-email"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.emails.create",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "PATCH",
+        "path": "/marketing/emails/2026-03/{email_id}",
+        "query": false,
+        "write": true
+      },
+      "description": "PATCH /marketing/emails/2026-03/{email_id}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "businessUnitId": {
+            "description": "Native brand ID.",
+            "type": "integer"
+          },
+          "campaign": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "email_id": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "description": "Email name.",
+            "type": "string"
+          },
+          "subject": {
+            "description": "Email subject.",
+            "type": "string"
+          },
+          "templatePath": {
+            "description": "Provider template path.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email_id"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.emails.update",
+      "metadata": {
+        "name": "Update HubSpot Marketing Email Draft",
+        "provider_scopes": [
+          "marketing-email"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.emails.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/marketing/transactional/2026-03/single-email/send",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /marketing/transactional/2026-03/single-email/send. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "contactProperties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          },
+          "customProperties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          },
+          "emailId": {
+            "description": "Provider transactional email ID.",
+            "type": "integer"
+          },
+          "message": {
+            "additionalProperties": false,
+            "properties": {
+              "sendId": {
+                "description": "Provider send identifier.",
+                "type": "string"
+              },
+              "to": {
+                "description": "Recipient email address.",
+                "format": "email",
+                "type": "string"
+              }
+            },
+            "required": [
+              "to",
+              "sendId"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "emailId",
+          "message"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.transactional.single_email.send",
+      "metadata": {
+        "name": "Send One HubSpot Transactional Email",
+        "provider_scopes": [
+          "crm.objects.contacts.read",
+          "transactional-email"
+        ],
+        "risk_level": "high"
+      },
+      "operation": "transactional.single_email.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/communication-preferences/2026-03/definitions",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /communication-preferences/2026-03/definitions. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "businessUnitId": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "includeTranslations": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.subscription_types.list",
+      "metadata": {
+        "name": "List HubSpot Email Subscription Types",
+        "provider_scopes": [
+          "subscriptions-definition-read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.subscription_types.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/communication-preferences/2026-03/statuses/{email}",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /communication-preferences/2026-03/statuses/{email}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "description": "Provider field.",
+            "enum": [
+              "EMAIL"
+            ],
+            "type": "string"
+          },
+          "email": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.contact_preferences.get",
+      "metadata": {
+        "name": "Get HubSpot Contact Email Preferences",
+        "provider_scopes": [
+          "crm.objects.contacts.read",
+          "subscriptions-status-read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.contact_preferences.get",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/communication-preferences/2026-03/statuses/{email}",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /communication-preferences/2026-03/statuses/{email}. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "channel": {
+            "description": "Provider field.",
+            "enum": [
+              "EMAIL"
+            ],
+            "type": "string"
+          },
+          "email": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "legalBasis": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "legalBasisExplanation": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "statusState": {
+            "description": "Provider field.",
+            "enum": [
+              "SUBSCRIBED",
+              "UNSUBSCRIBED",
+              "NOT_SPECIFIED"
+            ],
+            "type": "string"
+          },
+          "subscriptionId": {
+            "description": "Provider integer.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "subscriptionId",
+          "statusState",
+          "legalBasis",
+          "legalBasisExplanation",
+          "channel",
+          "email"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.contact_preferences.update",
+      "metadata": {
+        "name": "Update HubSpot Contact Email Preference",
+        "provider_scopes": [
+          "crm.objects.contacts.read",
+          "subscriptions-status-write"
+        ],
+        "risk_level": "high"
+      },
+      "operation": "marketing.contact_preferences.update",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/marketing/marketing-events/2026-03",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /marketing/marketing-events/2026-03. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.events.list",
+      "metadata": {
+        "name": "List HubSpot Marketing Events",
+        "provider_scopes": [
+          "crm.objects.marketing_events.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.events.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/marketing/marketing-events/2026-03/events/upsert",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /marketing/marketing-events/2026-03/events/upsert. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "custom_properties": {
+            "additionalProperties": {
+              "maxLength": 1024,
+              "type": "string"
+            },
+            "description": "Custom properties.",
+            "maxProperties": 50,
+            "propertyNames": {
+              "pattern": "^[a-z][a-z0-9_]{0,49}$"
+            },
+            "type": "object"
+          },
+          "description": {
+            "description": "Description.",
+            "maxLength": 5000,
+            "type": "string"
+          },
+          "end_at": {
+            "description": "End at.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "event_cancelled": {
+            "description": "Event cancelled.",
+            "type": "boolean"
+          },
+          "event_completed": {
+            "description": "Event completed.",
+            "type": "boolean"
+          },
+          "event_type": {
+            "description": "Event type.",
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "event_url": {
+            "description": "Event url.",
+            "format": "uri",
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "external_account_key": {
+            "description": "External account key.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "external_event_key": {
+            "description": "External event key.",
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "description": "Name.",
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "organizer": {
+            "description": "Organizer.",
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "start_at": {
+            "description": "Start at.",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "external_account_key",
+          "external_event_key",
+          "name",
+          "organizer"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.events.upsert",
+      "metadata": {
+        "name": "Upsert One HubSpot Marketing Event",
+        "provider_scopes": [
+          "crm.objects.marketing_events.write"
+        ],
+        "risk_level": "write"
+      },
+      "operation": "marketing.events.upsert",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/events/2026-03/event-definitions",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /events/2026-03/event-definitions. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "includeProperties": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "searchString": {
+            "description": "Provider field.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.behavioral_events.definitions.list",
+      "metadata": {
+        "name": "List HubSpot Behavioral Event Definitions",
+        "provider_scopes": [
+          "behavioral_events.event_definitions.read_write"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "marketing.behavioral_events.definitions.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": true,
+        "method": "POST",
+        "path": "/events/2026-03/send",
+        "query": false,
+        "write": true
+      },
+      "description": "POST /events/2026-03/send. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "eventName": {
+            "description": "Fully qualified native event name.",
+            "type": "string"
+          },
+          "objectId": {
+            "description": "Provider-native object ID.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "occurredAt": {
+            "description": "Provider field.",
+            "type": "string"
+          },
+          "properties": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            },
+            "description": "Provider property names mapped to native values.",
+            "type": "object"
+          },
+          "uuid": {
+            "description": "Provider field.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventName",
+          "objectId",
+          "occurredAt",
+          "uuid",
+          "properties"
+        ],
+        "type": "object"
+      },
+      "key": "hubspot.marketing.behavioral_events.send",
+      "metadata": {
+        "name": "Send One HubSpot Behavioral Event Occurrence",
+        "provider_scopes": [
+          "analytics.behavioral_events.send"
+        ],
+        "risk_level": "high"
+      },
+      "operation": "marketing.behavioral_events.send",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    },
+    {
+      "auth_methods": [
+        "oauth2_authorization_code",
+        "private_app_token"
+      ],
+      "config": {
+        "body_field": null,
+        "has_body": false,
+        "method": "GET",
+        "path": "/crm/objects/2026-03/deals",
+        "query": true,
+        "write": false
+      },
+      "description": "GET /crm/objects/2026-03/deals. Returns native HubSpot response fields.",
+      "examples": [],
+      "guidance": "Use provider-native identifiers and property names. Pagination returns the provider cursor for an explicit next request.",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "after": {
+            "description": "Provider pagination cursor.",
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "archived": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "enum": [
+                  "true",
+                  "false"
+                ],
+                "type": "string"
+              }
+            ],
+            "description": "Provider boolean flag."
+          },
+          "limit": {
+            "description": "Maximum results in this page.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "properties": {
+            "description": "Comma-separated native property names.",
+            "type": "string"
+          },
+          "propertiesWithHistory": {
+            "description": "Comma-separated native property names.",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      },
+      "key": "hubspot.crm.deals.list",
+      "metadata": {
+        "name": "List HubSpot Deals",
+        "provider_scopes": [
+          "crm.objects.deals.read"
+        ],
+        "risk_level": "read"
+      },
+      "operation": "crm.deals.list",
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      }
+    }
+  ],
+  "auth_methods": [
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply the resolved access_token for HubSpot bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "description": "Resolved HubSpot access token.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "oauth2_authorization_code",
+      "payload_format": "json",
+      "setup": {
+        "description": "Create a HubSpot private app access token or complete the OAuth authorization-code flow with the scopes required by the selected API operations.",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "OAuth Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "OAuth Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "label": "Connect with HubSpot"
+      }
+    },
+    {
+      "config_schema": {
+        "additionalProperties": true,
+        "properties": {},
+        "type": "object"
+      },
+      "description": "Supply the resolved access_token for HubSpot bearer authentication.",
+      "fields_schema": {
+        "additionalProperties": true,
+        "properties": {
+          "access_token": {
+            "description": "Resolved HubSpot access token.",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "access_token"
+        ],
+        "type": "object"
+      },
+      "key": "private_app_token",
+      "payload_format": "json",
+      "setup": {
+        "description": "Create a HubSpot private app access token or complete the OAuth authorization-code flow with the scopes required by the selected API operations.",
+        "fields": [
+          {
+            "description": null,
+            "key": "access_token",
+            "label": "Private App Access Token",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "label": "Private app access token"
+      }
+    }
+  ],
+  "config": {
+    "scopes": [
+      "crm.objects.contacts.read",
+      "crm.objects.contacts.write",
+      "crm.objects.companies.read",
+      "crm.objects.companies.write",
+      "crm.objects.deals.read",
+      "crm.objects.deals.write",
+      "crm.objects.owners.read",
+      "crm.schemas.contacts.read",
+      "crm.schemas.companies.read",
+      "crm.schemas.deals.read"
+    ],
+    "setup": {
+      "billing_url": "https://www.hubspot.com/pricing",
+      "console_url": "https://app.hubspot.com/developer-projects",
+      "credential_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/oauth/working-with-oauth",
+      "docs_url": "https://developers.hubspot.com/docs/api-reference/latest/overview",
+      "fallback_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/manage-apps-in-hubspot",
+      "homepage_url": "https://www.hubspot.com/",
+      "signup_url": "https://app.hubspot.com/signup-hubspot/crm",
+      "support_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+    }
+  },
+  "connector": "hubspot",
+  "description": "Fixed HubSpot CRM, marketing, event, preference and export APIs with native provider IDs and field names.",
+  "icon": {
+    "kind": "wordmark",
+    "media_type": "image/png",
+    "path": "connectors/hubspot/assets/icon.png"
+  },
+  "implementation": "stackos_connectors.connectors.hubspot.actions:HubSpotActionConnector",
+  "name": "HubSpot",
+  "schema_version": "stackos.connector.v1"
+}

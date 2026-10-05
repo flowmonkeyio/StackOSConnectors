@@ -378,4 +378,11 @@ class ConnectorClient:
                     "retry_safe": False,
                 },
             ) from None
-        return ConnectorResult.model_validate(clean(result.model_dump()))
+        payload = clean(result.model_dump())
+        # Native response facts may include signed download URLs and opaque next-page
+        # tokens. Display/audit projection belongs to the caller; credential echoes
+        # remain forbidden even in the in-process response.
+        payload["output_json"] = redact_secret_values(
+            result.output_json, auth_secret_values(request.auth)
+        )
+        return ConnectorResult.model_validate(payload)
