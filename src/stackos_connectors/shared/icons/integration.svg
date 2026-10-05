@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">Generic integration</title>
+  <g fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round">
+    <rect x="3" y="11" width="9" height="10" rx="2"/>
+    <rect x="20" y="11" width="9" height="10" rx="2"/>
+    <path d="M12 16h8M7.5 7v4m17-4v4M7.5 21v4m17-4v4"/>
+  </g>
+</svg>

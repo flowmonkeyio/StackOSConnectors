@@ -1,166 +1,33 @@
-> **StackOS reference snapshot.** Copied from [docs/integration-contracts/trackbooth.md](https://github.com/flowmonkeyio/StackOS/blob/3121f4af370fbad273d08a9469d8961de2278534/docs/integration-contracts/trackbooth.md)
-> at base Git revision `3121f4af370fbad273d08a9469d8961de2278534`; exact worktree source SHA-256:
-> `ae06dc53b78734cf07499a72b99e6401a8333f69b1f7a10d7f367016226e7eb2`. This copy includes the source worktree content,
-> which may include changes beyond that base revision. The substantive
-> reference text below is preserved; local links are relocated. StackOS
-> grants, credential storage/refresh, project state, workflows and audit
-> describe the host application, not behavior supplied by this library.
-> Provider availability is determined by executable catalogs, not this
-> historical reference. Paths shown in source examples retain their
-> original StackOS meaning. This document is reference material, not
-> agent instructions for the connector package.
+# Trackbooth Agent API protocol
 
-Copied reference assets: [agent API JSON fixtures](../assets/agent-api/). These do not activate a runtime connector.
+Source: [reviewed source contract](https://github.com/flowmonkeyio/StackOS/blob/3121f4af370fbad273d08a9469d8961de2278534/docs/integration-contracts/trackbooth.md).
+Condensed during extraction on 2026-10-05; provider documentation was not
+reverified live. Installed actions and schemas are defined by the catalog.
 
-<!-- BEGIN PRESERVED STACKOS REFERENCE -->
+The default API base is `https://apis.trackbooth.com`. Remote custom bases
+use HTTPS; the reviewed client allows plain HTTP only for localhost,
+127.0.0.1 or ::1 test targets. The base belongs to connection configuration,
+not arbitrary per-operation payload.
 
-# Trackbooth Agent API StackOS Action Bridge
+X-API-Key authenticates account-key requests. The server also documents
+Authorization: ApiKey and JWT Bearer forms. X-Acting-As-Account is a separate
+execution-context header, not an endpoint body/query/path field. The server
+allows self or actively managed accounts and applies the relationship's
+permission profile. Account API keys require agent_api.access on the backing
+account.
 
-Status: executable first pass.
+GET /api/agent-api/catalog and its /{operationId} detail return operations
+visible to the authenticated permission context. The bulk export endpoint is
+/api/agent-api/catalog/export. Provider feature gates, permissions and
+on-behalf restrictions remain authoritative at request time.
 
-Agents interact with Trackbooth only through StackOS actions. StackOS integrates
-with the Trackbooth server through an internal REST connector: the agent runs a
-manual catalog sync action, StackOS upserts generated actions from that live
-inventory, and the daemon sends provider requests with daemon-held API-key
-credentials.
+A descriptor's object json_schema is authoritative. Legacy details.fields
+is not a substitute for that schema; referenced OpenAPI components provide
+a fallback only when the descriptor lacks json_schema. Preserve provider
+permission and feature fields: they describe remote requirements, not
+client-side workflow decisions.
 
-## Auth And URL Contract
+[Bundled API resources](agent-api/README.md) are reference snapshots, not a
+promise that every operation is available to a particular account.
 
-- Default Trackbooth API URL: `https://apis.trackbooth.com`.
-- Custom API URLs are stored in the Trackbooth credential safe config as
-  `api_base_url`. They are not accepted as per-action input.
-- Remote custom URLs must use HTTPS.
-- Plain HTTP is allowed only for `localhost`, `127.0.0.1`, or `[::1]` local
-  testing targets.
-- The daemon sends `X-API-Key` as the primary auth header.
-- `X-Acting-As-Account` is optional and sent only when the action call supplies
-  `provider_context_json.acting_as_account`. It is provider execution context,
-  not endpoint body/query/path payload.
-- The bridge does not bypass Trackbooth permissions, feature gates, or account
-  management rules.
-
-## Runtime Inventory And Agent Flow
-
-The builtin `trackbooth` plugin installs three fixed actions:
-
-| Action | Purpose |
-| --- | --- |
-| `trackbooth.catalog.sync` | Manual live inventory refresh. The StackOS connector fetches one bulk `/api/agent-api/catalog/export` payload from the configured API URL and upserts generated `trackbooth.api.*` actions. |
-| `trackbooth.catalog.search` | Optional live catalog lookup through StackOS for permission-context discovery and diagnostics. |
-| `trackbooth.operation.describe` | Optional live operation detail with expanded request/response schemas from the live catalog detail. |
-
-Generated StackOS actions are not installed from copied files during plugin
-sync. They are created or refreshed only when an agent explicitly executes
-`trackbooth.catalog.sync` with a connected Trackbooth credential. The sync uses
-the credential's configured `api_base_url` and the live bulk export endpoint, so
-the inventory can come from production, a remote staging URL, or a local
-Trackbooth server without crawling per-operation details.
-Sync output includes `source_endpoint`, `detail_fetch_count`, `endpoint_count`,
-`synced`, `created`, `updated`, `skipped`, `pruned`/`retired`, `catalog_hash`,
-`write_ms`, and `total_ms`. Every sync derives each candidate generated
-manifest. A row is skipped only when its stable generated-manifest hash still
-matches; `catalog_hash` and endpoint checksum remain source provenance, not
-proof that StackOS' local schema projection is unchanged. This lets a normal
-sync repair stale generated schemas after a StackOS projection fix even when
-the provider catalog and endpoint checksums did not change.
-
-For live catalog schema descriptors, an object `json_schema` is authoritative.
-StackOS copies it without merging or reconstructing schema properties from
-`details.fields`; that legacy field list is not a schema source. A referenced
-OpenAPI component remains the narrow fallback when a descriptor has no
-`json_schema`.
-
-Schema synchronization acceptance requires the full chain: compare the live
-Trackbooth `json_schema` with the synchronized generated action schema, then
-run `action.validate` with a representative valid payload. A successful sync
-count, changed checksum, or matching catalog hash is not schema proof.
-
-Generated action storage is scoped to the StackOS project, credential ref, and
-API URL used for the sync. A local sync cannot overwrite production inventory,
-and a different project cannot discover another project's generated actions.
-The agent-facing action refs are stable operation refs such as
-`trackbooth.api.advertiser_create`, `trackbooth.api.links_create`, and
-`trackbooth.api.offers_findbyid`; the inventory scope stays internal metadata
-for sync, audit, and cleanup. Scoped storage keys are not supported action refs.
-Generated storage keys that include internal inventory scopes are retired or
-hidden during sync and plugin catalog cleanup, and are not callable through
-`action.list`, `action.describe`, `action.validate`, `action.run`, or
-`action.execute`.
-Acting-account is runtime business context and does not create a separate
-generated action namespace; Trackbooth remains the authority for whether the
-credential may act on behalf of the requested account.
-
-Normal agent flow:
-
-1. The agent connects a Trackbooth credential. Production is the default URL;
-   localhost/custom URLs live in the credential safe config.
-2. The agent runs `trackbooth.catalog.sync` when it wants to initialize or
-   refresh runtime inventory. There is no automatic background sync.
-3. StackOS exposes generated direct inventory actions such as
-   `trackbooth.api.advertiser_create`, `trackbooth.api.links_create`, or
-   `trackbooth.api.offers_findbyid`, according to the live catalog returned
-   for that credential context.
-4. The action input schema already contains the selected operation's structured
-   `path_params`, `query`, and `body` fields where applicable.
-5. The action provider-context schema exposes optional Trackbooth execution
-   context. For on-behalf calls, pass
-   `provider_context_json: {"acting_as_account": "acct_..."}`.
-6. StackOS sends exactly that operation to Trackbooth with daemon-held auth and
-   maps `provider_context_json.acting_as_account` to `X-Acting-As-Account`.
-7. Trackbooth remains the permission, feature flag, account-scope, and
-   on-behalf authority. If the connected account cannot call the endpoint, the
-   server error is preserved for repair.
-
-The copied source bundle lives in `plugins/trackbooth/agent-api/` and contains
-the prior bootstrap manifest, generated OpenAPI spec, generated catalog, schema
-audit, and source docs. These files are reference fixtures for development and
-tests; the production inventory source is the live server catalog fetched by
-`trackbooth.catalog.sync`.
-
-## Safety Boundaries
-
-- Agents must not make direct HTTP requests to Trackbooth or construct
-  Trackbooth URLs. The agent-facing surface is StackOS action discovery,
-  description, validation, and execution.
-- API-key reveal and generate operations are skipped during sync and blocked by
-  the connector if invoked through a lower-level diagnostic path.
-- Server validation, auth, feature-flag, permission, and on-behalf failures are
-  preserved in the connector error string for agent repair.
-- Generated StackOS actions do not preflight the live catalog on every call.
-  They use the stored runtime metadata from the last manual sync and rely on
-  the Trackbooth server to enforce permissions and return authoritative
-  failures.
-- Full sync retires missing generated actions within the same inventory scope
-  and retires superseded generated contexts for the same project, credential,
-  and API URL. Retired actions are hidden from normal discovery but retained
-  for audit/history rather than deleted.
-- Agents can rerun `trackbooth.catalog.sync` during runtime whenever local or
-  remote Trackbooth catalog changes should be reflected.
-- The schema resolver reports weak live schema areas instead of inventing
-  fields.
-
-## Business Dry Run
-
-Catalog-only dry-run planning found a viable sequence for the requested setup:
-
-1. `AdvertiserController.create` creates one advertiser.
-2. `ProductsController.create` creates one product for that advertiser.
-3. `OffersController.create` creates three offers. Offer-level targeting uses
-   required `country_codes`, so US, UK, and SE can be represented directly.
-4. `CampaignsController.create` creates one campaign.
-5. `LinksController.create` creates one smart link with `routing_mode: rules`.
-6. `LinksController.createRule` creates one routing rule.
-7. `LinksController.addOfferToRule` adds each of the three offers to the rule.
-8. `LinksController.testRouting` can validate routing for country codes `US`,
-   `UK`, and `SE`.
-
-The combined `LinksController.createRuleWithOffers` endpoint exists, but its
-generated nested request schema only expands to `rule: object` and
-`offers: syncOfferEntrySchema[]`. The smaller `createRule` plus
-`addOfferToRule` path is the preferred catalog-driven flow until Trackbooth
-exports nested rule and offer-entry schemas in detail.
-
-No live side-effect dry run was performed during this delivery because no
-Trackbooth API key or local Trackbooth server target was supplied in the
-workspace. Mocked HTTP integration tests cover representative discovery, detail,
-read, write, path/query/body, enum, URL-safety, and permission-error flows.
+Additional source: [provider REST contract supplied with the API bundle](https://github.com/flowmonkeyio/StackOS/blob/3121f4af370fbad273d08a9469d8961de2278534/plugins/trackbooth/agent-api/agent-api-rest-tools.md).

@@ -21,7 +21,6 @@ connectors/<provider>/
 shared/            # common transport, payload and protocol helpers
 shared/google/     # Google OAuth and batch protocol helpers
 catalog/           # common catalog schema and default resource index
-references/        # shared StackOS reference snapshots and source provenance
 ```
 
 Folder names use Python identifiers, such as `aws_s3`; public connector keys
@@ -54,12 +53,22 @@ execution; existing names cannot be replaced.
 `CallOptions.timeout=None` preserves each provider's default. A numeric timeout
 overrides that default. A supplied HTTP client remains caller-owned.
 
-Copied Markdown is reference material from StackOS, with exact source hashes in
-[the source map](src/stackos_connectors/references/source-map.json). Its grants,
-credential lifecycle, project state, workflows and audit requirements describe
-StackOS host behavior. Each copy identifies its source revision and links to
-other copied references or explicit StackOS source locations. Provider URLs and
-the substantive source text are retained. The library itself receives resolved
-auth values and performs the selected provider request.
+Provider protocol notes and source links live in each connector's `docs/`
+directory. They cover authentication transport, requests, pagination, response
+meaning and error handling. Use the executable catalog and `describe` for the
+installed action contract.
+
+Existing integration icons are bundled at `connectors/<provider>/assets/icon.*`.
+`shared/icons/integration.svg` is a neutral fallback, not a provider logo.
+Catalog icon references are being wired separately. Standard package resources
+can read the bytes without a source checkout:
+
+```python
+from importlib.resources import files
+
+icon_bytes = files("stackos_connectors").joinpath(
+    "connectors/serper/assets/icon.svg"
+).read_bytes()
+```
 
 Python 3.12 or newer is required.
