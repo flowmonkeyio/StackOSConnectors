@@ -74,6 +74,8 @@ class ActionDefinition:
     output_schema: Mapping[str, Any] = field(default_factory=dict)
     guidance: str = ""
     examples: tuple[Mapping[str, Any], ...] = ()
+    metadata: Mapping[str, Any] = field(default_factory=dict)
+    auth_optional: bool = False
 
     def __post_init__(self) -> None:
         if not all(
@@ -81,10 +83,12 @@ class ActionDefinition:
         ):
             raise ValueError("connector, action key and operation are required")
         methods = tuple(self.auth_methods)
+        if not isinstance(self.auth_optional, bool):
+            raise ValueError("auth_optional must be boolean")
         if len({method.key for method in methods}) != len(methods):
             raise ValueError("duplicate auth method key")
         object.__setattr__(self, "auth_methods", methods)
-        for name in ("input_schema", "output_schema", "config", "examples"):
+        for name in ("input_schema", "output_schema", "config", "examples", "metadata"):
             object.__setattr__(self, name, freeze(getattr(self, name)))
 
 

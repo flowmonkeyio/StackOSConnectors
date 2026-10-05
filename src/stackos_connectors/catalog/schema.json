@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "index": {
+      "type": "object",
+      "required": ["schema_version", "connectors"],
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {"const": "stackos.connectors.index.v1"},
+        "connectors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*\\.json$"}}
+      }
+    },
+    "auth_method": {
+      "type": "object",
+      "required": ["key", "fields_schema"],
+      "properties": {
+        "key": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "payload_format": {"enum": ["raw", "json", "none"]},
+        "payload_field": {"type": "string", "minLength": 1},
+        "fields_schema": {"type": "object"},
+        "config_schema": {"type": "object"}
+      }
+    },
+    "action": {
+      "type": "object",
+      "required": ["key", "operation", "input_schema", "auth_methods", "config"],
+      "properties": {
+        "key": {"type": "string", "minLength": 1},
+        "operation": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "guidance": {"type": "string"},
+        "input_schema": {"type": "object"},
+        "output_schema": {"type": "object"},
+        "auth_methods": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "auth_optional": {"type": "boolean"},
+        "config": {"type": "object"},
+        "examples": {"type": "array", "items": {"type": "object"}},
+        "metadata": {"type": "object"}
+      }
+    },
+    "connector": {
+      "type": "object",
+      "required": ["schema_version", "connector", "name", "description", "auth_methods", "actions"],
+      "properties": {
+        "schema_version": {"const": "stackos.connector.v1"},
+        "connector": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+        "name": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "implementation": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_.]*:[A-Za-z_][A-Za-z0-9_]*$"},
+        "auth_methods": {"type": "array", "items": {"$ref": "#/$defs/auth_method"}},
+        "actions": {"type": "array", "items": {"$ref": "#/$defs/action"}},
+        "metadata": {"type": "object"}
+      }
+    }
+  },
+  "$ref": "#/$defs/connector"
+}

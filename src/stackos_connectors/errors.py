@@ -28,11 +28,19 @@ class ConnectorError(Exception):
 
 
 class ValidationError(ConnectorError):
-    def __init__(self, detail: str, *, issues: list[Any] | None = None) -> None:
+    def __init__(
+        self,
+        detail: str,
+        *,
+        issues: list[Any] | None = None,
+        data: dict[str, Any] | None = None,
+    ) -> None:
         self.issues = issues or []
+        self.data = dict(data or {})
         super().__init__(
             detail,
             metadata_json={
+                **({"data": self.data} if self.data else {}),
                 "issues": [
                     item.model_dump() if hasattr(item, "model_dump") else item
                     for item in self.issues

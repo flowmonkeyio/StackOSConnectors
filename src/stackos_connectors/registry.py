@@ -61,7 +61,11 @@ def _preflight_boundary(
     try:
         yield clean
     except ValidationError as exc:
-        raise ValidationError(clean(exc.detail), issues=_clean_issues(exc.issues, clean)) from None
+        raise ValidationError(
+            clean(exc.detail),
+            issues=_clean_issues(exc.issues, clean),
+            data=clean(exc.data),
+        ) from None
     except ConnectorError as exc:
         metadata = clean(exc.metadata_json)
         metadata.pop("outcome", None)
@@ -95,6 +99,7 @@ class ConnectorRegistry:
         *,
         actions: Iterable[ActionDefinition] = (),
         implementations: Mapping[str, ConnectorFactory | str] | None = None,
+        connector_metadata: Mapping[str, Mapping[str, Any]] | None = None,
     ) -> None:
         definitions: dict[tuple[str, str], ActionDefinition] = {}
         for action in actions:
@@ -109,10 +114,13 @@ class ConnectorRegistry:
             definitions[key] = action
         self.actions = MappingProxyType(definitions)
         self.implementations = MappingProxyType(dict(implementations or {}))
+        self.connector_metadata = freeze(connector_metadata or {})
 
     def with_actions(self, actions: Iterable[ActionDefinition]) -> ConnectorRegistry:
         return ConnectorRegistry(
-            actions=[*self.actions.values(), *actions], implementations=self.implementations
+            actions=[*self.actions.values(), *actions],
+            implementations=self.implementations,
+            connector_metadata=self.connector_metadata,
         )
 
     def action(self, connector: str, action: str) -> ActionDefinition:
@@ -157,7 +165,10 @@ class ConnectorClient:
         return ConnectorClient(registry=self.registry.with_actions(actions))
 
     def list_connectors(self) -> list[str]:
-        return sorted({connector for connector, _ in self.registry.actions})
+        return sorted(
+            {connector for connector, _ in self.registry.actions}
+            | self.registry.connector_metadata.keys()
+        )
 
     def describe(self, connector: str, action: str | None = None) -> dict[str, Any]:
         definitions = (
@@ -165,20 +176,24 @@ class ConnectorClient:
             if action is not None
             else [item for item in self.registry.actions.values() if item.connector == connector]
         )
-        if not definitions:
+        if not definitions and connector not in self.registry.connector_metadata:
             raise ValidationError("connector is not registered")
         return {
+            **thaw(self.registry.connector_metadata.get(connector, {})),
             "connector": connector,
             "available": connector in self.registry.implementations,
             "actions": [
                 {
+                    **thaw(item.metadata),
                     "key": item.key,
                     "operation": item.operation,
+                    "config": thaw(item.config),
                     "description": item.description,
                     "guidance": item.guidance,
                     "input_schema": thaw(item.input_schema),
                     "output_schema": thaw(item.output_schema),
                     "examples": thaw(item.examples),
+                    "auth_optional": item.auth_optional,
                     "auth_methods": [
                         {
                             "key": method.key,
@@ -234,7 +249,9 @@ class ConnectorClient:
                 ),
                 None,
             )
-            if method is None:
+            if auth is None and definition.auth_optional:
+                pass
+            elif method is None:
                 issues.append(
                     ValidationIssue(path="$.auth.method", message="select a supported auth method")
                 )
@@ -323,6 +340,7 @@ class ConnectorClient:
             if isinstance(exc, ValidationError):
                 raise ValidationError(
                     clean(exc.detail),
+                    data=clean(exc.data),
                     issues=[
                         ValidationIssue.model_validate(clean(item.model_dump()))
                         for item in exc.issues
