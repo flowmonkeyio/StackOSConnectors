@@ -1,8 +1,8 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "sitemap",
-  "name": "sitemap",
-  "description": "Google People Also Ask protocol client backed by Firecrawl.",
+  "name": "Sitemap",
+  "description": "Read public XML sitemaps and sitemap indexes to discover page URLs.",
   "auth_methods": [],
   "actions": [
     {
@@ -55,6 +55,13 @@
       }
     }
   ],
-  "setup": {},
-  "implementation": "stackos_connectors.connectors.sitemap.actions:SitemapActionConnector"
+  "setup": {
+    "setup_note": "Supply a public sitemap URL. Authentication is not required."
+  },
+  "implementation": "stackos_connectors.connectors.sitemap.actions:SitemapActionConnector",
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  }
 }

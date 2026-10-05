@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "client_credentials",
-      "description": "",
+      "description": "Supply the resolved OAuth access token and user agent; acquire and refresh the token outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -33,9 +33,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth-client-credentials",
-        "config": null,
-        "description": "",
+        "label": "Client credentials",
         "fields": [
           {
             "description": null,
@@ -68,12 +66,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "client_credentials",
-        "label": "Client credentials",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Acquire the client-credentials access token before execution. Pass access_token and user_agent as execution auth fields. Create a Reddit app under developer preferences and use its client ID and client secret to acquire an access token. Supply a descriptive user agent."
       }
     }
   ],
@@ -158,35 +151,18 @@
     }
   ],
   "setup": {
-    "credential_payload": {
-      "format": "json",
-      "required_keys": [
-        "client_id",
-        "client_secret",
-        "user_agent"
-      ],
-      "secret_keys": [
-        "client_secret"
-      ]
-    },
-    "setup": {
-      "console_url": "https://www.reddit.com/prefs/apps",
-      "credential_label": "Reddit app client id, client secret, and user agent",
-      "credential_url": "https://www.reddit.com/prefs/apps",
-      "docs_url": "https://www.reddit.com/dev/api/",
-      "homepage_url": "https://www.reddit.com/",
-      "setup_note": "Create a Reddit app under developer preferences, then store client id, client secret, and user agent in StackOS.",
-      "signup_url": "https://www.reddit.com/register/",
-      "url_confidence": {
-        "console_url": "verified",
-        "credential_url": "verified",
-        "docs_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "verified"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Store the OAuth app JSON in the encrypted payload; do not persist access tokens in agent-visible state."
+    "console_url": "https://www.reddit.com/prefs/apps",
+    "credential_label": "Reddit app client id, client secret, and user agent",
+    "credential_url": "https://www.reddit.com/prefs/apps",
+    "docs_url": "https://www.reddit.com/dev/api/",
+    "homepage_url": "https://www.reddit.com/",
+    "setup_note": "Acquire the client-credentials access token before execution. Pass access_token and user_agent as execution auth fields. Create a Reddit app under developer preferences and use its client ID and client secret to acquire an access token. Supply a descriptive user agent.",
+    "signup_url": "https://www.reddit.com/register/"
   },
-  "implementation": "stackos_connectors.connectors.reddit.actions:RedditActionConnector"
+  "implementation": "stackos_connectors.connectors.reddit.actions:RedditActionConnector",
+  "icon": {
+    "path": "connectors/reddit/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

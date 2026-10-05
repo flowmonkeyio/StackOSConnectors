@@ -178,12 +178,19 @@ class ConnectorClient:
         )
         if not definitions and connector not in self.registry.connector_metadata:
             raise ValidationError("connector is not registered")
+        metadata = self.registry.connector_metadata.get(connector, {})
+        method_metadata = {
+            method["key"]: method
+            for method in metadata.get("auth_methods", ())
+            if isinstance(method, Mapping) and isinstance(method.get("key"), str)
+        }
         return {
-            **thaw(self.registry.connector_metadata.get(connector, {})),
+            **thaw(metadata),
             "connector": connector,
             "available": connector in self.registry.implementations,
             "actions": [
                 {
+                    **({"icon": thaw(metadata["icon"])} if "icon" in metadata else {}),
                     **thaw(item.metadata),
                     "key": item.key,
                     "operation": item.operation,
@@ -196,6 +203,7 @@ class ConnectorClient:
                     "auth_optional": item.auth_optional,
                     "auth_methods": [
                         {
+                            **thaw(method_metadata.get(method.key, {})),
                             "key": method.key,
                             "description": method.description,
                             "fields_schema": thaw(method.fields_schema),

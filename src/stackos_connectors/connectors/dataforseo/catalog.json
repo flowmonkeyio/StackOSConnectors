@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "basic",
-      "description": "",
+      "description": "Supply the API password in fields and API login in config for HTTP Basic authentication.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -43,9 +43,7 @@
       "payload_format": "raw",
       "payload_field": "password",
       "setup": {
-        "auth_type": "basic",
-        "config": null,
-        "description": "",
+        "label": "Login and password",
         "fields": [
           {
             "description": null,
@@ -68,12 +66,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "basic",
-        "label": "Login and password",
-        "payload_field": "password",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "DataForSEO uses HTTP Basic authentication with the API login as username and API password as password. Named actions cover live SERP and keyword endpoints. Obtain the API login and API password from DataForSEO API access."
       }
     }
   ],
@@ -858,7 +851,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "Fetch live SERP result evidence for an agent-selected query through DataForSEO; StackOS caps depth at 100 results for bounded agent calls.",
+      "description": "Fetch live SERP results for a query through DataForSEO, with depth limited to 100 results.",
       "metadata": {
         "capability": "seo-research",
         "name": "Analyze SERP",
@@ -1256,30 +1249,23 @@
     }
   ],
   "setup": {
+    "billing_url": "https://app.dataforseo.com/billing",
+    "console_url": "https://app.dataforseo.com/",
+    "credential_label": "DataForSEO API login and password",
+    "credential_url": "https://app.dataforseo.com/api-access",
+    "docs_url": "https://docs.dataforseo.com/",
+    "homepage_url": "https://dataforseo.com/",
+    "setup_note": "DataForSEO uses HTTP Basic authentication with the API login as username and API password as password. Named actions cover live SERP and keyword endpoints. Obtain the API login and API password from DataForSEO API access.",
+    "signup_url": "https://app.dataforseo.com/register",
     "docs": [
       "https://docs.dataforseo.com/v3/serp-se-type-live-advanced/",
       "https://docs.dataforseo.com/v3/keywords_data-google_ads-search_volume-live/"
-    ],
-    "setup": {
-      "billing_url": "https://app.dataforseo.com/billing",
-      "console_url": "https://app.dataforseo.com/",
-      "credential_label": "DataForSEO API login and password",
-      "credential_url": "https://app.dataforseo.com/api-access",
-      "docs_url": "https://docs.dataforseo.com/",
-      "homepage_url": "https://dataforseo.com/",
-      "setup_note": "Register for DataForSEO, open API access, then store the API login and API password in StackOS.",
-      "signup_url": "https://app.dataforseo.com/register",
-      "url_confidence": {
-        "billing_url": "directional",
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "directional"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "DataForSEO uses HTTP Basic auth with the API login as username and API password as the daemon-held secret. Exposed StackOS actions stay limited to documented live SERP and keyword evidence endpoints."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.dataforseo.actions:DataForSeoActionConnector"
+  "implementation": "stackos_connectors.connectors.dataforseo.actions:DataForSeoActionConnector",
+  "icon": {
+    "path": "connectors/dataforseo/assets/icon.jpeg",
+    "media_type": "image/jpeg",
+    "kind": "icon"
+  }
 }

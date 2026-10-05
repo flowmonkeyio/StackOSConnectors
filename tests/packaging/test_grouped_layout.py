@@ -45,6 +45,19 @@ def test_grouped_owners_have_no_old_duplicate_paths():
             registry=load_registry(f"connectors/{provider.name}/catalog.json")
         )
         assert document["connector"] in client.list_connectors()
+        described = client.describe(document["connector"])
+        assert described["name"] and described["description"]
+        assert described["icon"] == document["icon"]
+        assert root.joinpath(*described["icon"]["path"].split("/")).read_bytes()
+        for action, raw in zip(described["actions"], document["actions"], strict=True):
+            assert action["name"] and action["description"]
+            expected_icon = raw.get("icon", raw.get("metadata", {}).get("icon", document["icon"]))
+            assert action["icon"] == expected_icon
+            for method in action["auth_methods"]:
+                assert method["description"] and method["setup"]["description"]
+        for link in document.get("setup", {}).get("docs", []):
+            if not link.startswith("https://"):
+                assert root.joinpath(*link.split("/")).is_file(), link
     assert ConnectorClient(registry=load_registry()).list_connectors() == []
 
 

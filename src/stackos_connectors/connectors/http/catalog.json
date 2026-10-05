@@ -1,7 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "http",
-  "name": "http",
+  "name": "HTTP",
   "description": "Execute explicitly registered HTTP requests.",
   "auth_methods": [
     {
@@ -23,7 +23,10 @@
         "type": "object"
       },
       "payload_format": "raw",
-      "payload_field": "token"
+      "payload_field": "token",
+      "setup": {
+        "description": "bearer authentication for an explicitly registered HTTP action."
+      }
     },
     {
       "key": "header",
@@ -44,7 +47,10 @@
         "type": "object"
       },
       "payload_format": "raw",
-      "payload_field": "token"
+      "payload_field": "token",
+      "setup": {
+        "description": "header authentication for an explicitly registered HTTP action."
+      }
     },
     {
       "key": "basic",
@@ -69,11 +75,19 @@
       "config_schema": {
         "type": "object"
       },
-      "payload_format": "json"
+      "payload_format": "json",
+      "setup": {
+        "description": "basic authentication for an explicitly registered HTTP action."
+      }
     }
   ],
   "actions": [],
   "setup": {},
   "implementation": "stackos_connectors.connectors.http.actions:HttpActionConnector",
-  "guidance": "Register named ActionDefinition values with fixed http routing/configuration on an isolated ConnectorClient. No per-call route override is accepted."
+  "guidance": "Register named ActionDefinition values with fixed http routing/configuration on an isolated ConnectorClient. No per-call route override is accepted.",
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  }
 }

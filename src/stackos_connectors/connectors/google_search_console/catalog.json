@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "oauth2_authorization_code",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -22,59 +22,13 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {
-          "access_mode": {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          },
-          "default_site_url": {
-            "description": "Default Site URL",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          }
-        },
+        "properties": {},
         "required": []
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "Connect with Google",
         "fields": [
-          {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "key": "access_mode",
-            "label": "Search Console access",
-            "options": [
-              {
-                "label": "Read only",
-                "value": "readonly"
-              },
-              {
-                "label": "Read and submit sitemaps",
-                "value": "sitemap_write"
-              }
-            ],
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "select"
-          },
           {
             "description": null,
             "key": "client_id",
@@ -94,29 +48,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_site_url",
-            "label": "Default Site URL",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": true,
-        "key": "oauth2_authorization_code",
-        "label": "Connect with Google",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Obtain an access token using Google OAuth authorization-code consent outside this library. Execution accepts the resolved access_token."
       }
     },
     {
       "key": "oauth2_access_token",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -132,59 +71,13 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {
-          "access_mode": {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          },
-          "default_site_url": {
-            "description": "Default Site URL",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          }
-        },
+        "properties": {},
         "required": []
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "OAuth2 access token",
         "fields": [
-          {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "key": "access_mode",
-            "label": "Search Console access",
-            "options": [
-              {
-                "label": "Read only",
-                "value": "readonly"
-              },
-              {
-                "label": "Read and submit sitemaps",
-                "value": "sitemap_write"
-              }
-            ],
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "select"
-          },
           {
             "description": null,
             "key": "access_token",
@@ -194,29 +87,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_site_url",
-            "label": "Default Site URL",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "oauth2_access_token",
-        "label": "OAuth2 access token",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Obtain a Google access token with the required provider scopes and permissions before execution."
       }
     },
     {
       "key": "oauth2_refresh_token",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -232,59 +110,13 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {
-          "access_mode": {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          },
-          "default_site_url": {
-            "description": "Default Site URL",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          }
-        },
+        "properties": {},
         "required": []
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "OAuth2 refresh token",
         "fields": [
-          {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "key": "access_mode",
-            "label": "Search Console access",
-            "options": [
-              {
-                "label": "Read only",
-                "value": "readonly"
-              },
-              {
-                "label": "Read and submit sitemaps",
-                "value": "sitemap_write"
-              }
-            ],
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "select"
-          },
           {
             "description": null,
             "key": "client_id",
@@ -314,29 +146,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_site_url",
-            "label": "Default Site URL",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "oauth2_refresh_token",
-        "label": "OAuth2 refresh token",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Exchange the Google refresh token for an access token outside this library. Execution accepts the resolved access_token."
       }
     },
     {
       "key": "service-account",
-      "description": "Use a Google service-account JSON key with access to the Search Console property. No user consent redirect.",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -352,59 +169,13 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {
-          "access_mode": {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          },
-          "default_site_url": {
-            "description": "Default Site URL",
-            "type": [
-              "string",
-              "integer",
-              "number",
-              "boolean",
-              "object",
-              "array",
-              "null"
-            ]
-          }
-        },
+        "properties": {},
         "required": []
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "Use a Google service-account JSON key with access to the Search Console property. No user consent redirect.",
+        "label": "Service account",
         "fields": [
-          {
-            "description": "Read only is the default. Sitemap submission requires explicit write access and Google authorization.",
-            "key": "access_mode",
-            "label": "Search Console access",
-            "options": [
-              {
-                "label": "Read only",
-                "value": "readonly"
-              },
-              {
-                "label": "Read and submit sitemaps",
-                "value": "sitemap_write"
-              }
-            ],
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "select"
-          },
           {
             "description": null,
             "key": "service_account_json",
@@ -414,27 +185,9 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_site_url",
-            "label": "Default Site URL",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "service-account",
-        "label": "Service account",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": {
-          "enforcement": "local_required",
-          "evidence_source": "oauth_response"
-        }
+        "description": "Use the Google service-account key to acquire an access token outside this library. Execution accepts the resolved access_token; provider resource access must be granted separately."
       }
     }
   ],
@@ -931,6 +684,14 @@
     }
   ],
   "setup": {
+    "console_url": "https://search.google.com/search-console",
+    "credential_label": "Google Search Console credential",
+    "credential_url": "https://console.cloud.google.com/apis/credentials",
+    "docs_url": "https://developers.google.com/webmaster-tools/v1/how-tos/authorizing",
+    "fallback_reason": "OAuth consent and verified properties are account-specific; the official auth docs are the stable setup reference.",
+    "fallback_url": "https://developers.google.com/webmaster-tools/v1/how-tos/authorizing",
+    "homepage_url": "https://search.google.com/search-console/about",
+    "setup_note": "Read requests use the webmasters.readonly scope. Sitemap submission requires the webmasters scope and Google property permissions that allow submission. Acquire a token with the required scope before execution. Enable Search Console API. For service-account authentication, add its client_email as a user of the target property. Restricted property access supports performance reads; Cloud IAM alone does not grant property access. OAuth is also supported.",
     "docs": [
       "https://developers.google.com/webmaster-tools/v1/quickstart/quickstart-python",
       "https://support.google.com/webmasters/answer/7687615",
@@ -942,26 +703,12 @@
     ],
     "scopes": [
       "https://www.googleapis.com/auth/webmasters.readonly"
-    ],
-    "setup": {
-      "console_url": "https://search.google.com/search-console",
-      "credential_label": "Google Search Console credential",
-      "credential_url": "https://console.cloud.google.com/apis/credentials",
-      "docs_url": "https://developers.google.com/webmaster-tools/v1/how-tos/authorizing",
-      "fallback_reason": "OAuth consent and verified properties are account-specific; the official auth docs are the stable setup reference.",
-      "fallback_url": "https://developers.google.com/webmaster-tools/v1/how-tos/authorizing",
-      "homepage_url": "https://search.google.com/search-console/about",
-      "setup_note": "Enable Search Console API. For service-account setup, add the key's client_email as a user of the target Search Console property, then enter the JSON key locally. Restricted property access supports performance reads; Cloud IAM alone does not grant property access. OAuth remains available.",
-      "url_confidence": {
-        "console_url": "verified",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified"
-      },
-      "verified_at": "2026-06-17"
-    },
-    "setup_note": "Read-only access is the default. Select sitemap_write explicitly to request the webmasters write scope; OAuth requires new consent and service accounts acquire a new token. Google property permissions must also allow sitemap submission."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.google_search_console.actions:GoogleSearchConsoleActionConnector"
+  "implementation": "stackos_connectors.connectors.google_search_console.actions:GoogleSearchConsoleActionConnector",
+  "icon": {
+    "path": "connectors/google_search_console/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

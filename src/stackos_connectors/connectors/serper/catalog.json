@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "api_key",
-      "description": "",
+      "description": "Supply the Serper API key.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -28,9 +28,7 @@
       "payload_format": "raw",
       "payload_field": "api_key",
       "setup": {
-        "auth_type": "api-key",
-        "config": null,
-        "description": "",
+        "label": "API key",
         "fields": [
           {
             "description": null,
@@ -43,12 +41,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "api_key",
-        "label": "API key",
-        "payload_field": "api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "Serper.dev Google Search requests send the API key in the provider header and consume provider credits. Supply the query, locale, page, and result count explicitly. Obtain the API key from the Serper dashboard."
       }
     }
   ],
@@ -108,32 +101,24 @@
     }
   ],
   "setup": {
+    "billing_url": "https://serper.dev/pricing",
+    "console_url": "https://serper.dev/",
+    "credential_label": "Serper API key",
+    "credential_url": "https://serper.dev/api-key",
+    "docs_url": "https://serper.dev/api",
+    "fallback_reason": "Exact dashboard routes can change; the official site is the fallback for key and usage setup.",
+    "fallback_url": "https://serper.dev/",
+    "homepage_url": "https://serper.dev/",
+    "setup_note": "Serper.dev Google Search requests send the API key in the provider header and consume provider credits. Supply the query, locale, page, and result count explicitly. Obtain the API key from the Serper dashboard.",
+    "signup_url": "https://serper.dev/signup",
     "docs": [
       "https://serper.dev/"
-    ],
-    "setup": {
-      "billing_url": "https://serper.dev/pricing",
-      "console_url": "https://serper.dev/",
-      "credential_label": "Serper API key",
-      "credential_url": "https://serper.dev/api-key",
-      "docs_url": "https://serper.dev/api",
-      "fallback_reason": "Exact dashboard routes can change; the official site is the fallback for key and usage setup.",
-      "fallback_url": "https://serper.dev/",
-      "homepage_url": "https://serper.dev/",
-      "setup_note": "Register with Serper, create or copy the API key, and store it in StackOS.",
-      "signup_url": "https://serper.dev/signup",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "directional"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Serper.dev Google Search requests use a daemon-held key in the provider header and consume provider credits. Keep searches bounded with explicit query, locale, page, and result-count inputs."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.serper.actions:SerperActionConnector"
+  "implementation": "stackos_connectors.connectors.serper.actions:SerperActionConnector",
+  "icon": {
+    "path": "connectors/serper/assets/icon.svg",
+    "media_type": "image/svg+xml",
+    "kind": "wordmark"
+  }
 }

@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "api_key",
-      "description": "",
+      "description": "Supply the optional Jina Reader API key for authenticated requests.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -27,9 +27,7 @@
       "payload_format": "raw",
       "payload_field": "api_key",
       "setup": {
-        "auth_type": "api-key",
-        "config": null,
-        "description": "",
+        "label": "API key",
         "fields": [
           {
             "description": null,
@@ -42,12 +40,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "api_key",
-        "label": "API key",
-        "payload_field": "api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "The API key is optional; anonymous requests are supported. Jina Reader can run without a key. An API key from the Jina dashboard provides authenticated access with provider quota limits."
       }
     }
   ],
@@ -85,29 +78,21 @@
     }
   ],
   "setup": {
-    "setup": {
-      "billing_url": "https://jina.ai/pricing",
-      "console_url": "https://jina.ai/api-dashboard/",
-      "credential_label": "Optional Jina API key",
-      "credential_url": "https://jina.ai/api-dashboard/",
-      "docs_url": "https://docs.jina.ai/",
-      "fallback_reason": "Exact dashboard routing can vary; use the official Jina API dashboard.",
-      "fallback_url": "https://jina.ai/api-dashboard/",
-      "homepage_url": "https://jina.ai/",
-      "setup_note": "Jina Reader can run without a key. For higher quota, use Jina's API dashboard and store the API key in StackOS.",
-      "signup_url": "https://jina.ai/",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "directional",
-        "homepage_url": "verified",
-        "signup_url": "directional"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Jina Reader can run without a key; add a daemon-held API key only when higher quota is needed."
+    "billing_url": "https://jina.ai/pricing",
+    "console_url": "https://jina.ai/api-dashboard/",
+    "credential_label": "Optional Jina API key",
+    "credential_url": "https://jina.ai/api-dashboard/",
+    "docs_url": "https://docs.jina.ai/",
+    "fallback_reason": "Exact dashboard routing can vary; use the official Jina API dashboard.",
+    "fallback_url": "https://jina.ai/api-dashboard/",
+    "homepage_url": "https://jina.ai/",
+    "setup_note": "The API key is optional; anonymous requests are supported. Jina Reader can run without a key. An API key from the Jina dashboard provides authenticated access with provider quota limits.",
+    "signup_url": "https://jina.ai/"
   },
-  "implementation": "stackos_connectors.connectors.jina.actions:JinaActionConnector"
+  "implementation": "stackos_connectors.connectors.jina.actions:JinaActionConnector",
+  "icon": {
+    "path": "connectors/jina/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

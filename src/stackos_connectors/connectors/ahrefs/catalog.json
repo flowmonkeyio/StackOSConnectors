@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "api_key",
-      "description": "",
+      "description": "Supply the Ahrefs API key for bearer authentication.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -28,9 +28,8 @@
       "payload_format": "raw",
       "payload_field": "api_key",
       "setup": {
-        "auth_type": "api-key",
-        "config": null,
-        "description": "",
+        "label": "API key",
+        "description": "Ahrefs API v3 calls consume API units and require eligible Direct API access. Obtain an API key in the Ahrefs app. The limits_and_usage action reads subscription information, including plan and key limits and remaining units.",
         "fields": [
           {
             "description": null,
@@ -42,13 +41,7 @@
             "secret": true,
             "type": "secret"
           }
-        ],
-        "interactive": false,
-        "key": "api_key",
-        "label": "API key",
-        "payload_field": "api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        ]
       }
     }
   ],
@@ -164,29 +157,21 @@
     }
   ],
   "setup": {
-    "setup": {
-      "billing_url": "https://app.ahrefs.com/account/subscription",
-      "console_url": "https://app.ahrefs.com/",
-      "credential_label": "Ahrefs API key",
-      "credential_url": "https://app.ahrefs.com/api",
-      "docs_url": "https://docs.ahrefs.com/",
-      "fallback_reason": "API access is plan/account gated; official API docs and Ahrefs app are the nearest setup path.",
-      "fallback_url": "https://docs.ahrefs.com/",
-      "homepage_url": "https://ahrefs.com/",
-      "setup_note": "Confirm Direct API access, create or copy an API key, and pass it using the api_key authentication method. The limits_and_usage action explicitly reads subscription information.",
-      "signup_url": "https://app.ahrefs.com/user/sign-up",
-      "url_confidence": {
-        "billing_url": "directional",
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "directional"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Ahrefs API v3 usage consumes API units; confirm Direct API eligibility, plan row caps, key limits, and remaining units before high-volume runs."
+    "billing_url": "https://app.ahrefs.com/account/subscription",
+    "console_url": "https://app.ahrefs.com/",
+    "credential_label": "Ahrefs API key",
+    "credential_url": "https://app.ahrefs.com/api",
+    "docs_url": "https://docs.ahrefs.com/",
+    "fallback_reason": "API access is plan/account gated; official API docs and Ahrefs app are the nearest setup path.",
+    "fallback_url": "https://docs.ahrefs.com/",
+    "homepage_url": "https://ahrefs.com/",
+    "setup_note": "Ahrefs API v3 calls consume API units and require eligible Direct API access. Obtain an API key in the Ahrefs app. The limits_and_usage action reads subscription information, including plan and key limits and remaining units.",
+    "signup_url": "https://app.ahrefs.com/user/sign-up"
   },
-  "implementation": "stackos_connectors.connectors.ahrefs.actions:AhrefsActionConnector"
+  "implementation": "stackos_connectors.connectors.ahrefs.actions:AhrefsActionConnector",
+  "icon": {
+    "media_type": "image/png",
+    "kind": "icon",
+    "path": "connectors/ahrefs/assets/icon.png"
+  }
 }

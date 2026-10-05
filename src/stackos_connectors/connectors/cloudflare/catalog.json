@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "api_token",
-      "description": "",
+      "description": "Supply an API token with the permissions required by the selected request.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -28,9 +28,7 @@
       "payload_format": "raw",
       "payload_field": "api_token",
       "setup": {
-        "auth_type": "api-token",
-        "config": null,
-        "description": "",
+        "label": "API token",
         "fields": [
           {
             "description": null,
@@ -43,12 +41,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "api_token",
-        "label": "API token",
-        "payload_field": "api_token",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "Use a Cloudflare API token. Zone Read is needed for discovery and DNS Write is needed for record mutations. Create an API token with Zone Read for discovery and DNS Write for record mutations in the selected zones."
       }
     }
   ],
@@ -6364,32 +6357,25 @@
     }
   ],
   "setup": {
+    "console_url": "https://dash.cloudflare.com/",
+    "credential_label": "Cloudflare API token",
+    "credential_url": "https://dash.cloudflare.com/profile/api-tokens",
+    "docs_url": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
+    "fallback_reason": "Use Cloudflare's permissions reference when building a custom token for a narrower zone scope.",
+    "fallback_url": "https://developers.cloudflare.com/fundamentals/api/reference/permissions/",
+    "homepage_url": "https://www.cloudflare.com/",
+    "setup_note": "Use a Cloudflare API token. Zone Read is needed for discovery and DNS Write is needed for record mutations. Create an API token with Zone Read for discovery and DNS Write for record mutations in the selected zones.",
+    "signup_url": "https://dash.cloudflare.com/sign-up",
     "docs": [
-      "docs/integration-contracts/cloudflare-dns.md",
+      "connectors/cloudflare/docs/cloudflare-dns.md",
       "https://developers.cloudflare.com/api/resources/zones/methods/list/",
       "https://developers.cloudflare.com/api/resources/dns/subresources/records/"
-    ],
-    "setup": {
-      "console_url": "https://dash.cloudflare.com/",
-      "credential_label": "Cloudflare API token",
-      "credential_url": "https://dash.cloudflare.com/profile/api-tokens",
-      "docs_url": "https://developers.cloudflare.com/fundamentals/api/get-started/create-token/",
-      "fallback_reason": "Use Cloudflare's permissions reference when building a custom token for a narrower zone scope.",
-      "fallback_url": "https://developers.cloudflare.com/fundamentals/api/reference/permissions/",
-      "homepage_url": "https://www.cloudflare.com/",
-      "setup_note": "Create a least-privilege API token with Zone Read and DNS Write for the zones the operator intends the agent to manage.",
-      "signup_url": "https://dash.cloudflare.com/sign-up",
-      "url_confidence": {
-        "console_url": "verified",
-        "credential_url": "verified",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "verified"
-      },
-      "verified_at": "2026-07-15"
-    },
-    "setup_note": "Store a Cloudflare API token in StackOS. Zone Read is needed for discovery and DNS Write is needed for record mutations."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.cloudflare.actions:CloudflareActionConnector"
+  "implementation": "stackos_connectors.connectors.cloudflare.actions:CloudflareActionConnector",
+  "icon": {
+    "path": "connectors/cloudflare/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "wordmark"
+  }
 }

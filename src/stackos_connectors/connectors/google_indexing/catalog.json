@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "service-account",
-      "description": "Use a Google JSON key whose service-account email is a delegated owner of the verified site. Account test only acquires a token.",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -27,9 +27,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "Use a Google JSON key whose service-account email is a delegated owner of the verified site. Account test only acquires a token.",
+        "label": "Service account",
         "fields": [
           {
             "description": null,
@@ -42,15 +40,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "service-account",
-        "label": "Service account",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": {
-          "enforcement": "local_required",
-          "evidence_source": "oauth_response"
-        }
+        "description": "Use the Google service-account key to acquire an access token outside this library. Execution accepts the resolved access_token; provider resource access must be granted separately."
       }
     }
   ],
@@ -207,6 +197,14 @@
     }
   ],
   "setup": {
+    "console_url": "https://console.cloud.google.com/apis/library/indexing.googleapis.com",
+    "credential_label": "Google Indexing service-account JSON key",
+    "credential_url": "https://console.cloud.google.com/iam-admin/serviceaccounts",
+    "docs_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
+    "fallback_reason": "Cloud projects and service-account key pages depend on the signed-in account; follow the official prerequisites.",
+    "fallback_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
+    "homepage_url": "https://developers.google.com/search/apis/indexing-api/v3/quickstart",
+    "setup_note": "Enable Indexing API and add the service account as a delegated site owner in Search Console. FullUser access is insufficient. Acquire the access token before execution; token acquisition alone does not verify API or site access. Verify site ownership, enable Indexing API, and add the service-account email as a delegated owner. Only JobPosting or BroadcastEvent inside VideoObject is eligible; ordinary articles are unsupported. Google approval and quota apply.",
     "docs": [
       "https://developers.google.com/search/apis/indexing-api/v3/using-api",
       "https://developers.google.com/search/apis/indexing-api/v3/quota-pricing",
@@ -215,26 +213,12 @@
     ],
     "scopes": [
       "https://www.googleapis.com/auth/indexing"
-    ],
-    "setup": {
-      "console_url": "https://console.cloud.google.com/apis/library/indexing.googleapis.com",
-      "credential_label": "Google Indexing service-account JSON key",
-      "credential_url": "https://console.cloud.google.com/iam-admin/serviceaccounts",
-      "docs_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
-      "fallback_reason": "Cloud projects and service-account key pages depend on the signed-in account; follow the official prerequisites.",
-      "fallback_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
-      "homepage_url": "https://developers.google.com/search/apis/indexing-api/v3/quickstart",
-      "setup_note": "Verify site ownership, enable Indexing API, and add the service-account email as a delegated owner. Enter the JSON key locally. Only JobPosting or BroadcastEvent inside VideoObject is eligible; ordinary articles are unsupported. Google approval and quota apply.",
-      "url_confidence": {
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified"
-      },
-      "verified_at": "2026-09-28"
-    },
-    "setup_note": "Enable Indexing API and add the service account as a delegated site owner in Search Console. FullUser access is insufficient. Account test acquires a token; API and site access remain unverified."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.google_indexing.actions:GoogleIndexingActionConnector"
+  "implementation": "stackos_connectors.connectors.google_indexing.actions:GoogleIndexingActionConnector",
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  }
 }

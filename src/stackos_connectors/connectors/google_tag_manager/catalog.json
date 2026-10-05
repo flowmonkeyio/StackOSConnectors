@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "oauth2_authorization_code",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -27,9 +27,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "Connect with Google",
         "fields": [
           {
             "description": null,
@@ -50,29 +48,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_account_ref",
-            "label": "Default Account Ref",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": true,
-        "key": "oauth2_authorization_code",
-        "label": "Connect with Google",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Obtain an access token using Google OAuth authorization-code consent outside this library. Execution accepts the resolved access_token."
       }
     },
     {
       "key": "oauth2_access_token",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -93,9 +76,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "OAuth2 access token",
         "fields": [
           {
             "description": null,
@@ -106,29 +87,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_account_ref",
-            "label": "Default Account Ref",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "oauth2_access_token",
-        "label": "OAuth2 access token",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Obtain a Google access token with the required provider scopes and permissions before execution."
       }
     },
     {
       "key": "oauth2_refresh_token",
-      "description": "",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -149,9 +115,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "",
+        "label": "OAuth2 refresh token",
         "fields": [
           {
             "description": null,
@@ -182,29 +146,14 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_account_ref",
-            "label": "Default Account Ref",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "oauth2_refresh_token",
-        "label": "OAuth2 refresh token",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Exchange the Google refresh token for an access token outside this library. Execution accepts the resolved access_token."
       }
     },
     {
       "key": "service-account",
-      "description": "Use a Google service-account JSON key granted access to the Tag Manager account and containers. No user consent redirect.",
+      "description": "Supply the resolved Google access token; acquire and refresh it outside execution.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -225,9 +174,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "oauth",
-        "config": null,
-        "description": "Use a Google service-account JSON key granted access to the Tag Manager account and containers. No user consent redirect.",
+        "label": "Service account",
         "fields": [
           {
             "description": null,
@@ -238,27 +185,9 @@
             "required": true,
             "secret": true,
             "type": "secret"
-          },
-          {
-            "description": null,
-            "key": "default_account_ref",
-            "label": "Default Account Ref",
-            "options": null,
-            "placeholder": null,
-            "required": false,
-            "secret": false,
-            "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "service-account",
-        "label": "Service account",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": {
-          "enforcement": "local_required",
-          "evidence_source": "oauth_response"
-        }
+        "description": "Use the Google service-account key to acquire an access token outside this library. Execution accepts the resolved access_token; provider resource access must be granted separately."
       }
     }
   ],
@@ -329,7 +258,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "List containers for a Google Tag Manager account ref.",
+      "description": "List containers for a Google Tag Manager account ID or accounts/{account_id} resource path.",
       "metadata": {
         "capability": "seo-measurement",
         "name": "List Google Tag Manager Containers",
@@ -412,7 +341,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "List workspaces for a Google Tag Manager container ref.",
+      "description": "List workspaces using account_id and container_id, each as a native Google Tag Manager ID or matching resource path.",
       "metadata": {
         "capability": "seo-measurement",
         "name": "List Google Tag Manager Workspaces",
@@ -460,7 +389,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "List tags in a Google Tag Manager workspace ref.",
+      "description": "List tags using account_id, container_id and workspace_id, each as a native Google Tag Manager ID or matching resource path.",
       "metadata": {
         "capability": "seo-measurement",
         "name": "List Google Tag Manager Workspace Tags",
@@ -508,7 +437,7 @@
       ],
       "auth_optional": false,
       "config": {},
-      "description": "List triggers in a Google Tag Manager workspace ref.",
+      "description": "List triggers using account_id, container_id and workspace_id, each as a native Google Tag Manager ID or matching resource path.",
       "metadata": {
         "capability": "seo-measurement",
         "name": "List Google Tag Manager Workspace Triggers",
@@ -517,6 +446,14 @@
     }
   ],
   "setup": {
+    "console_url": "https://tagmanager.google.com/",
+    "credential_label": "Google Tag Manager credential",
+    "credential_url": "https://console.cloud.google.com/apis/credentials",
+    "docs_url": "https://developers.google.com/tag-platform/tag-manager/api/v2",
+    "fallback_reason": "OAuth consent, account access, and container IDs are account-specific; use the official API authorization documentation.",
+    "fallback_url": "https://developers.google.com/tag-platform/tag-manager/api/v2/authorization",
+    "homepage_url": "https://tagmanager.google.com/",
+    "setup_note": "Acquire an access token through Google OAuth or a service account with Tag Manager read-only access. Named actions cover reads; mutations, publishing and permission management are not registered. Enable Tag Manager API. For service-account authentication, add its client_email to the Tag Manager account with read access to the relevant containers. OAuth is also supported.",
     "docs": [
       "https://developers.google.com/tag-platform/tag-manager/api/v2",
       "https://developers.google.com/tag-platform/tag-manager/api/v2/authorization",
@@ -529,26 +466,12 @@
     ],
     "scopes": [
       "https://www.googleapis.com/auth/tagmanager.readonly"
-    ],
-    "setup": {
-      "console_url": "https://tagmanager.google.com/",
-      "credential_label": "Google Tag Manager credential",
-      "credential_url": "https://console.cloud.google.com/apis/credentials",
-      "docs_url": "https://developers.google.com/tag-platform/tag-manager/api/v2",
-      "fallback_reason": "OAuth consent, account access, and container refs are account-specific; the official API docs are the stable setup reference.",
-      "fallback_url": "https://developers.google.com/tag-platform/tag-manager/api/v2/authorization",
-      "homepage_url": "https://tagmanager.google.com/",
-      "setup_note": "Enable Tag Manager API. For service-account setup, add the key's client_email to the Tag Manager account with read access to the relevant containers, then enter the JSON key locally. OAuth remains available.",
-      "url_confidence": {
-        "console_url": "verified",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified"
-      },
-      "verified_at": "2026-06-17"
-    },
-    "setup_note": "Choose Google OAuth or a service-account JSON key with Tag Manager read-only access. Container/workspace mutations, versioning, publish, and permission-management scopes remain deferred."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.google_tag_manager.actions:GoogleTagManagerActionConnector"
+  "implementation": "stackos_connectors.connectors.google_tag_manager.actions:GoogleTagManagerActionConnector",
+  "icon": {
+    "path": "connectors/google_tag_manager/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

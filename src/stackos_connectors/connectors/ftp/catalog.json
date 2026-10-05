@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "ftp-password",
-      "description": "",
+      "description": "Supply the FTP password in fields and server connection settings in config.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -115,9 +115,7 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "ftp-password",
-        "config": null,
-        "description": "",
+        "label": "FTP password",
         "fields": [
           {
             "description": null,
@@ -218,12 +216,7 @@
             "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "ftp-password",
-        "label": "FTP password",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": null
+        "description": "Use the FTP server's host, username, password, and transport settings. Explicit FTPS is the default; plain FTP is available when deliberately selected. Obtain the host, username, password, port, and TLS settings from the FTP server operator."
       }
     }
   ],
@@ -426,7 +419,7 @@
               "additionalProperties": false,
               "properties": {
                 "local_path": {
-                  "description": "Agent-selected daemon-local file or directory path. StackOS does not restrict transfers to generated assets.",
+                  "description": "Exact local file or directory path for the transfer.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -562,7 +555,7 @@
       ],
       "auth_optional": false,
       "config": {
-        "agent_guidance": "Choose any daemon-readable local path or paths and exact remote targets. StackOS does not require generated assets or another FTP-specific path gate. Select overwrite, skip, or fail and stop or continue explicitly for each call.",
+        "agent_guidance": "Supply readable local paths and exact remote targets. Select overwrite, skip, or fail and stop or continue explicitly for each call.",
         "docs": [
           "docs/integration-contracts/ftp.md",
           "https://www.rfc-editor.org/rfc/rfc959",
@@ -606,7 +599,7 @@
               "additionalProperties": false,
               "properties": {
                 "local_path": {
-                  "description": "Agent-selected daemon-local file or directory path. StackOS does not restrict transfers to generated assets.",
+                  "description": "Exact local file or directory path for the transfer.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -742,7 +735,7 @@
       ],
       "auth_optional": false,
       "config": {
-        "agent_guidance": "Choose any daemon-writable local destination path or paths. Directories recurse automatically; select overwrite, skip, or fail and stop or continue explicitly. Remote child names are kept inside the selected destination tree.",
+        "agent_guidance": "Supply writable local destination paths. Directories recurse automatically; select overwrite, skip, or fail and stop or continue explicitly. Remote child names stay inside the selected destination tree.",
         "docs": [
           "docs/integration-contracts/ftp.md",
           "https://www.rfc-editor.org/rfc/rfc959",
@@ -807,7 +800,7 @@
       ],
       "auth_optional": false,
       "config": {
-        "agent_guidance": "Pass the exact remote file path selected by the user or agent. StackOS sends DELE without another FTP-specific confirmation or path gate; missing paths and permission failures remain provider errors.",
+        "agent_guidance": "Pass the exact remote file path. The action sends DELE; missing paths and permission failures remain provider errors.",
         "docs": [
           "docs/integration-contracts/ftp.md",
           "https://www.rfc-editor.org/rfc/rfc959",
@@ -1061,7 +1054,7 @@
       ],
       "auth_optional": false,
       "config": {
-        "agent_guidance": "Pass exact source and destination paths. StackOS does not pre-delete a destination, force replacement, create destination parents, or emulate rejected directory moves. Existing-target and directory support remain server-defined.",
+        "agent_guidance": "Pass exact source and destination paths. The action does not pre-delete a destination, force replacement, create destination parents, or emulate rejected directory moves. Existing-target and directory support remain server-defined.",
         "docs": [
           "docs/integration-contracts/ftp.md",
           "https://www.rfc-editor.org/rfc/rfc959",
@@ -1077,25 +1070,22 @@
     }
   ],
   "setup": {
+    "credential_label": "FTP host, username, and password",
+    "docs_url": "https://www.rfc-editor.org/rfc/rfc4217",
+    "fallback_reason": "Server provisioning and credential pages are provider-specific.",
+    "fallback_url": "https://docs.python.org/3/library/ftplib.html",
+    "setup_note": "Use the FTP server's host, username, password, and transport settings. Explicit FTPS is the default; plain FTP is available when deliberately selected. Obtain the host, username, password, port, and TLS settings from the FTP server operator.",
     "docs": [
-      "docs/integration-contracts/ftp.md",
+      "connectors/ftp/docs/ftp.md",
       "https://www.rfc-editor.org/rfc/rfc959",
       "https://www.rfc-editor.org/rfc/rfc3659",
       "https://www.rfc-editor.org/rfc/rfc4217"
-    ],
-    "setup": {
-      "credential_label": "FTP host, username, and password",
-      "docs_url": "https://www.rfc-editor.org/rfc/rfc4217",
-      "fallback_reason": "Server provisioning and credential pages are provider-specific.",
-      "fallback_url": "https://docs.python.org/3/library/ftplib.html",
-      "setup_note": "FTP is a protocol, not one vendor. Obtain connection settings from the server operator and store the password only in StackOS.",
-      "url_confidence": {
-        "docs_url": "verified",
-        "fallback_url": "verified"
-      },
-      "verified_at": "2026-07-15"
-    },
-    "setup_note": "Use the FTP server's host, username, password, and transport settings. Explicit FTPS is the default; plain FTP is available when deliberately selected."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.ftp.actions:FtpActionConnector"
+  "implementation": "stackos_connectors.connectors.ftp.actions:FtpActionConnector",
+  "icon": {
+    "path": "connectors/ftp/assets/icon.svg",
+    "media_type": "image/svg+xml",
+    "kind": "wordmark-dark"
+  }
 }

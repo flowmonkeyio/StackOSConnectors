@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "api_key",
-      "description": "",
+      "description": "Supply the Firecrawl API key.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -28,9 +28,7 @@
       "payload_format": "raw",
       "payload_field": "api_key",
       "setup": {
-        "auth_type": "api-key",
-        "config": null,
-        "description": "",
+        "label": "API key",
         "fields": [
           {
             "description": null,
@@ -43,12 +41,7 @@
             "type": "secret"
           }
         ],
-        "interactive": false,
-        "key": "api_key",
-        "label": "API key",
-        "payload_field": "api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "Supply the Firecrawl API key for scrape, crawl, and map requests. Create or copy an API key in the Firecrawl app; provider plan limits apply."
       }
     }
   ],
@@ -166,29 +159,21 @@
     }
   ],
   "setup": {
-    "setup": {
-      "billing_url": "https://www.firecrawl.dev/pricing",
-      "console_url": "https://app.firecrawl.dev/",
-      "credential_label": "Firecrawl API key",
-      "credential_url": "https://app.firecrawl.dev/",
-      "docs_url": "https://docs.firecrawl.dev/",
-      "fallback_reason": "Exact key screen can be app-gated; official app and docs are the nearest setup targets.",
-      "fallback_url": "https://docs.firecrawl.dev/",
-      "homepage_url": "https://www.firecrawl.dev/",
-      "setup_note": "Sign in to Firecrawl, create/copy an API key, confirm plan limits, and store the key in StackOS.",
-      "signup_url": "https://app.firecrawl.dev/",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "directional",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "directional"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Store the Firecrawl API key from the Firecrawl app. StackOS resolves it inside the daemon for scrape, crawl, and map actions."
+    "billing_url": "https://www.firecrawl.dev/pricing",
+    "console_url": "https://app.firecrawl.dev/",
+    "credential_label": "Firecrawl API key",
+    "credential_url": "https://app.firecrawl.dev/",
+    "docs_url": "https://docs.firecrawl.dev/",
+    "fallback_reason": "Exact key screen can be app-gated; official app and docs are the nearest setup targets.",
+    "fallback_url": "https://docs.firecrawl.dev/",
+    "homepage_url": "https://www.firecrawl.dev/",
+    "setup_note": "Supply the Firecrawl API key for scrape, crawl, and map requests. Create or copy an API key in the Firecrawl app; provider plan limits apply.",
+    "signup_url": "https://app.firecrawl.dev/"
   },
-  "implementation": "stackos_connectors.connectors.firecrawl.actions:FirecrawlActionConnector"
+  "implementation": "stackos_connectors.connectors.firecrawl.actions:FirecrawlActionConnector",
+  "icon": {
+    "path": "connectors/firecrawl/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

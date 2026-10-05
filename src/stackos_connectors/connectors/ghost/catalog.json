@@ -6,7 +6,7 @@
   "auth_methods": [
     {
       "key": "admin_api_key",
-      "description": "",
+      "description": "Supply the Ghost Admin API key and site configuration.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -55,9 +55,7 @@
       "payload_format": "raw",
       "payload_field": "admin_api_key",
       "setup": {
-        "auth_type": "admin-api-key",
-        "config": null,
-        "description": "",
+        "label": "Admin API key",
         "fields": [
           {
             "description": null,
@@ -90,12 +88,7 @@
             "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "admin_api_key",
-        "label": "Admin API key",
-        "payload_field": "admin_api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "Enter the Ghost site/admin domain root; the connector appends /ghost/api/admin/ paths and pins Accept-Version. In Ghost Admin, open Settings, Integrations, create or select a custom integration, and obtain its Admin API key."
       }
     }
   ],
@@ -195,29 +188,21 @@
     }
   ],
   "setup": {
-    "setup": {
-      "billing_url": "https://ghost.org/pricing/",
-      "console_url": "https://ghost.org/docs/admin-api/",
-      "credential_label": "Ghost Admin API key",
-      "credential_url": "https://ghost.org/docs/admin-api/",
-      "docs_url": "https://ghost.org/docs/admin-api/",
-      "fallback_reason": "The exact Admin settings URL depends on the Ghost site domain; use Ghost Admin Settings -> Integrations.",
-      "fallback_url": "https://ghost.org/docs/admin-api/",
-      "homepage_url": "https://ghost.org/",
-      "setup_note": "In Ghost Admin, open Settings, Integrations, create or select a custom integration, then copy the Admin API key into StackOS.",
-      "signup_url": "https://ghost.org/pricing/",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "directional",
-        "credential_url": "verified",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "verified"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "Enter the Ghost site/admin domain root; the connector appends /ghost/api/admin/ paths and pins Accept-Version."
+    "billing_url": "https://ghost.org/pricing/",
+    "console_url": "https://ghost.org/docs/admin-api/",
+    "credential_label": "Ghost Admin API key",
+    "credential_url": "https://ghost.org/docs/admin-api/",
+    "docs_url": "https://ghost.org/docs/admin-api/",
+    "fallback_reason": "The exact Admin settings URL depends on the Ghost site domain; use Ghost Admin Settings -> Integrations.",
+    "fallback_url": "https://ghost.org/docs/admin-api/",
+    "homepage_url": "https://ghost.org/",
+    "setup_note": "Enter the Ghost site/admin domain root; the connector appends /ghost/api/admin/ paths and pins Accept-Version. In Ghost Admin, open Settings, Integrations, create or select a custom integration, and obtain its Admin API key.",
+    "signup_url": "https://ghost.org/pricing/"
   },
-  "implementation": "stackos_connectors.connectors.ghost.actions:GhostActionConnector"
+  "implementation": "stackos_connectors.connectors.ghost.actions:GhostActionConnector",
+  "icon": {
+    "path": "connectors/ghost/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "wordmark"
+  }
 }

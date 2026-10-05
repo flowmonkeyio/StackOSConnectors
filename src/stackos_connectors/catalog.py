@@ -143,9 +143,17 @@ def load_registry(*resource_names: str, root: Traversable | None = None) -> Conn
             raise ValueError("invalid connector catalog resource name")
     if len(set(resource_names)) != len(resource_names):
         raise ValueError("duplicate connector catalog resource name")
-    return registry_from_documents(
+    registry = registry_from_documents(
         _read(source.joinpath(*name.split("/"))) for name in resource_names
     )
+    presentations = [*registry.connector_metadata.values()]
+    presentations.extend(action.metadata for action in registry.actions.values())
+    for metadata in presentations:
+        if (icon := metadata.get("icon")) and not source.joinpath(
+            *icon["path"].split("/")
+        ).is_file():
+            raise ValueError(f"missing connector icon resource: {icon['path']}")
+    return registry
 
 
 def default_registry() -> ConnectorRegistry:

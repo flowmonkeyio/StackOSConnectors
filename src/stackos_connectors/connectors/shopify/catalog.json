@@ -2,11 +2,11 @@
   "schema_version": "stackos.connector.v1",
   "connector": "shopify",
   "name": "Shopify Admin API",
-  "description": "Static-token Shopify Admin GraphQL provider. Tokens stay daemon-held; agents can only run curated action catalog operations.",
+  "description": "Shopify Admin GraphQL requests for products, orders, customers, inventory and analytics using fixed query and mutation documents.",
   "auth_methods": [
     {
       "key": "admin-api-token",
-      "description": "",
+      "description": "Supply the Admin API access token, store domain and optional API version.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -55,9 +55,8 @@
       "payload_format": "raw",
       "payload_field": "admin_api_access_token",
       "setup": {
-        "auth_type": "api-token",
-        "config": null,
-        "description": "",
+        "label": "Shopify Admin API access token",
+        "description": "Supply an existing Shopify Admin API access token and the store myshopify.com domain. The token requires the scopes for the selected requests; acquire it outside this library.",
         "fields": [
           {
             "description": null,
@@ -89,13 +88,7 @@
             "secret": false,
             "type": "text"
           }
-        ],
-        "interactive": false,
-        "key": "admin-api-token",
-        "label": "Shopify Admin API access token",
-        "payload_field": "admin_api_access_token",
-        "payload_format": "raw",
-        "permission_verification": null
+        ]
       }
     }
   ],
@@ -3161,30 +3154,22 @@
     }
   ],
   "setup": {
-    "connection_category": "Commerce",
+    "console_url": "https://admin.shopify.com/",
+    "credential_label": "Shopify Admin API access token",
+    "credential_url": "https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens",
+    "docs_url": "https://shopify.dev/docs/api/admin-graphql/latest",
+    "fallback_reason": "Access-token acquisition depends on the Shopify app configuration; use the official authentication documentation.",
+    "fallback_url": "https://shopify.dev/docs/api/admin-graphql/latest",
+    "homepage_url": "https://shopify.dev/docs/api/admin-graphql",
+    "setup_note": "Supply an existing Shopify Admin API access token and the store myshopify.com domain. The token requires the scopes for the selected requests; acquire it outside this library.",
+    "support_url": "https://help.shopify.com/",
     "default_api_version": "2026-07",
-    "endpoint_template": "https://{store_domain}/admin/api/{api_version}/graphql.json",
-    "setup": {
-      "console_url": "https://admin.shopify.com/",
-      "credential_label": "Shopify Admin API access token",
-      "credential_url": "https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens",
-      "docs_url": "https://shopify.dev/docs/api/admin-graphql/latest",
-      "fallback_reason": "Static-token setup requires an operator-supplied Admin API access token; OAuth/token acquisition is deliberately out of scope.",
-      "fallback_url": "https://shopify.dev/docs/api/admin-graphql/latest",
-      "homepage_url": "https://shopify.dev/docs/api/admin-graphql",
-      "setup_note": "Use an existing token from a Shopify custom app with only the scopes needed for the enabled actions.",
-      "support_url": "https://help.shopify.com/",
-      "url_confidence": {
-        "console_url": "directional",
-        "credential_url": "verified",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "support_url": "verified"
-      },
-      "verified_at": "2026-07-08"
-    },
-    "setup_note": "Store an existing Shopify Admin API access token and the store myshopify.com domain. StackOS does not create tokens or run OAuth for this provider."
+    "endpoint_template": "https://{store_domain}/admin/api/{api_version}/graphql.json"
   },
-  "implementation": "stackos_connectors.connectors.shopify.actions:ShopifyActionConnector"
+  "implementation": "stackos_connectors.connectors.shopify.actions:ShopifyActionConnector",
+  "icon": {
+    "media_type": "image/png",
+    "kind": "icon",
+    "path": "connectors/shopify/assets/icon.png"
+  }
 }

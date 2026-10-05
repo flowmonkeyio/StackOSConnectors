@@ -2,11 +2,11 @@
   "schema_version": "stackos.connector.v1",
   "connector": "openrouter",
   "name": "OpenRouter",
-  "description": "Unified model API provider connection for future workflow-owned model actions.",
+  "description": "OpenRouter model API protocol and authentication support; no named actions are registered.",
   "auth_methods": [
     {
       "key": "api_key",
-      "description": "",
+      "description": "Supply the OpenRouter API key and optional application attribution headers.",
       "fields_schema": {
         "type": "object",
         "properties": {
@@ -53,9 +53,7 @@
       "payload_format": "raw",
       "payload_field": "api_key",
       "setup": {
-        "auth_type": "api-key",
-        "config": null,
-        "description": "",
+        "label": "API key",
         "fields": [
           {
             "description": null,
@@ -88,41 +86,29 @@
             "type": "text"
           }
         ],
-        "interactive": false,
-        "key": "api_key",
-        "label": "API key",
-        "payload_field": "api_key",
-        "payload_format": "raw",
-        "permission_verification": null
+        "description": "Supply an OpenRouter API key for authentication. This catalog currently declares no executable named actions. Create an OpenRouter API key and add provider credits when required."
       }
     }
   ],
   "actions": [],
   "setup": {
+    "billing_url": "https://openrouter.ai/settings/credits",
+    "console_url": "https://openrouter.ai/settings/keys",
+    "credential_label": "OpenRouter API key",
+    "credential_url": "https://openrouter.ai/settings/keys",
+    "docs_url": "https://openrouter.ai/docs",
+    "homepage_url": "https://openrouter.ai/",
+    "setup_note": "Supply an OpenRouter API key for authentication. This catalog currently declares no executable named actions. Create an OpenRouter API key and add provider credits when required.",
+    "signup_url": "https://openrouter.ai/sign-in",
     "docs": [
       "https://openrouter.ai/docs/api/reference/authentication",
       "https://openrouter.ai/docs/api/api-reference/models/get-models"
-    ],
-    "setup": {
-      "billing_url": "https://openrouter.ai/settings/credits",
-      "console_url": "https://openrouter.ai/settings/keys",
-      "credential_label": "OpenRouter API key",
-      "credential_url": "https://openrouter.ai/settings/keys",
-      "docs_url": "https://openrouter.ai/docs",
-      "homepage_url": "https://openrouter.ai/",
-      "setup_note": "Sign in to OpenRouter, create an API key, add credits if needed, and store the key in StackOS.",
-      "signup_url": "https://openrouter.ai/sign-in",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "verified",
-        "credential_url": "verified",
-        "docs_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "verified"
-      },
-      "verified_at": "2026-06-11"
-    },
-    "setup_note": "OpenRouter is currently stored and auth-tested as a connection only. StackOS does not expose generic text-generation actions until a workflow-owned policy, grant, and audit contract exists."
+    ]
   },
-  "guidance": "Protocol/auth-probe support only; no named action is currently registered."
+  "guidance": "Protocol/auth-probe support only; no named action is currently registered.",
+  "icon": {
+    "path": "connectors/openrouter/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }

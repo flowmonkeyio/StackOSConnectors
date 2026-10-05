@@ -44,8 +44,10 @@ result = await client.execute(
 )
 ```
 
-`describe` supplies action descriptions, native input/output schemas and execution
-auth requirements. `validate_data` checks the declared input without resolving
+`describe` supplies provider and action names, descriptions, native input/output
+schemas, setup information and execution auth requirements. Auth method `setup`
+describes credential acquisition; `fields_schema` and `config_schema` define the
+resolved auth accepted for execution. `validate_data` checks input without resolving
 credentials. `validate`, `estimate_cost` and `execute` also check the selected auth
 method. Dynamic actions must be explicitly registered on a scoped client before
 execution; existing names cannot be replaced.
@@ -59,16 +61,19 @@ meaning and error handling. Use the executable catalog and `describe` for the
 installed action contract.
 
 Existing integration icons are bundled at `connectors/<provider>/assets/icon.*`.
-`shared/icons/integration.svg` is a neutral fallback, not a provider logo.
-Catalog icon references are being wired separately. Standard package resources
-can read the bytes without a source checkout:
+Each catalog's `icon` object contains a package-relative `path`, `media_type` and
+`kind`. Actions inherit the integration icon unless an action declares its own.
+Kinds preserve the source presentation: `icon`, `wordmark`, `wordmark-dark` or
+`wordmark-inverse`. Missing logos use the neutral `fallback` at
+`shared/icons/integration.svg`. Standard package resources read the bytes without
+a source checkout:
 
 ```python
 from importlib.resources import files
 
-icon_bytes = files("stackos_connectors").joinpath(
-    "connectors/serper/assets/icon.svg"
-).read_bytes()
+description = client.describe("serper", "serper.search")
+icon = description["actions"][0]["icon"]
+icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read_bytes()
 ```
 
 Python 3.12 or newer is required.

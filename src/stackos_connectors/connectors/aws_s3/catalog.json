@@ -6,12 +6,12 @@
   "auth_methods": [
     {
       "key": "aws-access-key",
-      "description": "",
+      "description": "Supply AWS access-key credentials and bucket, optional prefix, and region configuration.",
       "fields_schema": {
         "type": "object",
         "properties": {
           "access_key_id": {
-            "description": "Stored and returned only through the daemon secret boundary.",
+            "description": "AWS access key ID used to sign S3 requests.",
             "type": "string",
             "minLength": 1
           },
@@ -77,12 +77,10 @@
       },
       "payload_format": "json",
       "setup": {
-        "auth_type": "aws-access-key",
-        "config": null,
-        "description": "",
+        "label": "AWS access key",
         "fields": [
           {
-            "description": "Stored and returned only through the daemon secret boundary.",
+            "description": "AWS access key ID used to sign S3 requests.",
             "key": "access_key_id",
             "label": "Access key ID",
             "options": null,
@@ -327,15 +325,7 @@
             "type": "select"
           }
         ],
-        "interactive": false,
-        "key": "aws-access-key",
-        "label": "AWS access key",
-        "payload_field": null,
-        "payload_format": "json",
-        "permission_verification": {
-          "enforcement": "provider_enforced",
-          "evidence_source": "unavailable"
-        }
+        "description": "Bind one Amazon S3 general-purpose bucket using explicit access-key credentials, its AWS region, and an optional relative object-key path. Supply an access key ID, secret access key, optional session token, bucket, optional path, and region. Temporary credentials require their session token."
       }
     }
   ],
@@ -484,7 +474,7 @@
                   "type": "string"
                 },
                 "local_path": {
-                  "description": "Exact daemon-local file or directory selected by the agent.",
+                  "description": "Exact local file or directory to upload.",
                   "minLength": 1,
                   "type": "string"
                 }
@@ -610,7 +600,7 @@
               "additionalProperties": false,
               "properties": {
                 "local_path": {
-                  "description": "Exact daemon-local destination selected by the agent.",
+                  "description": "Exact local destination for downloaded objects.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -1033,34 +1023,26 @@
     }
   ],
   "setup": {
+    "billing_url": "https://aws.amazon.com/s3/pricing/",
+    "console_url": "https://console.aws.amazon.com/s3/",
+    "credential_label": "AWS access key and one S3 bucket",
+    "credential_url": "https://console.aws.amazon.com/iam/home#/security_credentials",
+    "docs_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
+    "fallback_reason": "IAM credential provisioning depends on the operator's AWS account and organization policy.",
+    "fallback_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
+    "homepage_url": "https://aws.amazon.com/s3/",
+    "setup_note": "Bind one Amazon S3 general-purpose bucket using explicit access-key credentials, its AWS region, and an optional relative object-key path. Supply an access key ID, secret access key, optional session token, bucket, optional path, and region. Temporary credentials require their session token.",
+    "signup_url": "https://portal.aws.amazon.com/billing/signup",
     "docs": [
-      "docs/integration-contracts/s3.md",
+      "connectors/aws_s3/docs/s3.md",
       "https://docs.aws.amazon.com/AmazonS3/latest/userguide/security-iam.html",
       "https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html"
-    ],
-    "setup": {
-      "billing_url": "https://aws.amazon.com/s3/pricing/",
-      "console_url": "https://console.aws.amazon.com/s3/",
-      "credential_label": "AWS access key and one S3 bucket",
-      "credential_url": "https://console.aws.amazon.com/iam/home#/security_credentials",
-      "docs_url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
-      "fallback_reason": "IAM credential provisioning depends on the operator's AWS account and organization policy.",
-      "fallback_url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
-      "homepage_url": "https://aws.amazon.com/s3/",
-      "setup_note": "Prefer temporary least-privilege credentials. Store the access key id, secret access key, optional session token, bucket, optional path, and region only in StackOS.",
-      "signup_url": "https://portal.aws.amazon.com/billing/signup",
-      "url_confidence": {
-        "billing_url": "verified",
-        "console_url": "verified",
-        "credential_url": "directional",
-        "docs_url": "verified",
-        "fallback_url": "verified",
-        "homepage_url": "verified",
-        "signup_url": "verified"
-      },
-      "verified_at": "2026-07-26"
-    },
-    "setup_note": "Bind one Amazon S3 general-purpose bucket using explicit access-key credentials, its AWS region, and an optional relative object-key path."
+    ]
   },
-  "implementation": "stackos_connectors.connectors.aws_s3.actions:S3ActionConnector"
+  "implementation": "stackos_connectors.connectors.aws_s3.actions:S3ActionConnector",
+  "icon": {
+    "path": "connectors/aws_s3/assets/icon.png",
+    "media_type": "image/png",
+    "kind": "icon"
+  }
 }
