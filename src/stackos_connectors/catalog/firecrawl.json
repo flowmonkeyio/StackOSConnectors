@@ -1,0 +1,194 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "firecrawl",
+  "name": "Firecrawl",
+  "description": "Web crawling and scraping provider.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "API Key",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "auth_type": "api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": "fc-...",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "api_key",
+        "label": "API key",
+        "payload_field": "api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "web.scrape",
+      "operation": "scrape",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "formats": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "only_main_content": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Fetch and normalize a web page.",
+      "metadata": {
+        "capability": "web-retrieval",
+        "name": "Scrape Web Page",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "web.crawl",
+      "operation": "crawl",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "max_depth": {
+            "type": "integer"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Start a bounded Firecrawl crawl for an agent-selected site.",
+      "metadata": {
+        "capability": "web-retrieval",
+        "name": "Crawl Website",
+        "risk_level": "cost"
+      }
+    },
+    {
+      "key": "web.map",
+      "operation": "map",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "search": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Discover URLs from an agent-selected site.",
+      "metadata": {
+        "capability": "web-retrieval",
+        "name": "Map Website URLs",
+        "risk_level": "cost"
+      }
+    }
+  ],
+  "setup": {
+    "setup": {
+      "billing_url": "https://www.firecrawl.dev/pricing",
+      "console_url": "https://app.firecrawl.dev/",
+      "credential_label": "Firecrawl API key",
+      "credential_url": "https://app.firecrawl.dev/",
+      "docs_url": "https://docs.firecrawl.dev/",
+      "fallback_reason": "Exact key screen can be app-gated; official app and docs are the nearest setup targets.",
+      "fallback_url": "https://docs.firecrawl.dev/",
+      "homepage_url": "https://www.firecrawl.dev/",
+      "setup_note": "Sign in to Firecrawl, create/copy an API key, confirm plan limits, and store the key in StackOS.",
+      "signup_url": "https://app.firecrawl.dev/",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Store the Firecrawl API key from the Firecrawl app. StackOS resolves it inside the daemon for scrape, crawl, and map actions."
+  },
+  "implementation": "stackos_connectors.actions.firecrawl:FirecrawlActionConnector"
+}

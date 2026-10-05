@@ -34,18 +34,20 @@ class ValidationError(ConnectorError):
         *,
         issues: list[Any] | None = None,
         data: dict[str, Any] | None = None,
+        metadata_json: dict[str, Any] | None = None,
     ) -> None:
         self.issues = issues or []
         self.data = dict(data or {})
         super().__init__(
             detail,
             metadata_json={
+                "provider_executed": False,
+                **(metadata_json or {}),
                 **({"data": self.data} if self.data else {}),
                 "issues": [
                     item.model_dump() if hasattr(item, "model_dump") else item
                     for item in self.issues
                 ],
-                "provider_executed": False,
             },
         )
 

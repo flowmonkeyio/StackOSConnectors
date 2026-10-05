@@ -1,0 +1,128 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "openrouter",
+  "name": "OpenRouter",
+  "description": "Unified model API provider connection for future workflow-owned model actions.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "OpenRouter API Key",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {
+          "http_referer": {
+            "description": "HTTP Referer",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "app_title": {
+            "description": "Application Title",
+            "type": [
+              "string",
+              "integer",
+              "number",
+              "boolean",
+              "object",
+              "array",
+              "null"
+            ]
+          }
+        },
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "auth_type": "api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "OpenRouter API Key",
+            "options": null,
+            "placeholder": "sk-or-v1-...",
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "http_referer",
+            "label": "HTTP Referer",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          },
+          {
+            "description": null,
+            "key": "app_title",
+            "label": "Application Title",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": false,
+            "type": "text"
+          }
+        ],
+        "interactive": false,
+        "key": "api_key",
+        "label": "API key",
+        "payload_field": "api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [],
+  "setup": {
+    "docs": [
+      "https://openrouter.ai/docs/api/reference/authentication",
+      "https://openrouter.ai/docs/api/api-reference/models/get-models"
+    ],
+    "setup": {
+      "billing_url": "https://openrouter.ai/settings/credits",
+      "console_url": "https://openrouter.ai/settings/keys",
+      "credential_label": "OpenRouter API key",
+      "credential_url": "https://openrouter.ai/settings/keys",
+      "docs_url": "https://openrouter.ai/docs",
+      "homepage_url": "https://openrouter.ai/",
+      "setup_note": "Sign in to OpenRouter, create an API key, add credits if needed, and store the key in StackOS.",
+      "signup_url": "https://openrouter.ai/sign-in",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "OpenRouter is currently stored and auth-tested as a connection only. StackOS does not expose generic text-generation actions until a workflow-owned policy, grant, and audit contract exists."
+  },
+  "guidance": "Protocol/auth-probe support only; no named action is currently registered."
+}

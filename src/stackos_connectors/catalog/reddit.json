@@ -1,0 +1,192 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "reddit",
+  "name": "Reddit",
+  "description": "Reddit research provider using OAuth client credentials.",
+  "auth_methods": [
+    {
+      "key": "client_credentials",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          },
+          "user_agent": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved Reddit user agent accompanying the bearer token."
+          }
+        },
+        "required": [
+          "access_token",
+          "user_agent"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth-client-credentials",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "client_id",
+            "label": "Client ID",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "client_secret",
+            "label": "Client Secret",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          },
+          {
+            "description": null,
+            "key": "user_agent",
+            "label": "User Agent",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "client_credentials",
+        "label": "Client credentials",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "reddit.search-subreddit",
+      "operation": "search_subreddit",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "string"
+          },
+          "subreddit": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subreddit",
+          "query"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Search posts in a configured subreddit.",
+      "metadata": {
+        "capability": "community-research",
+        "name": "Search Subreddit",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "reddit.top-questions",
+      "operation": "top_questions",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "subreddit": {
+            "type": "string"
+          },
+          "time_filter": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subreddit"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "client_credentials"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Fetch raw top Reddit posts from a subreddit; the executing agent filters question-shaped titles when needed.",
+      "metadata": {
+        "capability": "community-research",
+        "name": "Top Reddit Posts",
+        "risk_level": "read"
+      }
+    }
+  ],
+  "setup": {
+    "credential_payload": {
+      "format": "json",
+      "required_keys": [
+        "client_id",
+        "client_secret",
+        "user_agent"
+      ],
+      "secret_keys": [
+        "client_secret"
+      ]
+    },
+    "setup": {
+      "console_url": "https://www.reddit.com/prefs/apps",
+      "credential_label": "Reddit app client id, client secret, and user agent",
+      "credential_url": "https://www.reddit.com/prefs/apps",
+      "docs_url": "https://www.reddit.com/dev/api/",
+      "homepage_url": "https://www.reddit.com/",
+      "setup_note": "Create a Reddit app under developer preferences, then store client id, client secret, and user agent in StackOS.",
+      "signup_url": "https://www.reddit.com/register/",
+      "url_confidence": {
+        "console_url": "verified",
+        "credential_url": "verified",
+        "docs_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "verified"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Store the OAuth app JSON in the encrypted payload; do not persist access tokens in agent-visible state."
+  },
+  "implementation": "stackos_connectors.actions.reddit:RedditActionConnector"
+}

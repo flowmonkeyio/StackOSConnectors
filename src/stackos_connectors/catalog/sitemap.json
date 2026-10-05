@@ -1,0 +1,60 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "sitemap",
+  "name": "sitemap",
+  "description": "Google People Also Ask protocol client backed by Firecrawl.",
+  "auth_methods": [],
+  "actions": [
+    {
+      "key": "sitemap.fetch",
+      "operation": "fetch",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "max_entries": {
+            "maximum": 20000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "max_index_depth": {
+            "maximum": 4,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "timeout_s": {
+            "maximum": 60,
+            "minimum": 0.1,
+            "type": "number"
+          },
+          "urls": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "urls"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [],
+      "auth_optional": false,
+      "config": {},
+      "description": "Fetch and parse public sitemap URLs with sitemap-index recursion.",
+      "metadata": {
+        "capability": "web-retrieval",
+        "name": "Fetch Sitemap",
+        "risk_level": "read"
+      }
+    }
+  ],
+  "setup": {},
+  "implementation": "stackos_connectors.actions.sitemap:SitemapActionConnector"
+}

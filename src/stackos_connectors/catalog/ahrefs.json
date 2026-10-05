@@ -1,0 +1,172 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "ahrefs",
+  "name": "Ahrefs",
+  "description": "Organic keyword and backlink research provider; requires eligible API access and API units.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "API Key",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "auth_type": "api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "api_key",
+        "label": "API key",
+        "payload_field": "api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "competitor.keywords",
+      "operation": "competitor.keywords",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "country": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "limit": {
+            "description": "Ahrefs plan row caps are enforced at runtime: Lite 100, Standard 250, Advanced 500, Enterprise bounded by the StackOS action cap of 1000.",
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Pull competitor organic keyword evidence for agent analysis; StackOS captures Ahrefs API-unit headers while monetary budget enforcement remains disabled until API units are modeled.",
+      "metadata": {
+        "capability": "seo-research",
+        "name": "Competitor Keywords",
+        "risk_level": "cost"
+      }
+    },
+    {
+      "key": "backlink.research",
+      "operation": "backlink.research",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "description": "Ahrefs plan row caps are enforced at runtime: Lite 100, Standard 250, Advanced 500, Enterprise bounded by the StackOS action cap of 1000.",
+            "maximum": 1000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "mode": {
+            "enum": [
+              "exact",
+              "prefix",
+              "domain",
+              "subdomains"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "target"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Pull backlink evidence for an agent-defined SEO investigation; StackOS captures Ahrefs API-unit headers while monetary budget enforcement remains disabled until API units are modeled.",
+      "metadata": {
+        "capability": "seo-research",
+        "name": "Backlink Research",
+        "risk_level": "cost"
+      }
+    }
+  ],
+  "setup": {
+    "setup": {
+      "billing_url": "https://app.ahrefs.com/account/subscription",
+      "console_url": "https://app.ahrefs.com/",
+      "credential_label": "Ahrefs API key",
+      "credential_url": "https://app.ahrefs.com/api",
+      "docs_url": "https://docs.ahrefs.com/",
+      "fallback_reason": "API access is plan/account gated; official API docs and Ahrefs app are the nearest setup path.",
+      "fallback_url": "https://docs.ahrefs.com/",
+      "homepage_url": "https://ahrefs.com/",
+      "setup_note": "Confirm the Ahrefs plan has Direct API access/API units, then create or copy the API key and store it in StackOS. StackOS checks subscription usage before costed Ahrefs row calls.",
+      "signup_url": "https://app.ahrefs.com/user/sign-up",
+      "url_confidence": {
+        "billing_url": "directional",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Ahrefs API v3 usage consumes API units; confirm Direct API eligibility, plan row caps, key limits, and remaining units before high-volume runs."
+  },
+  "implementation": "stackos_connectors.actions.ahrefs:AhrefsActionConnector"
+}

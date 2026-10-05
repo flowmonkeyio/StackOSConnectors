@@ -341,6 +341,7 @@ class ConnectorClient:
                 raise ValidationError(
                     clean(exc.detail),
                     data=clean(exc.data),
+                    metadata_json=clean(exc.metadata_json),
                     issues=[
                         ValidationIssue.model_validate(clean(item.model_dump()))
                         for item in exc.issues

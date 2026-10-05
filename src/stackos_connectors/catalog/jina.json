@@ -1,0 +1,113 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "jina",
+  "name": "Jina Reader",
+  "description": "Readable web document extraction provider; API key is optional for higher quota.",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "api_key": {
+            "description": "API Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "auth_type": "api-key",
+        "config": null,
+        "description": "",
+        "fields": [
+          {
+            "description": null,
+            "key": "api_key",
+            "label": "API Key",
+            "options": null,
+            "placeholder": null,
+            "required": false,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "api_key",
+        "label": "API key",
+        "payload_field": "api_key",
+        "payload_format": "raw",
+        "permission_verification": null
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "web.read",
+      "operation": "read",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": true,
+      "config": {},
+      "description": "Fetch a readable Markdown view of a URL through Jina Reader.",
+      "metadata": {
+        "capability": "web-retrieval",
+        "name": "Read Web Page",
+        "risk_level": "read"
+      }
+    }
+  ],
+  "setup": {
+    "setup": {
+      "billing_url": "https://jina.ai/pricing",
+      "console_url": "https://jina.ai/api-dashboard/",
+      "credential_label": "Optional Jina API key",
+      "credential_url": "https://jina.ai/api-dashboard/",
+      "docs_url": "https://docs.jina.ai/",
+      "fallback_reason": "Exact dashboard routing can vary; use the official Jina API dashboard.",
+      "fallback_url": "https://jina.ai/api-dashboard/",
+      "homepage_url": "https://jina.ai/",
+      "setup_note": "Jina Reader can run without a key. For higher quota, use Jina's API dashboard and store the API key in StackOS.",
+      "signup_url": "https://jina.ai/",
+      "url_confidence": {
+        "billing_url": "verified",
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "directional",
+        "homepage_url": "verified",
+        "signup_url": "directional"
+      },
+      "verified_at": "2026-06-11"
+    },
+    "setup_note": "Jina Reader can run without a key; add a daemon-held API key only when higher quota is needed."
+  },
+  "implementation": "stackos_connectors.actions.jina:JinaActionConnector"
+}

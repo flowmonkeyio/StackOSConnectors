@@ -111,7 +111,7 @@ class CallOptions:
     provider_context: Mapping[str, Any] = field(default_factory=dict, repr=False)
     idempotency_key: str | None = field(default=None, repr=False)
     correlation_id: str | None = field(default=None, repr=False)
-    timeout: float = 60.0
+    timeout: float | None = None
     http: httpx.AsyncClient | None = field(default=None, repr=False, compare=False)
     output_dir: Path | None = field(default=None, repr=False)
     progress_callback: Callable[[dict[str, Any]], None] | None = field(
@@ -121,7 +121,7 @@ class CallOptions:
     rate_limiter: RateLimiter | None = field(default=None, repr=False, compare=False)
 
     def __post_init__(self) -> None:
-        if self.timeout <= 0:
+        if self.timeout is not None and self.timeout <= 0:
             raise ValueError("timeout must be positive")
         object.__setattr__(self, "provider_context", freeze(self.provider_context))
 

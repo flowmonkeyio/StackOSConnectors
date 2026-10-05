@@ -1,0 +1,240 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "google-indexing",
+  "name": "Google Indexing API",
+  "description": "Submit eligible job posting or livestream URL notifications and read notification history. Acceptance does not prove indexing.",
+  "auth_methods": [
+    {
+      "key": "service-account",
+      "description": "Use a Google JSON key whose service-account email is a delegated owner of the verified site. Account test only acquires a token.",
+      "fields_schema": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Resolved bearer access token; acquired/refreshed by the caller."
+          }
+        },
+        "required": [
+          "access_token"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      },
+      "payload_format": "json",
+      "setup": {
+        "auth_type": "oauth",
+        "config": null,
+        "description": "Use a Google JSON key whose service-account email is a delegated owner of the verified site. Account test only acquires a token.",
+        "fields": [
+          {
+            "description": null,
+            "key": "service_account_json",
+            "label": "Service-account JSON key",
+            "options": null,
+            "placeholder": null,
+            "required": true,
+            "secret": true,
+            "type": "secret"
+          }
+        ],
+        "interactive": false,
+        "key": "service-account",
+        "label": "Service account",
+        "payload_field": null,
+        "payload_format": "json",
+        "permission_verification": {
+          "enforcement": "local_required",
+          "evidence_source": "oauth_response"
+        }
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "indexing.url-notifications.publish",
+      "operation": "url_notifications.publish",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "URL_UPDATED",
+              "URL_DELETED"
+            ],
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "type"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Notify Google about URL_UPDATED or URL_DELETED for an eligible JobPosting or livestream BroadcastEvent inside VideoObject. Delete only after 404, 410, or noindex. Acceptance does not certify crawling, indexing, or removal.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Publish Google Indexing Notification",
+        "risk_level": "destructive"
+      }
+    },
+    {
+      "key": "indexing.url-notifications.metadata.get",
+      "operation": "url_notifications.metadata.get",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Read the latest notifications Google received for one URL. This does not report current indexing status.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Read Google Indexing Notification History",
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "indexing.batch.publish",
+      "operation": "batch.publish",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "enum": [
+              "URL_UPDATED",
+              "URL_DELETED"
+            ],
+            "type": "string"
+          },
+          "urls": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "urls",
+          "type"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Send one notification type for 1–100 eligible URLs. Each encoded inner request is at most 1 MB. Per-URL quota applies. Processing order and atomicity are not guaranteed; notification receipt does not certify indexing or removal. Inspect partial outcomes before choosing to retry.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Publish Google Indexing Notifications in a Batch",
+        "risk_level": "destructive"
+      }
+    },
+    {
+      "key": "indexing.batch.metadata.get",
+      "operation": "batch.metadata.get",
+      "input_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "urls": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": [
+          "urls"
+        ],
+        "type": "object"
+      },
+      "output_schema": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "auth_methods": [
+        "service-account"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "description": "Read notification history for 1–100 URLs using one Account. Each encoded inner request is at most 1 MB. Returns complete per-item outcomes in input order; actual indexing status remains unverified. Each item consumes quota; no automatic retry or chunking.",
+      "metadata": {
+        "capability": "seo-measurement",
+        "name": "Read Google Indexing Notification History in a Batch",
+        "risk_level": "read"
+      }
+    }
+  ],
+  "setup": {
+    "docs": [
+      "https://developers.google.com/search/apis/indexing-api/v3/using-api",
+      "https://developers.google.com/search/apis/indexing-api/v3/quota-pricing",
+      "https://developers.google.com/search/apis/indexing-api/v3/reference/indexing/rest/v3/urlNotifications/publish",
+      "https://developers.google.com/search/apis/indexing-api/v3/reference/indexing/rest/v3/urlNotifications/getMetadata"
+    ],
+    "scopes": [
+      "https://www.googleapis.com/auth/indexing"
+    ],
+    "setup": {
+      "console_url": "https://console.cloud.google.com/apis/library/indexing.googleapis.com",
+      "credential_label": "Google Indexing service-account JSON key",
+      "credential_url": "https://console.cloud.google.com/iam-admin/serviceaccounts",
+      "docs_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
+      "fallback_reason": "Cloud projects and service-account key pages depend on the signed-in account; follow the official prerequisites.",
+      "fallback_url": "https://developers.google.com/search/apis/indexing-api/v3/prereqs",
+      "homepage_url": "https://developers.google.com/search/apis/indexing-api/v3/quickstart",
+      "setup_note": "Verify site ownership, enable Indexing API, and add the service-account email as a delegated owner. Enter the JSON key locally. Only JobPosting or BroadcastEvent inside VideoObject is eligible; ordinary articles are unsupported. Google approval and quota apply.",
+      "url_confidence": {
+        "console_url": "directional",
+        "credential_url": "directional",
+        "docs_url": "verified",
+        "fallback_url": "verified",
+        "homepage_url": "verified"
+      },
+      "verified_at": "2026-09-28"
+    },
+    "setup_note": "Enable Indexing API and add the service account as a delegated site owner in Search Console. FullUser access is insufficient. Account test acquires a token; API and site access remain unverified."
+  },
+  "implementation": "stackos_connectors.actions.google_indexing:GoogleIndexingActionConnector"
+}

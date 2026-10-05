@@ -1,0 +1,10 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "google-paa",
+  "name": "google-paa",
+  "description": "Google People Also Ask protocol client backed by Firecrawl.",
+  "auth_methods": [],
+  "actions": [],
+  "setup": {},
+  "guidance": "Protocol/auth-probe support only; no named action is currently registered."
+}
