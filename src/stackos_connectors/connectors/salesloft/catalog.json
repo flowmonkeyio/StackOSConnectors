@@ -111,6 +111,13 @@
         ],
         "interactive": true,
         "label": "Connect with Salesloft"
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -156,6 +163,12 @@
         ],
         "interactive": false,
         "label": "OAuth2 access token"
+      },
+      "evidence_source": "unavailable",
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     },
     {
@@ -201,7 +214,8 @@
         ],
         "interactive": false,
         "label": "API key"
-      }
+      },
+      "evidence_source": "unavailable"
     }
   ],
   "auth_type": "oauth-or-api-key",
@@ -235,5 +249,11 @@
   },
   "implementation": "stackos_connectors.connectors.salesloft.actions:SalesloftActionConnector",
   "name": "Salesloft",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://accounts.salesloft.com/oauth/authorize",
+    "token_endpoint": "https://accounts.salesloft.com/oauth/token",
+    "pkce_mode": "unavailable"
+  }
 }

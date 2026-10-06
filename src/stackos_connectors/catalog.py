@@ -87,6 +87,14 @@ def registry_from_documents(documents: Iterable[Mapping[str, Any]]) -> Connector
                 if name not in {"connector", "implementation", "actions", "metadata"}
             },
         }
+        # Keep the existing discovery shape, with scope facts owned once by the
+        # integration's protocol declaration rather than a second config table.
+        if protocol := document.get("auth_protocol"):
+            config = metadata[key].setdefault("config", {})
+            if protocol.get("scopes"):
+                config["scopes"] = protocol["scopes"]
+            if protocol.get("optional_scope_bundles"):
+                config["scope_bundles"] = protocol["optional_scope_bundles"]
         if binding := document.get("implementation"):
             implementations[key] = binding
         for action in document["actions"]:

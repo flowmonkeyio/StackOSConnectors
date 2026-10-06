@@ -66,7 +66,14 @@
             "type": "secret"
           }
         ],
-        "description": "Acquire the client-credentials access token before execution. Pass access_token and user_agent as execution auth fields. Create a Reddit app under developer preferences and use its client ID and client secret to acquire an access token. Supply a descriptive user agent."
+        "description": "Acquire the client-credentials access token before execution. Pass access_token and user_agent as execution auth fields. Create a Reddit app under developer preferences and use its client ID and client secret to acquire an access token. Supply a descriptive user agent.",
+        "auth_type": "oauth-client-credentials",
+        "interactive": false
+      },
+      "protocol": {
+        "grant_types": [
+          "client_credentials"
+        ]
       }
     }
   ],
@@ -169,5 +176,11 @@
     "path": "connectors/reddit/assets/icon.png",
     "media_type": "image/png",
     "kind": "icon"
+  },
+  "config": {},
+  "auth_protocol": {
+    "flow": "client_credentials",
+    "token_endpoint": "https://www.reddit.com/api/v1/access_token",
+    "client_auth_style": "basic"
   }
 }

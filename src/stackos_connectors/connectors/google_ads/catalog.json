@@ -607,6 +607,12 @@
         ],
         "interactive": true,
         "label": "Connect with Google"
+      },
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -693,6 +699,11 @@
         ],
         "interactive": false,
         "label": "OAuth2 refresh token"
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     },
     {
@@ -759,6 +770,17 @@
         ],
         "interactive": false,
         "label": "Service account"
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "jwt_bearer"
+        ],
+        "flow": "jwt_bearer",
+        "authorization_endpoint": null,
+        "pkce_mode": "unavailable",
+        "authorization_params": [],
+        "required_token_type": "Bearer"
       }
     }
   ],
@@ -793,5 +815,28 @@
   },
   "implementation": "stackos_connectors.connectors.google_ads.actions:GoogleAdsActionConnector",
   "name": "Google Ads",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+    "token_endpoint": "https://oauth2.googleapis.com/token",
+    "scopes": [
+      "https://www.googleapis.com/auth/adwords"
+    ],
+    "pkce_mode": "supported",
+    "authorization_params": [
+      [
+        "access_type",
+        "offline"
+      ],
+      [
+        "include_granted_scopes",
+        "true"
+      ],
+      [
+        "prompt",
+        "consent"
+      ]
+    ]
+  }
 }

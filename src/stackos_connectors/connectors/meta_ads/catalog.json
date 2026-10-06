@@ -876,6 +876,13 @@
         ],
         "interactive": true,
         "label": "Connect with Meta"
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -931,16 +938,17 @@
         ],
         "interactive": false,
         "label": "Existing OAuth access token"
+      },
+      "evidence_source": "unavailable",
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     }
   ],
   "auth_type": "oauth",
   "config": {
-    "scopes": [
-      "ads_management",
-      "ads_read",
-      "business_management"
-    ],
     "setup": {
       "billing_url": "https://business.facebook.com/billing_hub",
       "console_url": "https://developers.facebook.com/apps/",
@@ -973,5 +981,17 @@
   },
   "implementation": "stackos_connectors.connectors.meta_ads.actions:MetaAdsActionConnector",
   "name": "Meta Ads",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://www.facebook.com/v25.0/dialog/oauth",
+    "token_endpoint": "https://graph.facebook.com/v25.0/oauth/access_token",
+    "scopes": [
+      "ads_management",
+      "ads_read",
+      "business_management"
+    ],
+    "pkce_mode": "unavailable",
+    "hook": "meta-long-lived"
+  }
 }

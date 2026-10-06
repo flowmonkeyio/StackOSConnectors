@@ -8,6 +8,31 @@ from stackos_connectors import ConnectorClient
 from stackos_connectors.catalog import load_registry
 
 
+def test_auth_protocol_resources_have_integration_owners():
+    root = resources.files("stackos_connectors")
+    registry = load_registry()
+    protocols = {
+        key: metadata
+        for key, metadata in registry.connector_metadata.items()
+        if "auth_protocol" in metadata
+    }
+    assert len(protocols) == 15
+    assert "google-indexing" not in protocols
+    for key, metadata in protocols.items():
+        document = json.loads(
+            root.joinpath("connectors", key.replace("-", "_"), "catalog.json").read_text()
+        )
+        assert "scopes" not in document.get("config", {})
+        assert "scope_bundles" not in document.get("config", {})
+        for binding_name in ("auth_implementation",):
+            if binding := metadata.get(binding_name):
+                module, _ = binding.split(":")
+                assert module.startswith(f"stackos_connectors.connectors.{key.replace('-', '_')}.")
+                parts = module.split(".")[1:]
+                assert root.joinpath(*parts[:-1], parts[-1] + ".py").is_file()
+    assert root.joinpath("shared", "google", "service_account.py").is_file()
+
+
 def test_grouped_owners_have_no_old_duplicate_paths():
     root = resources.files("stackos_connectors")
     for old in ["actions", "integrations", "assets", "s3_contract.py"]:

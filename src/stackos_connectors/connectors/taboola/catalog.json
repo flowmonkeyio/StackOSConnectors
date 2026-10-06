@@ -554,6 +554,11 @@
         ],
         "interactive": false,
         "label": "Client credentials"
+      },
+      "protocol": {
+        "grant_types": [
+          "client_credentials"
+        ]
       }
     }
   ],
@@ -589,5 +594,10 @@
   },
   "implementation": "stackos_connectors.connectors.taboola.actions:TaboolaActionConnector",
   "name": "Taboola",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "client_credentials",
+    "token_endpoint": "https://backstage.taboola.com/backstage/oauth/token",
+    "client_auth_style": "body"
+  }
 }

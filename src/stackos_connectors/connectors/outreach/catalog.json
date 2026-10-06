@@ -111,6 +111,12 @@
         ],
         "interactive": true,
         "label": "Connect with Outreach"
+      },
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -156,14 +162,16 @@
         ],
         "interactive": false,
         "label": "OAuth2 access token"
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     }
   ],
   "auth_type": "oauth",
   "config": {
-    "scopes": [
-      "sequenceStates.write"
-    ],
     "setup": {
       "billing_url": "https://www.outreach.ai/pricing",
       "console_url": "https://developers.outreach.io/",
@@ -193,5 +201,14 @@
   },
   "implementation": "stackos_connectors.connectors.outreach.actions:OutreachActionConnector",
   "name": "Outreach",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://api.outreach.io/oauth/authorize",
+    "token_endpoint": "https://api.outreach.io/oauth/token",
+    "scopes": [
+      "sequenceStates.write"
+    ],
+    "pkce_mode": "unavailable"
+  }
 }

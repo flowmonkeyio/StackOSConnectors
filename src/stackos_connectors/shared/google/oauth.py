@@ -1,4 +1,4 @@
-"""Google bearer helpers for access tokens already resolved by the daemon."""
+"""Google bearer helpers for access tokens already resolved by the consumer."""
 
 from __future__ import annotations
 

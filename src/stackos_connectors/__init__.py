@@ -4,6 +4,15 @@ from collections.abc import Mapping
 from functools import lru_cache
 from typing import Any
 
+from .auth import (
+    AuthorizationRequest,
+    OAuthProviderContract,
+    OAuthTokenError,
+    TokenResult,
+    build_authorization_request,
+    get_auth_contract,
+    request_token,
+)
 from .contracts import (
     ActionDefinition,
     AuthMethodDefinition,
@@ -74,6 +83,7 @@ def describe(connector: str, action: str | None = None) -> dict[str, Any]:
 __all__ = [
     "ActionDefinition",
     "AuthMethodDefinition",
+    "AuthorizationRequest",
     "CallOptions",
     "Connector",
     "ConnectorAuth",
@@ -85,15 +95,21 @@ __all__ = [
     "ConnectorResult",
     "IntegrationDownError",
     "NativeSession",
+    "OAuthProviderContract",
+    "OAuthTokenError",
     "RateLimitedError",
     "RateLimiter",
+    "TokenResult",
     "ValidationError",
     "ValidationIssue",
+    "build_authorization_request",
     "describe",
     "estimate_cost",
     "execute",
+    "get_auth_contract",
     "get_default_client",
     "list_connectors",
+    "request_token",
     "validate",
     "validate_data",
 ]

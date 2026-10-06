@@ -3,77 +3,496 @@
   "$defs": {
     "icon": {
       "type": "object",
-      "required": ["path", "media_type", "kind"],
+      "required": [
+        "path",
+        "media_type",
+        "kind"
+      ],
       "additionalProperties": false,
       "properties": {
-        "path": {"type": "string", "pattern": "^(?:[A-Za-z0-9_][A-Za-z0-9_-]*/)*[A-Za-z0-9_][A-Za-z0-9_-]*\\.(?:svg|png|jpg|jpeg|webp)$", "not": {"pattern": "[\\r\\n]"}},
-        "media_type": {"enum": ["image/svg+xml", "image/png", "image/jpeg", "image/webp"]},
-        "kind": {"enum": ["icon", "wordmark", "wordmark-dark", "wordmark-inverse", "fallback"]}
+        "path": {
+          "type": "string",
+          "pattern": "^(?:[A-Za-z0-9_][A-Za-z0-9_-]*/)*[A-Za-z0-9_][A-Za-z0-9_-]*\\.(?:svg|png|jpg|jpeg|webp)$",
+          "not": {
+            "pattern": "[\\r\\n]"
+          }
+        },
+        "media_type": {
+          "enum": [
+            "image/svg+xml",
+            "image/png",
+            "image/jpeg",
+            "image/webp"
+          ]
+        },
+        "kind": {
+          "enum": [
+            "icon",
+            "wordmark",
+            "wordmark-dark",
+            "wordmark-inverse",
+            "fallback"
+          ]
+        }
       },
       "allOf": [
-        {"if": {"properties": {"path": {"pattern": "\\.svg$"}}}, "then": {"properties": {"media_type": {"const": "image/svg+xml"}}}},
-        {"if": {"properties": {"path": {"pattern": "\\.png$"}}}, "then": {"properties": {"media_type": {"const": "image/png"}}}},
-        {"if": {"properties": {"path": {"pattern": "\\.jpe?g$"}}}, "then": {"properties": {"media_type": {"const": "image/jpeg"}}}},
-        {"if": {"properties": {"path": {"pattern": "\\.webp$"}}}, "then": {"properties": {"media_type": {"const": "image/webp"}}}}
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.svg$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "image/svg+xml"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.png$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "image/png"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.jpe?g$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "image/jpeg"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "path": {
+                "pattern": "\\.webp$"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "media_type": {
+                "const": "image/webp"
+              }
+            }
+          }
+        }
       ]
     },
     "presentation_metadata": {
       "type": "object",
-      "properties": {"icon": {"$ref": "#/$defs/icon"}}
+      "properties": {
+        "icon": {
+          "$ref": "#/$defs/icon"
+        }
+      }
     },
     "index": {
       "type": "object",
-      "required": ["schema_version", "connectors"],
+      "required": [
+        "schema_version",
+        "connectors"
+      ],
       "additionalProperties": false,
       "properties": {
-        "schema_version": {"const": "stackos.connectors.index.v1"},
-        "connectors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^(?:[a-z0-9][a-z0-9_-]*/)*[a-z0-9][a-z0-9_-]*\\.json$"}}
+        "schema_version": {
+          "const": "stackos.connectors.index.v1"
+        },
+        "connectors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^(?:[a-z0-9][a-z0-9_-]*/)*[a-z0-9][a-z0-9_-]*\\.json$"
+          }
+        }
       }
     },
     "auth_method": {
       "type": "object",
-      "required": ["key", "fields_schema"],
+      "required": [
+        "key",
+        "fields_schema"
+      ],
       "properties": {
-        "key": {"type": "string", "minLength": 1},
-        "description": {"type": "string"},
-        "payload_format": {"enum": ["raw", "json", "none"]},
-        "payload_field": {"type": "string", "minLength": 1},
-        "fields_schema": {"type": "object"},
-        "config_schema": {"type": "object"}
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "payload_format": {
+          "enum": [
+            "raw",
+            "json",
+            "none"
+          ]
+        },
+        "payload_field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fields_schema": {
+          "type": "object"
+        },
+        "config_schema": {
+          "type": "object"
+        },
+        "protocol": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/auth_protocol"
+            }
+          ],
+          "required": [
+            "grant_types"
+          ]
+        },
+        "auth_type": {
+          "type": "string"
+        },
+        "interactive": {
+          "type": "boolean"
+        },
+        "evidence_source": {
+          "enum": [
+            "oauth_response",
+            "provider_probe",
+            "unavailable"
+          ]
+        },
+        "setup": {
+          "type": "object"
+        }
       }
     },
     "action": {
       "type": "object",
-      "required": ["key", "operation", "input_schema", "auth_methods", "config"],
+      "required": [
+        "key",
+        "operation",
+        "input_schema",
+        "auth_methods",
+        "config"
+      ],
       "properties": {
-        "key": {"type": "string", "minLength": 1},
-        "operation": {"type": "string", "minLength": 1},
-        "description": {"type": "string"},
-        "guidance": {"type": "string"},
-        "icon": {"$ref": "#/$defs/icon"},
-        "input_schema": {"type": "object"},
-        "output_schema": {"type": "object"},
-        "auth_methods": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
-        "auth_optional": {"type": "boolean"},
-        "config": {"type": "object"},
-        "examples": {"type": "array", "items": {"type": "object"}},
-        "metadata": {"$ref": "#/$defs/presentation_metadata"}
+        "key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "guidance": {
+          "type": "string"
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        },
+        "input_schema": {
+          "type": "object"
+        },
+        "output_schema": {
+          "type": "object"
+        },
+        "auth_methods": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "auth_optional": {
+          "type": "boolean"
+        },
+        "config": {
+          "type": "object"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "metadata": {
+          "$ref": "#/$defs/presentation_metadata"
+        }
       }
     },
     "connector": {
       "type": "object",
-      "required": ["schema_version", "connector", "name", "description", "auth_methods", "actions"],
+      "required": [
+        "schema_version",
+        "connector",
+        "name",
+        "description",
+        "auth_methods",
+        "actions"
+      ],
       "properties": {
-        "schema_version": {"const": "stackos.connector.v1"},
-        "connector": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
-        "name": {"type": "string", "minLength": 1},
-        "description": {"type": "string"},
-        "icon": {"$ref": "#/$defs/icon"},
-        "implementation": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_.]*:[A-Za-z_][A-Za-z0-9_]*$"},
-        "auth_methods": {"type": "array", "items": {"$ref": "#/$defs/auth_method"}},
-        "actions": {"type": "array", "items": {"$ref": "#/$defs/action"}},
-        "metadata": {"$ref": "#/$defs/presentation_metadata"}
+        "schema_version": {
+          "const": "stackos.connector.v1"
+        },
+        "connector": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "icon": {
+          "$ref": "#/$defs/icon"
+        },
+        "implementation": {
+          "type": "string",
+          "pattern": "^[A-Za-z_][A-Za-z0-9_.]*:[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "auth_methods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/auth_method"
+          }
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/action"
+          }
+        },
+        "metadata": {
+          "$ref": "#/$defs/presentation_metadata"
+        },
+        "auth_protocol": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/auth_protocol"
+            }
+          ],
+          "required": [
+            "flow",
+            "token_endpoint"
+          ]
+        },
+        "auth_implementation": {
+          "$ref": "#/$defs/package_binding"
+        },
+        "probe_implementation": {
+          "$ref": "#/$defs/package_binding"
+        }
       }
+    },
+    "auth_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "flow": {
+          "enum": [
+            "authorization_code",
+            "client_credentials",
+            "jwt_bearer"
+          ]
+        },
+        "grant_types": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "authorization_code",
+              "refresh_token",
+              "client_credentials",
+              "jwt_bearer"
+            ]
+          }
+        },
+        "token_endpoint": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "authorization_endpoint": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://"
+        },
+        "include_response_type": {
+          "type": "boolean"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "direct_scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope_separator": {
+          "type": "string"
+        },
+        "optional_scope_parameter": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "client_auth_style": {
+          "enum": [
+            "body",
+            "basic"
+          ]
+        },
+        "pkce_mode": {
+          "enum": [
+            "required",
+            "supported",
+            "unavailable"
+          ]
+        },
+        "authorization_params": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "token_params": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "response_metadata_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response_scope_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response_account_id_field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authorization_code_response_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "refresh_token_response_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_token_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "required_scope_subset": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hook": {
+          "enum": [
+            "meta-long-lived",
+            null
+          ]
+        },
+        "response_config_fields": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "optional_scope_bundles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "label",
+              "optional_scopes"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "optional_scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "package_binding": {
+      "type": "string",
+      "pattern": "^stackos_connectors\\.connectors\\.[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*:[A-Za-z_][A-Za-z0-9_]*$"
     }
   },
   "$ref": "#/$defs/connector"

@@ -50,7 +50,15 @@
             "type": "secret"
           }
         ],
-        "description": "Obtain an access token using Google OAuth authorization-code consent outside this library. Execution accepts the resolved access_token."
+        "description": "The consumer handles Google browser consent, state and callbacks. Exchange the resulting authorization code with request_token. Execution accepts the resolved access_token; credential storage and refresh scheduling remain consumer-owned.",
+        "auth_type": "oauth",
+        "interactive": true
+      },
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -89,7 +97,14 @@
             "type": "secret"
           }
         ],
-        "description": "Obtain a Google access token with the required provider scopes and permissions before execution."
+        "description": "Obtain a Google access token with the required provider scopes and permissions before execution.",
+        "auth_type": "oauth",
+        "interactive": false
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     },
     {
@@ -148,7 +163,14 @@
             "type": "secret"
           }
         ],
-        "description": "Exchange the Google refresh token for an access token outside this library. Execution accepts the resolved access_token."
+        "description": "Exchange the Google refresh token for an access token with an explicit request_token call. Execution accepts the resolved access_token; credential storage and refresh scheduling remain consumer-owned.",
+        "auth_type": "oauth",
+        "interactive": false
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     },
     {
@@ -187,7 +209,20 @@
             "type": "secret"
           }
         ],
-        "description": "Use the Google service-account key to acquire an access token outside this library. Execution accepts the resolved access_token; provider resource access must be granted separately."
+        "description": "Use request_token with the Google service-account key to acquire an access token. Execution accepts the resolved access_token; provider resource access must be granted separately. Credential storage and refresh scheduling remain consumer-owned.",
+        "auth_type": "oauth",
+        "interactive": false
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "jwt_bearer"
+        ],
+        "flow": "jwt_bearer",
+        "authorization_endpoint": null,
+        "pkce_mode": "unavailable",
+        "authorization_params": [],
+        "required_token_type": "Bearer"
       }
     }
   ],
@@ -473,5 +508,29 @@
     "path": "connectors/google_tag_manager/assets/icon.png",
     "media_type": "image/png",
     "kind": "icon"
+  },
+  "config": {},
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://accounts.google.com/o/oauth2/v2/auth",
+    "token_endpoint": "https://oauth2.googleapis.com/token",
+    "scopes": [
+      "https://www.googleapis.com/auth/tagmanager.readonly"
+    ],
+    "pkce_mode": "supported",
+    "authorization_params": [
+      [
+        "access_type",
+        "offline"
+      ],
+      [
+        "include_granted_scopes",
+        "true"
+      ],
+      [
+        "prompt",
+        "consent"
+      ]
+    ]
   }
 }

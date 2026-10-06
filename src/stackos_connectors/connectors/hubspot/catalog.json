@@ -4876,9 +4876,63 @@
             "required": true,
             "secret": true,
             "type": "secret"
+          },
+          {
+            "key": "scope_bundles",
+            "label": "Optional capability bundles",
+            "type": "multi-select",
+            "secret": false,
+            "required": false,
+            "placeholder": null,
+            "description": "Reconnect after selecting a bundle that adds OAuth scopes. Scope-free operator checklists such as Webhooks do not require new consent. Actual returned scopes determine scope state.",
+            "options": [
+              {
+                "label": "Sales",
+                "value": "sales"
+              },
+              {
+                "label": "Marketing",
+                "value": "marketing"
+              },
+              {
+                "label": "Bulk jobs",
+                "value": "bulk"
+              },
+              {
+                "label": "Webhooks",
+                "value": "webhooks"
+              },
+              {
+                "label": "Custom workflow automation",
+                "value": "automation"
+              },
+              {
+                "label": "Transactional communications",
+                "value": "transactional-communications"
+              }
+            ]
+          },
+          {
+            "key": "app_id",
+            "label": "HubSpot App ID",
+            "type": "number",
+            "secret": false,
+            "required": false,
+            "placeholder": null,
+            "description": "Required when signed ingress is enabled. Copy the numeric app ID from the HubSpot developer project so incoming events can be bound to the exact app.",
+            "options": null
           }
         ],
-        "label": "Connect with HubSpot"
+        "label": "Connect with HubSpot",
+        "auth_type": "oauth",
+        "interactive": true
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -4918,23 +4972,14 @@
             "type": "secret"
           }
         ],
-        "label": "Private app access token"
-      }
+        "label": "Private app access token",
+        "auth_type": "api-key",
+        "interactive": false
+      },
+      "evidence_source": "provider_probe"
     }
   ],
   "config": {
-    "scopes": [
-      "crm.objects.contacts.read",
-      "crm.objects.contacts.write",
-      "crm.objects.companies.read",
-      "crm.objects.companies.write",
-      "crm.objects.deals.read",
-      "crm.objects.deals.write",
-      "crm.objects.owners.read",
-      "crm.schemas.contacts.read",
-      "crm.schemas.companies.read",
-      "crm.schemas.deals.read"
-    ],
     "setup": {
       "billing_url": "https://www.hubspot.com/pricing",
       "console_url": "https://app.hubspot.com/developer-projects",
@@ -4955,5 +5000,101 @@
   },
   "implementation": "stackos_connectors.connectors.hubspot.actions:HubSpotActionConnector",
   "name": "HubSpot",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://app.hubspot.com/oauth/authorize",
+    "token_endpoint": "https://api.hubspot.com/oauth/2026-03/token",
+    "optional_scope_parameter": "optional_scope",
+    "client_auth_style": "body",
+    "pkce_mode": "unavailable",
+    "response_metadata_fields": [
+      "hub_id",
+      "user_id",
+      "app_id",
+      "hub_domain",
+      "is_private_distribution"
+    ],
+    "response_scope_fields": [
+      "scopes",
+      "scope"
+    ],
+    "response_account_id_field": "hub_id",
+    "authorization_code_response_requirements": [
+      "refresh_token",
+      "expires_in",
+      "scope_evidence"
+    ],
+    "refresh_token_response_requirements": [
+      "refresh_token",
+      "expires_in"
+    ],
+    "scopes": [
+      "crm.objects.contacts.read",
+      "crm.objects.contacts.write",
+      "crm.objects.companies.read",
+      "crm.objects.companies.write",
+      "crm.objects.deals.read",
+      "crm.objects.deals.write",
+      "crm.objects.owners.read",
+      "crm.schemas.contacts.read",
+      "crm.schemas.companies.read",
+      "crm.schemas.deals.read"
+    ],
+    "optional_scope_bundles": {
+      "sales": {
+        "label": "Sales",
+        "optional_scopes": [
+          "crm.objects.leads.read",
+          "crm.objects.leads.write",
+          "crm.objects.products.read",
+          "crm.objects.products.write",
+          "crm.objects.line_items.read",
+          "crm.objects.line_items.write",
+          "crm.objects.quotes.read",
+          "crm.objects.goals.read"
+        ]
+      },
+      "marketing": {
+        "label": "Marketing",
+        "optional_scopes": [
+          "forms",
+          "crm.lists.read",
+          "crm.lists.write",
+          "marketing.campaigns.read",
+          "marketing.campaigns.write",
+          "marketing-email",
+          "subscriptions-definition-read",
+          "subscriptions-status-read",
+          "subscriptions-status-write",
+          "crm.objects.marketing_events.read",
+          "crm.objects.marketing_events.write",
+          "analytics.behavioral_events.send",
+          "behavioral_events.event_definitions.read_write"
+        ]
+      },
+      "bulk": {
+        "label": "Bulk jobs",
+        "optional_scopes": [
+          "crm.export"
+        ]
+      },
+      "webhooks": {
+        "label": "Webhooks",
+        "optional_scopes": []
+      },
+      "automation": {
+        "label": "Custom workflow automation",
+        "optional_scopes": [
+          "automation"
+        ]
+      },
+      "transactional-communications": {
+        "label": "Transactional communications",
+        "optional_scopes": [
+          "transactional-email"
+        ]
+      }
+    }
+  }
 }

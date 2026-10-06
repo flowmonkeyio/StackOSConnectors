@@ -373,6 +373,12 @@
         ],
         "interactive": true,
         "label": "Connect with Salesforce"
+      },
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -445,15 +451,16 @@
         ],
         "interactive": false,
         "label": "OAuth2 access token"
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     }
   ],
   "auth_type": "oauth",
   "config": {
-    "scopes": [
-      "api",
-      "refresh_token"
-    ],
     "setup": {
       "billing_url": "https://www.salesforce.com/pricing/",
       "console_url": "https://login.salesforce.com/",
@@ -486,5 +493,27 @@
   },
   "implementation": "stackos_connectors.connectors.salesforce.actions:SalesforceActionConnector",
   "name": "Salesforce",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://login.salesforce.com/services/oauth2/authorize",
+    "token_endpoint": "https://login.salesforce.com/services/oauth2/token",
+    "scopes": [
+      "api",
+      "refresh_token"
+    ],
+    "pkce_mode": "required",
+    "response_metadata_fields": [
+      "instance_url",
+      "id"
+    ],
+    "response_config_fields": [
+      [
+        "instance_url",
+        "instance_url",
+        ".salesforce.com"
+      ]
+    ]
+  },
+  "auth_implementation": "stackos_connectors.connectors.salesforce.auth:resolve_contract"
 }

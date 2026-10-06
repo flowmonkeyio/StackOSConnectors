@@ -2713,7 +2713,16 @@
             "type": "secret"
           }
         ],
-        "label": "Connect with Linear"
+        "label": "Connect with Linear",
+        "auth_type": "oauth",
+        "interactive": true
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -2751,15 +2760,14 @@
             "type": "secret"
           }
         ],
-        "label": "Personal API key"
-      }
+        "label": "Personal API key",
+        "auth_type": "api-key",
+        "interactive": false
+      },
+      "evidence_source": "unavailable"
     }
   ],
   "config": {
-    "scopes": [
-      "read",
-      "write"
-    ],
     "setup": {
       "console_url": "https://linear.app/settings/api/applications",
       "credential_label": "Linear OAuth application or personal API key",
@@ -2790,5 +2798,42 @@
   },
   "implementation": "stackos_connectors.connectors.linear.actions:LinearActionConnector",
   "name": "Linear",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://linear.app/oauth/authorize",
+    "token_endpoint": "https://api.linear.app/oauth/token",
+    "scopes": [
+      "read",
+      "write"
+    ],
+    "scope_separator": ",",
+    "client_auth_style": "body",
+    "pkce_mode": "required",
+    "authorization_params": [
+      [
+        "actor",
+        "user"
+      ]
+    ],
+    "response_scope_fields": [
+      "scope"
+    ],
+    "response_account_id_field": null,
+    "authorization_code_response_requirements": [
+      "refresh_token",
+      "expires_in",
+      "scope_evidence"
+    ],
+    "refresh_token_response_requirements": [
+      "refresh_token",
+      "expires_in",
+      "scope_evidence"
+    ],
+    "required_token_type": "Bearer",
+    "required_scope_subset": [
+      "read",
+      "write"
+    ]
+  }
 }

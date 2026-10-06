@@ -170,6 +170,12 @@
         ],
         "interactive": true,
         "label": "Connect with Microsoft"
+      },
+      "protocol": {
+        "grant_types": [
+          "authorization_code",
+          "refresh_token"
+        ]
       }
     },
     {
@@ -218,16 +224,16 @@
         ],
         "interactive": false,
         "label": "OAuth2 access token"
+      },
+      "protocol": {
+        "grant_types": [
+          "refresh_token"
+        ]
       }
     }
   ],
   "auth_type": "oauth",
   "config": {
-    "scopes": [
-      "offline_access",
-      "https://graph.microsoft.com/Mail.Send",
-      "https://graph.microsoft.com/Calendars.ReadWrite"
-    ],
     "setup": {
       "billing_url": "https://admin.microsoft.com/Adminportal/Home#/BillingAccounts",
       "console_url": "https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
@@ -257,5 +263,23 @@
   },
   "implementation": "stackos_connectors.connectors.microsoft_365.actions:MicrosoftGraphActionConnector",
   "name": "Microsoft 365",
-  "schema_version": "stackos.connector.v1"
+  "schema_version": "stackos.connector.v1",
+  "auth_protocol": {
+    "flow": "authorization_code",
+    "authorization_endpoint": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+    "token_endpoint": "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+    "scopes": [
+      "offline_access",
+      "https://graph.microsoft.com/Mail.Send",
+      "https://graph.microsoft.com/Calendars.ReadWrite"
+    ],
+    "pkce_mode": "required",
+    "authorization_params": [
+      [
+        "response_mode",
+        "query"
+      ]
+    ]
+  },
+  "auth_implementation": "stackos_connectors.connectors.microsoft_365.auth:resolve_contract"
 }

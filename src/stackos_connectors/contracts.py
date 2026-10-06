@@ -33,7 +33,10 @@ def thaw(value: Any) -> Any:
 
 @dataclass(frozen=True)
 class ConnectorAuth:
-    """Resolved execution credentials. OAuth acquisition/refresh belongs to the caller."""
+    """Explicit auth material; execution uses resolved credentials, auth calls use setup fields.
+
+    The caller owns storage and decides when to invoke acquisition or refresh.
+    """
 
     method: str
     fields: Mapping[str, Any] = field(repr=False)
