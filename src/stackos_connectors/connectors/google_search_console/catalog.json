@@ -23,7 +23,16 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "access_mode": {
+            "type": "string",
+            "enum": [
+              "readonly",
+              "sitemap_write"
+            ],
+            "default": "readonly"
+          }
+        },
         "required": []
       },
       "payload_format": "json",
@@ -49,6 +58,24 @@
             "required": true,
             "secret": true,
             "type": "secret"
+          },
+          {
+            "key": "access_mode",
+            "label": "Access",
+            "type": "select",
+            "secret": false,
+            "required": false,
+            "options": [
+              {
+                "value": "readonly",
+                "label": "Read only"
+              },
+              {
+                "value": "sitemap_write",
+                "label": "Read and submit sitemaps"
+              }
+            ],
+            "description": "Defaults to read only. Changing access requires acquiring a token with the selected scope."
           }
         ],
         "description": "The consumer handles Google browser consent, state and callbacks. Exchange the resulting authorization code with request_token. Execution accepts the resolved access_token; credential storage and refresh scheduling remain consumer-owned.",
@@ -80,7 +107,16 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "access_mode": {
+            "type": "string",
+            "enum": [
+              "readonly",
+              "sitemap_write"
+            ],
+            "default": "readonly"
+          }
+        },
         "required": []
       },
       "payload_format": "json",
@@ -96,6 +132,24 @@
             "required": true,
             "secret": true,
             "type": "secret"
+          },
+          {
+            "key": "access_mode",
+            "label": "Access",
+            "type": "select",
+            "secret": false,
+            "required": false,
+            "options": [
+              {
+                "value": "readonly",
+                "label": "Read only"
+              },
+              {
+                "value": "sitemap_write",
+                "label": "Read and submit sitemaps"
+              }
+            ],
+            "description": "Defaults to read only. Changing access requires acquiring a token with the selected scope."
           }
         ],
         "description": "Obtain a Google access token with the required provider scopes and permissions before execution.",
@@ -126,7 +180,16 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "access_mode": {
+            "type": "string",
+            "enum": [
+              "readonly",
+              "sitemap_write"
+            ],
+            "default": "readonly"
+          }
+        },
         "required": []
       },
       "payload_format": "json",
@@ -162,6 +225,24 @@
             "required": true,
             "secret": true,
             "type": "secret"
+          },
+          {
+            "key": "access_mode",
+            "label": "Access",
+            "type": "select",
+            "secret": false,
+            "required": false,
+            "options": [
+              {
+                "value": "readonly",
+                "label": "Read only"
+              },
+              {
+                "value": "sitemap_write",
+                "label": "Read and submit sitemaps"
+              }
+            ],
+            "description": "Defaults to read only. Changing access requires acquiring a token with the selected scope."
           }
         ],
         "description": "Exchange the Google refresh token for an access token with an explicit request_token call. Execution accepts the resolved access_token; credential storage and refresh scheduling remain consumer-owned.",
@@ -192,7 +273,16 @@
       },
       "config_schema": {
         "type": "object",
-        "properties": {},
+        "properties": {
+          "access_mode": {
+            "type": "string",
+            "enum": [
+              "readonly",
+              "sitemap_write"
+            ],
+            "default": "readonly"
+          }
+        },
         "required": []
       },
       "payload_format": "json",
@@ -208,6 +298,24 @@
             "required": true,
             "secret": true,
             "type": "secret"
+          },
+          {
+            "key": "access_mode",
+            "label": "Access",
+            "type": "select",
+            "secret": false,
+            "required": false,
+            "options": [
+              {
+                "value": "readonly",
+                "label": "Read only"
+              },
+              {
+                "value": "sitemap_write",
+                "label": "Read and submit sitemaps"
+              }
+            ],
+            "description": "Defaults to read only. Changing access requires acquiring a token with the selected scope."
           }
         ],
         "description": "Use request_token with the Google service-account key to acquire an access token. Execution accepts the resolved access_token; provider resource access must be granted separately. Credential storage and refresh scheduling remain consumer-owned.",
@@ -778,5 +886,6 @@
         "consent"
       ]
     ]
-  }
+  },
+  "auth_implementation": "stackos_connectors.connectors.google_search_console.auth:resolve_contract"
 }

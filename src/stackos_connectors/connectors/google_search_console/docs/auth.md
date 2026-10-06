@@ -9,6 +9,18 @@ The [bundled catalog](../catalog.json) is the installed contract for method fiel
 | `oauth2_refresh_token` | `refresh_token` |
 | `service-account` | `jwt_bearer` |
 
+All four methods expose `access_mode`: omitted or `readonly` requests
+`https://www.googleapis.com/auth/webmasters.readonly`; explicit `sitemap_write`
+requests `https://www.googleapis.com/auth/webmasters`. Keep the saved selection
+when renewing a service-account token. Changing it requires fresh grant evidence;
+OAuth consent must be repeated when a new scope is needed. Selecting a mode does
+not expand a manually supplied token's permissions.
+
+The full `webmasters` scope also permits read operations. Consumers can use
+`stackos_connectors.auth.scope_satisfies` to check that documented relationship
+without changing stored provider scope evidence. Read-only scope never satisfies
+a sitemap submission requirement. Property permissions remain separate.
+
 Service-account token success does not establish Search Console property access. Inventory probes can succeed with no properties. Google Indexing is a separate resolved-token contract; no new Indexing JWT grant is supplied.
 
 `request_token` receives resolved application/key fields and performs only the requested grant. Actions and `probe_credentials` receive resolved execution fields. Discovery, probes and actions never acquire or refresh implicitly. The consumer owns credential/state/PKCE custody, callbacks, refresh timing and concurrency, permissions, persistence and audit. Token results and authorization URLs are sensitive in-process values.
