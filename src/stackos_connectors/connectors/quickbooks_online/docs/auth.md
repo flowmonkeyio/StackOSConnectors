@@ -10,4 +10,16 @@ The caller owns application secrets, state verification, callback handling, bind
 
 An omitted token response scope remains unknown; the requested accounting scope is not evidence of an actual grant. An omitted refresh token remains absent in `TokenResult`; the caller decides whether to retain a prior value. Unknown refresh outcomes require caller reconciliation, not automatic replay. `CompanyInfo.Id` is a separate entity identifier and need not equal callback `realmId`.
 
+Both method setup forms require an explicit environment and numeric company realm
+ID of 1–32 digits. Neither field has a default. The caller validates the intended
+realm against the OAuth callback before exchanging a code.
+
+`probe_credentials` reuses `quickbooks-online.company-info.get` with the resolved
+token and configured realm. It returns optional company display name and metadata
+containing provider-returned `company_id`, caller-configured `configured_realm_id`
+and `environment`. `provider_account_id` remains null because the returned entity
+ID is not realm attestation. No grants or scopes are inferred from a successful
+CompanyInfo read. Malformed responses and credential echoes fail through the same
+validator as the action; provider failures expose only safe status/reason facts.
+
 Primary protocol sources: [sandbox discovery](https://developer.intuit.com/.well-known/openid_sandbox_configuration/), [production discovery](https://developer.intuit.com/.well-known/openid_configuration/), [official Python OAuth client](https://github.com/intuit/oauth-pythonclient/blob/master/intuitlib/client.py), and [accounting scope](https://github.com/intuit/oauth-pythonclient/blob/master/intuitlib/enums.py). Local fixture verification does not establish live app consent or sandbox compatibility.

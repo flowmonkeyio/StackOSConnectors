@@ -4,6 +4,7 @@
   "name": "QuickBooks Online",
   "description": "Bounded company and invoice reads with explicit caller-owned OAuth.",
   "auth_type": "oauth",
+  "probe_implementation": "stackos_connectors.connectors.quickbooks_online.probe:probe",
   "auth_methods": [
     {
       "key": "oauth2_authorization_code",
@@ -26,6 +27,7 @@
         "type": "object",
         "properties": {
           "environment": {
+            "type": "string",
             "enum": [
               "sandbox",
               "production"
@@ -43,6 +45,7 @@
         "additionalProperties": false
       },
       "setup": {
+        "label": "Connect with QuickBooks",
         "auth_type": "oauth",
         "interactive": true,
         "description": "Register an Intuit app, verify callback state and realmId, and supply its resolved accounting access token.",
@@ -60,6 +63,26 @@
             "type": "secret",
             "secret": true,
             "required": true
+          },
+          {
+            "key": "environment",
+            "label": "Environment",
+            "type": "select",
+            "secret": false,
+            "required": true,
+            "options": [
+              {"value": "sandbox", "label": "Sandbox"},
+              {"value": "production", "label": "Production"}
+            ],
+            "description": "Choose the intended QuickBooks environment explicitly; there is no default."
+          },
+          {
+            "key": "realm_id",
+            "label": "Company realm ID",
+            "type": "text",
+            "secret": false,
+            "required": true,
+            "description": "Numeric company realm ID, 1–32 digits. Bind it to the intended company and verify callback realmId before token exchange."
           }
         ]
       },
@@ -92,6 +115,7 @@
         "type": "object",
         "properties": {
           "environment": {
+            "type": "string",
             "enum": [
               "sandbox",
               "production"
@@ -109,6 +133,7 @@
         "additionalProperties": false
       },
       "setup": {
+        "label": "OAuth2 access token",
         "auth_type": "oauth",
         "interactive": false,
         "description": "Register an Intuit app, verify callback state and realmId, and supply its resolved accounting access token.",
@@ -119,6 +144,26 @@
             "type": "secret",
             "secret": true,
             "required": true
+          },
+          {
+            "key": "environment",
+            "label": "Environment",
+            "type": "select",
+            "secret": false,
+            "required": true,
+            "options": [
+              {"value": "sandbox", "label": "Sandbox"},
+              {"value": "production", "label": "Production"}
+            ],
+            "description": "Choose the intended QuickBooks environment explicitly; there is no default."
+          },
+          {
+            "key": "realm_id",
+            "label": "Company realm ID",
+            "type": "text",
+            "secret": false,
+            "required": true,
+            "description": "Numeric company realm ID, 1–32 digits. Supply the company realm bound to this access token."
           }
         ]
       },

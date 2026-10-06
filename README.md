@@ -175,14 +175,23 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.3
+python -m pip install stackos-connectors==0.2.4
 ```
 
-Or add `stackos-connectors==0.2.3` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.4` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+### 0.2.4 release notes
+
+- Complete QuickBooks setup metadata with method labels and explicit required
+  environment and company realm fields.
+- Add a credential probe through the existing validated CompanyInfo read. It
+  returns bounded company identity and leaves OAuth grant evidence unknown.
+- Preserve the two QuickBooks read actions and Google Indexing authentication
+  support from 0.2.3.
 
 ### 0.2.3 release notes
 

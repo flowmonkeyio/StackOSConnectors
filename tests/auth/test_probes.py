@@ -385,5 +385,5 @@ def test_probe_bindings_are_fixed_and_metadata_discovery_does_not_probe(monkeypa
         for key, metadata in get_default_client().registry.connector_metadata.items()
         if metadata.get("probe_implementation")
     }
-    assert len(bound) == 37
+    assert len(bound) == 38
     assert all(project_probe_config(key, {}) == {} for key in bound)

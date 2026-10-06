@@ -19,6 +19,11 @@ A missing `Invoice` array in an otherwise empty `QueryResponse` means an empty p
 
 The consumer owns page traversal, cross-page duplicate detection, aggregate size/count bounds, empty-scan handling, overflow detection, persistence and publication. A short page can terminate a declared traversal, but offset pagination is not a transactionally isolated snapshot. The returned `realm_id` repeats request context, not independent provider attestation. Provider faults return fixed safe error codes and status, never raw response bodies, tokens or transport exception text.
 
+The explicit credential probe calls the existing CompanyInfo action and shares
+its validation, transport, retry bounds and redaction. It reports only safe company
+identity, keeps configured realm context distinct from `CompanyInfo.Id`, and does
+not establish OAuth scope grants. See [authentication](auth.md) for its result.
+
 Run local checks with `.venv/bin/python -B -m pytest tests/quickbooks_online tests/auth tests/catalog tests/packaging -p no:cacheprovider` and `.venv/bin/ruff check src/stackos_connectors/connectors/quickbooks_online tests/quickbooks_online`. The standalone installed-wheel driver in `tests/packaging/installed_auth_consumer.py` uses injected transports with live networking prohibited. Live Intuit consent/provider verification is a separate gate.
 
 References: [Invoice API](https://developer.intuit.com/app/developer/qbo/docs/api/accounting/most-commonly-used/invoice), [limits and throttling](https://static.developer.intuit.com/output_html/qbo/docs/learn/limits-and-throttles.html), [authentication](auth.md).

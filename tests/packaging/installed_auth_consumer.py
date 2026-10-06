@@ -58,6 +58,12 @@ ACCESS = "driver-access-canary"
 
 async def quickbooks_reads(client):
     """Exercise the installed QBO action factory through the public API."""
+    description = client.describe("quickbooks-online")
+    assert len(description["actions"]) == 2
+    for method in description["auth_methods"]:
+        assert method["setup"]["label"]
+        setup_fields = {field["key"]: field for field in method["setup"]["fields"]}
+        assert setup_fields["environment"]["required"] and setup_fields["realm_id"]["required"]
     raw = '{ "Id":"7", "TxnDate":"2026-01-31", "TotalAmt":9007199254740993.0100, "Balance":-0.001 }'
     calls = []
 
@@ -110,8 +116,21 @@ async def quickbooks_reads(client):
         )
         assert page.output_json["invoices"] == [{"native_id": "7", "raw_json": raw}]
         assert page.output_json["count"] == 1
+        probe = await probe_credentials("quickbooks-online", auth=auth, options=options)
+        assert probe["ok"]
+        assert probe["metadata"]["evidence"] == {
+            "account": {
+                "provider_account_id": None,
+                "display_name": "Synthetic",
+                "metadata": {
+                    "company_id": "1",
+                    "configured_realm_id": "123456789",
+                    "environment": "sandbox",
+                },
+            }
+        }
         assert not http.is_closed
-    assert len(calls) == 2
+    assert len(calls) == 3
 
 
 async def main():
@@ -202,7 +221,6 @@ async def main():
         assert result.access_token == ACCESS and result.scopes_present
         assert ACCESS not in repr(result) and SECRET not in repr(auth)
     assert len(grant_calls) == 17  # Meta explicitly performs its second exchange.
-    await quickbooks_reads(client)
 
     async with httpx.AsyncClient(
         transport=httpx.MockTransport(
@@ -302,6 +320,7 @@ async def main():
 
     auth_api.request_token = implicit_grant
     oauth_protocol.request_token = implicit_grant
+    await quickbooks_reads(client)
     client.describe("google-workspace")
     config = project_probe_config(
         "wordpress", {"site_url": "https://fixture.test", "account_ref": "private"}
@@ -396,6 +415,7 @@ async def main():
                     "slack_v0",
                     "hubspot_v3",
                     "quickbooks_exact_reads",
+                    "quickbooks_company_probe",
                 ],
                 "network": "blocked; injected edges only",
                 "origins": origins,
