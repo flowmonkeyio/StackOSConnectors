@@ -56,6 +56,64 @@ SECRET = "driver-secret-canary"
 ACCESS = "driver-access-canary"
 
 
+async def quickbooks_reads(client):
+    """Exercise the installed QBO action factory through the public API."""
+    raw = '{ "Id":"7", "TxnDate":"2026-01-31", "TotalAmt":9007199254740993.0100, "Balance":-0.001 }'
+    calls = []
+
+    def edge(request):
+        calls.append(request)
+        assert request.method == "GET"
+        assert request.url.host == "sandbox-quickbooks.api.intuit.com"
+        assert request.headers["authorization"] == f"Bearer {ACCESS}"
+        if request.url.path.endswith("/companyinfo/123456789"):
+            return httpx.Response(
+                200, json={"CompanyInfo": {"Id": "1", "CompanyName": "Synthetic"}}
+            )
+        assert request.url.path == "/v3/company/123456789/query"
+        assert (
+            request.url.params["query"]
+            == "select * from Invoice where TxnDate >= '2026-01-01' and TxnDate <= '2026-01-31' "
+            "STARTPOSITION 1 MAXRESULTS 10"
+        )
+        return httpx.Response(
+            200,
+            content='{"QueryResponse":{"Invoice":[' + raw + '],"startPosition":1,"maxResults":1}}',
+        )
+
+    auth = ConnectorAuth(
+        "oauth2_token",
+        {"access_token": ACCESS},
+        config={"environment": "sandbox", "realm_id": "123456789"},
+    )
+    async with httpx.AsyncClient(transport=httpx.MockTransport(edge)) as http:
+        options = CallOptions(http=http, timeout=1)
+        company = await client.execute(
+            "quickbooks-online", "quickbooks-online.company-info.get", {}, auth, options
+        )
+        assert company.output_json == {
+            "realm_id": "123456789",
+            "company_id": "1",
+            "company_name": "Synthetic",
+        }
+        page = await client.execute(
+            "quickbooks-online",
+            "quickbooks-online.invoices.list",
+            {
+                "txn_date_from": "2026-01-01",
+                "txn_date_to": "2026-01-31",
+                "start_position": 1,
+                "max_results": 10,
+            },
+            auth,
+            options,
+        )
+        assert page.output_json["invoices"] == [{"native_id": "7", "raw_json": raw}]
+        assert page.output_json["count"] == 1
+        assert not http.is_closed
+    assert len(calls) == 2
+
+
 async def main():
     before = set(Path.cwd().iterdir())
     client = get_default_client()
@@ -65,7 +123,7 @@ async def main():
         for key, metadata in client.registry.connector_metadata.items()
         if "auth_protocol" in metadata
     }
-    assert len(providers) == 15 and "google-indexing" not in providers
+    assert len(providers) == 16 and "google-indexing" not in providers
     methods = 0
     for key, metadata in providers.items():
         assert root.joinpath("connectors", key.replace("-", "_"), "docs", "auth.md").is_file()
@@ -141,7 +199,8 @@ async def main():
             assert not http.is_closed
         assert result.access_token == ACCESS and result.scopes_present
         assert ACCESS not in repr(result) and SECRET not in repr(auth)
-    assert len(grant_calls) == 16  # Meta explicitly performs its second exchange.
+    assert len(grant_calls) == 17  # Meta explicitly performs its second exchange.
+    await quickbooks_reads(client)
 
     async with httpx.AsyncClient(
         transport=httpx.MockTransport(
@@ -309,6 +368,7 @@ async def main():
                     "telegram",
                     "slack_v0",
                     "hubspot_v3",
+                    "quickbooks_exact_reads",
                 ],
                 "network": "blocked; injected edges only",
                 "origins": origins,

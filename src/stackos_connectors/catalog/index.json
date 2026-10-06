@@ -35,6 +35,7 @@
     "connectors/openrouter/catalog.json",
     "connectors/outreach/catalog.json",
     "connectors/pipedrive/catalog.json",
+    "connectors/quickbooks_online/catalog.json",
     "connectors/reddit/catalog.json",
     "connectors/reve/catalog.json",
     "connectors/salesforce/catalog.json",

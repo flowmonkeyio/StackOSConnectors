@@ -16,7 +16,7 @@ def test_auth_protocol_resources_have_integration_owners():
         for key, metadata in registry.connector_metadata.items()
         if "auth_protocol" in metadata
     }
-    assert len(protocols) == 15
+    assert len(protocols) == 16
     assert "google-indexing" not in protocols
     for key, metadata in protocols.items():
         document = json.loads(

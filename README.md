@@ -57,6 +57,9 @@ execution; existing names cannot be replaced.
 `CallOptions.timeout=None` preserves each provider's default. A numeric timeout
 overrides that default. A supplied HTTP client remains caller-owned.
 
+QuickBooks Online provides bounded company/invoice reads with exact invoice JSON
+fragments and explicit OAuth. See the [provider contract](src/stackos_connectors/connectors/quickbooks_online/docs/quickbooks-online.md).
+
 ## Explicit authentication
 
 `get_auth_contract(connector, method=..., config=...)` reads immutable provider
