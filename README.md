@@ -4,8 +4,10 @@ A Python library of named provider connectors. A caller supplies a connector,
 action, input data and resolved authentication. The library maps that action to
 the provider protocol and returns provider output, metadata and file descriptors.
 
-The consumer owns credential storage and refresh, authorization, persistent state,
-workflow decisions and audit. Provider implementations use plain contracts and
+The consumer owns credential storage, when to authorize or refresh, persistent
+state, workflow decisions and audit. Explicit package functions implement provider
+authorization URLs, token grants, probes and signature checks. They never start
+authorization, refresh tokens or persist state implicitly. Provider implementations use plain contracts and
 can accept caller-owned HTTP clients, rate buckets and native protocol sessions.
 
 Each integration is grouped under `src/stackos_connectors/connectors/`:
@@ -55,6 +57,74 @@ execution; existing names cannot be replaced.
 `CallOptions.timeout=None` preserves each provider's default. A numeric timeout
 overrides that default. A supplied HTTP client remains caller-owned.
 
+## Explicit authentication
+
+`get_auth_contract(connector, method=..., config=...)` reads immutable provider
+facts from the bundled catalog. `build_authorization_request` formats a consent
+URL using the caller's redirect URI, state and optional PKCE challenge. The caller
+opens that URL, handles the callback and checks its state. `request_token` performs
+one requested `authorization_code`, `refresh_token`, `client_credentials` or
+`jwt_bearer` grant, where the selected method declares support. Meta's declared
+second token exchange is part of that explicit request.
+
+```python
+from stackos_connectors import ConnectorAuth, request_token
+
+token = await request_token(
+    "google-search-console",
+    auth=ConnectorAuth(
+        method="oauth2_authorization_code",
+        fields={"client_id": client_id, "client_secret": client_secret},
+    ),
+    grant_type="authorization_code",
+    code=validated_callback_code,
+    redirect_uri=registered_redirect_uri,
+    code_verifier=stored_pkce_verifier,
+    http=caller_http,
+)
+```
+
+Grant calls accept resolved application/key fields; action and probe calls accept
+the method's resolved execution fields, usually an access token. The catalog's
+`setup` and `protocol` describe acquisition separately from `fields_schema` and
+`config_schema`. Manual token methods retain their declared refresh compatibility;
+the library does not infer an auth method from token shape.
+
+`TokenResult` holds sensitive in-process values. An absent `refresh_token` means
+the response did not rotate it. `scopes_present=False` distinguishes omitted
+scope evidence from an explicitly empty grant. For a successful Google JWT grant,
+the immutable contract supplies the signed request's scopes; the consumer can
+apply the reviewed omission rule without changing the token response's provenance.
+The caller decides how to preserve prior evidence, enforce permissions and store
+results. `OAuthTokenError` exposes bounded categories/status and repair facts,
+without raw provider response bodies. Repr suppression is not a storage policy.
+
+`probe_credentials(connector, auth=..., options=..., context=...)` explicitly
+tests a resolved credential through a fixed provider binding. It returns safe
+provider facts and optional `AuthProbeEvidence`; it does not establish application
+readiness or permissions. `project_probe_config` projects portable config and
+retains supported legacy probe aliases. The caller chooses the IMAP native mailbox
+through `CallOptions(provider_context={"mailbox": ...})`. Google Ads/Workspace
+service-account probes only report resolved-token presence and unverified resource
+access; they make no HTTP call or new-grant claim.
+
+Google JWT validation/signing is shared across the five declared service-account
+methods. Credentials never come from ambient identity or key-supplied endpoints.
+Provider details live in `connectors/<provider>/docs/auth.md` and the catalog.
+Google Indexing retains its existing resolved-token action/probe contract; this
+release adds no Indexing JWT acquisition method.
+
+Provider-local pure helpers cover Telegram authorization request/challenge/state
+translation (`connectors.telegram.auth`), Slack v0 HMAC verification
+(`connectors.slack_bot.auth.verify_signature_v0`) and HubSpot v3 HMAC verification
+(`connectors.hubspot.signature.verify_signature_v3`). Callers own native sessions,
+encrypted custody, challenge expiry, ingress routing, trusted canonical URI,
+timestamp/replay checks and policy. HubSpot v2 verification is not implemented.
+
+No library call to discovery, probe or action execution starts an authorization
+flow, refreshes a token, opens a native session, stores credentials or selects
+readiness. Remote token revocation is not part of this API.
+
 For file-producing actions, pass `CallOptions(output_dir=Path(...))` and consume
 the plain descriptors in `result.files`. The library does not create application
 artifacts or public download URLs. Telegram actions require an already authorized
@@ -102,10 +172,10 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.1.1
+python -m pip install stackos-connectors==0.2.0
 ```
 
-Or add `stackos-connectors==0.1.1` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.0` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use

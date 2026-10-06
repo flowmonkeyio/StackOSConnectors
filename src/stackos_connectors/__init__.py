@@ -27,6 +27,12 @@ from .contracts import (
     ValidationIssue,
 )
 from .errors import ConnectorError, IntegrationDownError, RateLimitedError, ValidationError
+from .probe import (
+    AuthMethodProbeContext,
+    AuthProbeEvidence,
+    probe_credentials,
+    project_probe_config,
+)
 from .registry import ConnectorClient, ConnectorRegistry
 
 
@@ -83,6 +89,8 @@ def describe(connector: str, action: str | None = None) -> dict[str, Any]:
 __all__ = [
     "ActionDefinition",
     "AuthMethodDefinition",
+    "AuthMethodProbeContext",
+    "AuthProbeEvidence",
     "AuthorizationRequest",
     "CallOptions",
     "Connector",
@@ -109,6 +117,8 @@ __all__ = [
     "get_auth_contract",
     "get_default_client",
     "list_connectors",
+    "probe_credentials",
+    "project_probe_config",
     "request_token",
     "validate",
     "validate_data",

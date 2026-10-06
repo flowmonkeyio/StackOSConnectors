@@ -24,6 +24,7 @@ def test_auth_protocol_resources_have_integration_owners():
         )
         assert "scopes" not in document.get("config", {})
         assert "scope_bundles" not in document.get("config", {})
+        assert root.joinpath("connectors", key.replace("-", "_"), "docs", "auth.md").is_file()
         for binding_name in ("auth_implementation",):
             if binding := metadata.get(binding_name):
                 module, _ = binding.split(":")
@@ -31,6 +32,25 @@ def test_auth_protocol_resources_have_integration_owners():
                 parts = module.split(".")[1:]
                 assert root.joinpath(*parts[:-1], parts[-1] + ".py").is_file()
     assert root.joinpath("shared", "google", "service_account.py").is_file()
+
+
+def test_public_auth_and_probe_exports_are_available():
+    import stackos_connectors as api
+
+    for name in (
+        "get_auth_contract",
+        "build_authorization_request",
+        "request_token",
+        "probe_credentials",
+        "project_probe_config",
+        "AuthMethodProbeContext",
+        "AuthProbeEvidence",
+        "OAuthProviderContract",
+        "AuthorizationRequest",
+        "TokenResult",
+        "OAuthTokenError",
+    ):
+        assert name in api.__all__ and callable(getattr(api, name))
 
 
 def test_grouped_owners_have_no_old_duplicate_paths():
