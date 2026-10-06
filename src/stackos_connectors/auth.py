@@ -143,6 +143,17 @@ def get_auth_contract(
     return contract
 
 
+def scope_satisfies(connector: str, required: str, granted: set[str]) -> bool:
+    """Report documented scope compatibility; the consumer owns enforcement."""
+    if required in granted:
+        return True
+    if connector == "google-search-console":
+        from .connectors.google_search_console.auth import READ_SCOPE, WRITE_SCOPE
+
+        return required == READ_SCOPE and WRITE_SCOPE in granted
+    return False
+
+
 def build_authorization_request(
     connector: str,
     *,
