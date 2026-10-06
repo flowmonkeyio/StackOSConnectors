@@ -111,11 +111,11 @@ through `CallOptions(provider_context={"mailbox": ...})`. Google Ads/Workspace
 service-account probes only report resolved-token presence and unverified resource
 access; they make no HTTP call or new-grant claim.
 
-Google JWT validation/signing is shared across the five declared service-account
+Google JWT validation/signing is shared across the six declared service-account
 methods. Credentials never come from ambient identity or key-supplied endpoints.
 Provider details live in `connectors/<provider>/docs/auth.md` and the catalog.
-Google Indexing retains its existing resolved-token action/probe contract; this
-release adds no Indexing JWT acquisition method.
+Google Indexing supports explicit `jwt_bearer` acquisition with the fixed Indexing
+scope. Token acquisition does not establish API enablement or site-owner access.
 
 Provider-local pure helpers cover Telegram authorization request/challenge/state
 translation (`connectors.telegram.auth`), Slack v0 HMAC verification
@@ -175,14 +175,22 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.2
+python -m pip install stackos-connectors==0.2.3
 ```
 
-Or add `stackos-connectors==0.2.2` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.3` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+### 0.2.3 release notes
+
+- Restore Google Indexing service-account token acquisition through the canonical
+  `get_auth_contract` and `request_token` APIs. The contract fixes the Google token
+  endpoint and Indexing scope, requires a Bearer response, and rejects delegation.
+- Preserve the QuickBooks Online connector from 0.2.2 and the Search Console scope
+  handling from 0.2.1.
 
 ## Publishing
 

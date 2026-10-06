@@ -123,7 +123,7 @@ async def main():
         for key, metadata in client.registry.connector_metadata.items()
         if "auth_protocol" in metadata
     }
-    assert len(providers) == 16 and "google-indexing" not in providers
+    assert len(providers) == 17 and "google-indexing" in providers
     methods = 0
     for key, metadata in providers.items():
         assert root.joinpath("connectors", key.replace("-", "_"), "docs", "auth.md").is_file()
@@ -148,6 +148,8 @@ async def main():
 
     grant_calls = []
     for provider in providers:
+        if provider == "google-indexing":
+            continue  # Its only grant is exercised with a generated JSON key below.
         application_only = provider in {"reddit", "taboola"}
         grant = "client_credentials" if application_only else "authorization_code"
         method = "client_credentials" if application_only else "oauth2_authorization_code"
@@ -254,6 +256,30 @@ async def main():
             http=http,
         )
     assert signed.access_token == ACCESS and not signed.scopes_present
+
+    def indexing_jwt_edge(request):
+        assert str(request.url) == "https://oauth2.googleapis.com/token"
+        body = parse_qs(request.content.decode())
+        assert body["grant_type"] == ["urn:ietf:params:oauth:grant-type:jwt-bearer"]
+        encoded = body["assertion"][0].split(".")[1]
+        claims = json.loads(base64.urlsafe_b64decode(encoded + "=" * (-len(encoded) % 4)))
+        assert claims["scope"] == "https://www.googleapis.com/auth/indexing"
+        assert claims["aud"] == "https://oauth2.googleapis.com/token"
+        assert "sub" not in claims
+        return httpx.Response(
+            200, json={"access_token": ACCESS, "expires_in": 3600, "token_type": "Bearer"}
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(indexing_jwt_edge)) as http:
+        indexing = await request_token(
+            "google-indexing",
+            auth=ConnectorAuth("service-account", {"service_account_json": key_json}),
+            grant_type="jwt_bearer",
+            http=http,
+        )
+        assert not http.is_closed
+    assert indexing.access_token == ACCESS and not indexing.scopes_present
+    assert indexing.token_type == "Bearer" and indexing.expires_in == 3600
     try:
         await request_token(
             "taboola",
@@ -363,6 +389,7 @@ async def main():
                     "refresh",
                     "client_credentials",
                     "delegated_jwt",
+                    "indexing_jwt",
                     "probe",
                     "action",
                     "telegram",

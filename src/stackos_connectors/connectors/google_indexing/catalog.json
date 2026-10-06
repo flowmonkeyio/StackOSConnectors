@@ -41,7 +41,20 @@
             "type": "secret"
           }
         ],
-        "description": "Use the Google service-account key to acquire an access token outside this library. Execution accepts the resolved access_token; provider resource access must be granted separately."
+        "description": "Use request_token with the Google service-account key to acquire an access token. Execution accepts the resolved access_token; provider resource access must be granted separately. Credential storage and refresh scheduling remain consumer-owned.",
+        "auth_type": "oauth",
+        "interactive": false
+      },
+      "evidence_source": "oauth_response",
+      "protocol": {
+        "grant_types": [
+          "jwt_bearer"
+        ],
+        "flow": "jwt_bearer",
+        "authorization_endpoint": null,
+        "pkce_mode": "unavailable",
+        "authorization_params": [],
+        "required_token_type": "Bearer"
       }
     }
   ],
@@ -221,5 +234,12 @@
     "path": "shared/icons/integration.svg",
     "media_type": "image/svg+xml",
     "kind": "fallback"
+  },
+  "auth_protocol": {
+    "flow": "jwt_bearer",
+    "token_endpoint": "https://oauth2.googleapis.com/token",
+    "scopes": [
+      "https://www.googleapis.com/auth/indexing"
+    ]
   }
 }

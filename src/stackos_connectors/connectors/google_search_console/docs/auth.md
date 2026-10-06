@@ -21,7 +21,7 @@ The full `webmasters` scope also permits read operations. Consumers can use
 without changing stored provider scope evidence. Read-only scope never satisfies
 a sitemap submission requirement. Property permissions remain separate.
 
-Service-account token success does not establish Search Console property access. Inventory probes can succeed with no properties. Google Indexing is a separate resolved-token contract; no new Indexing JWT grant is supplied.
+Service-account token success does not establish Search Console property access. Inventory probes can succeed with no properties. Google Indexing has a separate [service-account authentication contract](../../google_indexing/docs/auth.md) and scope.
 
 `request_token` receives resolved application/key fields and performs only the requested grant. Actions and `probe_credentials` receive resolved execution fields. Discovery, probes and actions never acquire or refresh implicitly. The consumer owns credential/state/PKCE custody, callbacks, refresh timing and concurrency, permissions, persistence and audit. Token results and authorization URLs are sensitive in-process values.
 

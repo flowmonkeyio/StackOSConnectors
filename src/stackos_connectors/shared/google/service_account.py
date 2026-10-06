@@ -19,6 +19,7 @@ JWT_GRANT = "urn:ietf:params:oauth:grant-type:jwt-bearer"
 GOOGLE_SERVICE_ACCOUNT_PROVIDERS = frozenset(
     {
         "google-search-console",
+        "google-indexing",
         "google-analytics",
         "google-tag-manager",
         "google-ads",

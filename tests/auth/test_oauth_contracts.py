@@ -65,13 +65,41 @@ def test_authorization_request_preserves_linear_protocol_and_hides_state():
     [
         ("missing", "oauth2_token"),
         ("pipedrive", "api_token"),
-        ("google-indexing", "service-account"),
+        ("google-indexing", "oauth2_authorization_code"),
         ("linear", "missing"),
     ],
 )
 def test_unsupported_auth_does_not_gain_a_protocol(provider, method):
     with pytest.raises(OAuthTokenError):
         get_auth_contract(provider, method=method)
+
+
+def test_google_indexing_contract_has_fixed_jwt_protocol():
+    from stackos_connectors.shared.google.service_account import (
+        GOOGLE_SERVICE_ACCOUNT_PROVIDERS,
+    )
+
+    contract = get_auth_contract(
+        "google-indexing",
+        method="service-account",
+        config={"token_endpoint": "https://untrusted.example/token", "scopes": ["invented"]},
+    )
+    assert "google-indexing" in GOOGLE_SERVICE_ACCOUNT_PROVIDERS
+    assert contract.flow == "jwt_bearer"
+    assert contract.token_endpoint == "https://oauth2.googleapis.com/token"
+    assert contract.scopes == ("https://www.googleapis.com/auth/indexing",)
+    assert contract.grant_types == ("jwt_bearer",)
+    assert contract.required_token_type == "Bearer"
+    assert contract.authorization_endpoint is None
+    assert contract.pkce_mode == "unavailable"
+    assert contract.authorization_params == ()
+    assert contract.delegated_subject is None
+    with pytest.raises(OAuthTokenError, match="only for Google Workspace"):
+        get_auth_contract(
+            "google-indexing",
+            method="service-account",
+            config={"delegated_subject": "user@example.com"},
+        )
 
 
 def test_dynamic_endpoints_and_delegation():

@@ -372,7 +372,12 @@ def test_probe_bindings_are_fixed_and_metadata_discovery_does_not_probe(monkeypa
     monkeypatch.setattr("stackos_connectors.probe.probe_credentials", forbidden)
     description = get_default_client().describe("google-indexing")
     assert description["probe_implementation"].startswith("stackos_connectors.")
-    assert "auth_protocol" not in description
+    assert description["auth_protocol"]["flow"] == "jwt_bearer"
+    method = description["auth_methods"][0]
+    assert method["evidence_source"] == "oauth_response"
+    assert method["setup"]["auth_type"] == "oauth"
+    assert not method["setup"]["interactive"]
+    assert method["fields_schema"]["required"] == ["access_token"]
     # Every catalog-local binding is importable from the standalone wheel. Pure
     # config projection must neither construct a provider nor perform a probe.
     bound = {

@@ -81,11 +81,12 @@ async def test_explicit_jwt_grant():
         "google-ads",
         "google-workspace",
         "google-search-console",
+        "google-indexing",
         "google-analytics",
         "google-tag-manager",
     ],
 )
-async def test_five_released_jwt_providers(provider):
+async def test_released_jwt_providers(provider):
     from urllib.parse import parse_qs
 
     from stackos_connectors.auth import get_auth_contract
@@ -107,12 +108,44 @@ async def test_five_released_jwt_providers(provider):
         )
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http:
-        await request_token(
+        result = await request_token(
             provider,
             auth=ConnectorAuth("service-account", {"service_account_json": value}),
             grant_type="jwt_bearer",
             http=http,
         )
+        assert not http.is_closed
+    assert result.access_token == "token"
+    assert result.token_type == "Bearer" and result.expires_in == 3600
+    assert result.scopes is None and not result.scopes_present
+
+
+@pytest.mark.parametrize(
+    "response,invalid_field",
+    [
+        ({"expires_in": 3600}, "token_type"),
+        ({"expires_in": 3600, "token_type": "Basic"}, "token_type"),
+        ({"token_type": "Bearer"}, "expires_in"),
+        ({"expires_in": 0, "token_type": "Bearer"}, "expires_in"),
+        ({"expires_in": 3600, "token_type": "Bearer", "scope": ""}, "scope"),
+    ],
+)
+async def test_google_indexing_rejects_invalid_token_response(response, invalid_field):
+    _, value = make_key()
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(
+            lambda r: httpx.Response(200, json={"access_token": "token", **response})
+        )
+    ) as http:
+        with pytest.raises(OAuthTokenError) as caught:
+            await request_token(
+                "google-indexing",
+                auth=ConnectorAuth("service-account", {"service_account_json": value}),
+                grant_type="jwt_bearer",
+                http=http,
+            )
+    assert caught.value.provider_key == "google-indexing"
+    assert invalid_field in caught.value.invalid_fields
 
 
 @pytest.mark.parametrize(
