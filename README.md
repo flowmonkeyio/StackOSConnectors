@@ -175,10 +175,10 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.0
+python -m pip install stackos-connectors==0.2.2
 ```
 
-Or add `stackos-connectors==0.2.0` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.2` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use

@@ -133,7 +133,8 @@ def test_search_console_auth_excludes_host_defaults_and_keeps_native_site_inputs
     described = client.describe("google-search-console")
     for method in described["auth_methods"]:
         config = method["config_schema"]
-        assert not {"access_mode", "default_site_url"} & config.get("properties", {}).keys()
+        assert "default_site_url" not in config.get("properties", {})
+        assert config["properties"]["access_mode"]["enum"] == ["readonly", "sitemap_write"]
         assert not {"access_mode", "default_site_url"} & set(config.get("required", []))
         assert method["fields_schema"]["required"] == ["access_token"]
     selected = [
