@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "dataforseo",
+  "probe_implementation": "stackos_connectors.connectors.dataforseo.probe:Integration",
   "name": "DataForSEO",
   "description": "SERP, keyword volume, and competitor research provider.",
   "auth_methods": [

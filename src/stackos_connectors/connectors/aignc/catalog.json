@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "aignc",
+  "probe_implementation": "stackos_connectors.connectors.aignc.integration:AigncIntegration",
   "name": "AIGNC",
   "description": "Model discovery, text completion, JPEG generation, and audio analysis through AIGNC.",
   "implementation": "stackos_connectors.connectors.aignc.actions:AigncActionConnector",

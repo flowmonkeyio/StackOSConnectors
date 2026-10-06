@@ -226,6 +226,7 @@
     }
   },
   "connector": "smtp",
+  "probe_implementation": "stackos_connectors.connectors.smtp.probe:Integration",
   "description": "Submit email through SMTP and report relay acceptance or recipient rejection; acceptance is not delivery confirmation.",
   "icon": {
     "kind": "wordmark-dark",

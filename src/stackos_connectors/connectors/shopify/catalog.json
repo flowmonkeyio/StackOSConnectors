@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "shopify",
+  "probe_implementation": "stackos_connectors.connectors.shopify.probe:Integration",
   "name": "Shopify Admin API",
   "description": "Shopify Admin GraphQL requests for products, orders, customers, inventory and analytics using fixed query and mutation documents.",
   "auth_methods": [

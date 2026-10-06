@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-veo",
+  "probe_implementation": "stackos_connectors.connectors.google_veo.integration:GoogleVeoIntegration",
   "name": "Google Veo",
   "description": "Google Gemini API Veo video generation provider.",
   "auth_methods": [

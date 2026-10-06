@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "ahrefs",
+  "probe_implementation": "stackos_connectors.connectors.ahrefs.integration:AhrefsIntegration",
   "name": "Ahrefs",
   "description": "Organic keyword and backlink research provider; requires eligible API access and API units.",
   "auth_methods": [

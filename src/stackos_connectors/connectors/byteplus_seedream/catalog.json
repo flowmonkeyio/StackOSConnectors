@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "byteplus-seedream",
+  "probe_implementation": "stackos_connectors.connectors.byteplus_seedream.probe:Integration",
   "name": "BytePlus ModelArk",
   "description": "BytePlus ModelArk media generation provider.",
   "auth_methods": [

@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-search-console",
+  "probe_implementation": "stackos_connectors.connectors.google_search_console.integration:GoogleSearchConsoleIntegration",
   "name": "Google Search Console",
   "description": "Search Console site, sitemap, search analytics, and URL inspection evidence.",
   "auth_methods": [

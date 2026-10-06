@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-tag-manager",
+  "probe_implementation": "stackos_connectors.connectors.google_tag_manager.integration:GoogleTagManagerIntegration",
   "name": "Google Tag Manager",
   "description": "Tag Manager account, container, workspace, tag, trigger, and install snippet reads.",
   "auth_methods": [

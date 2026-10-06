@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-gemini-image",
+  "probe_implementation": "stackos_connectors.connectors.google_gemini_image.integration:GoogleGeminiImageIntegration",
   "name": "Google Gemini Image",
   "description": "Gemini Nano Banana image generation and editing provider.",
   "auth_methods": [

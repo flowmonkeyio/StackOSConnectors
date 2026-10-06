@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "serper",
+  "probe_implementation": "stackos_connectors.connectors.serper.integration:SerperIntegration",
   "name": "Serper.dev",
   "description": "Google Search/SERP provider for compact live search-result evidence.",
   "auth_methods": [

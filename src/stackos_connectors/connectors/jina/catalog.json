@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "jina",
+  "probe_implementation": "stackos_connectors.connectors.jina.integration:JinaReaderIntegration",
   "name": "Jina Reader",
   "description": "Readable web document extraction provider; API key is optional for higher quota.",
   "auth_methods": [

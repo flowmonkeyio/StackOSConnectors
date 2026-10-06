@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "alibaba-wan",
+  "probe_implementation": "stackos_connectors.connectors.alibaba_wan.integration:AlibabaWanIntegration",
   "name": "Alibaba Wan",
   "description": "Alibaba Model Studio Wan async video generation provider.",
   "auth_methods": [

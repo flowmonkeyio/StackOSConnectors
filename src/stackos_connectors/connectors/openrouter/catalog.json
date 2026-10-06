@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "openrouter",
+  "probe_implementation": "stackos_connectors.connectors.openrouter.probe:Integration",
   "name": "OpenRouter",
   "description": "OpenRouter model API protocol and authentication support; no named actions are registered.",
   "auth_methods": [

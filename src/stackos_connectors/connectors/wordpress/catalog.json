@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "wordpress",
+  "probe_implementation": "stackos_connectors.connectors.wordpress.probe:Integration",
   "name": "WordPress",
   "description": "WordPress REST API publishing provider using Application Passwords.",
   "auth_methods": [

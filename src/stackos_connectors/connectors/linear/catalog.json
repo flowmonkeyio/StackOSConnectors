@@ -2790,6 +2790,7 @@
     }
   },
   "connector": "linear",
+  "probe_implementation": "stackos_connectors.connectors.linear.integration:LinearIntegration",
   "description": "Fixed Linear GraphQL actions for issues, comments, projects, teams, and related workspace objects.",
   "icon": {
     "kind": "wordmark-inverse",

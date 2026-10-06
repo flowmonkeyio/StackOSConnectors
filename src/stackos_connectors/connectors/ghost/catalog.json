@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "ghost",
+  "probe_implementation": "stackos_connectors.connectors.ghost.probe:Integration",
   "name": "Ghost",
   "description": "Ghost Admin API publishing provider using an Admin API key.",
   "auth_methods": [

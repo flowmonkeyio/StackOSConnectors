@@ -508,6 +508,7 @@
     }
   },
   "connector": "imap",
+  "probe_implementation": "stackos_connectors.connectors.imap.probe:Integration",
   "description": "List mailboxes, search and fetch UID-qualified messages, export exact MIME to caller files, and update message flags.",
   "icon": {
     "kind": "wordmark-dark",

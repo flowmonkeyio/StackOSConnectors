@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "ideogram",
+  "probe_implementation": "stackos_connectors.connectors.ideogram.integration:IdeogramImagesIntegration",
   "name": "Ideogram",
   "description": "Ideogram 4.0 image generation and remix provider.",
   "auth_methods": [

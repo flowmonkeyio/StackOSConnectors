@@ -451,6 +451,7 @@
     }
   },
   "connector": "pipedrive",
+  "probe_implementation": "stackos_connectors.connectors.pipedrive.probe:Integration",
   "description": "Pipedrive CRM provider contract for organizations, people, deals, activities, and notes.",
   "icon": {
     "kind": "wordmark",

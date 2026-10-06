@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "reddit",
+  "probe_implementation": "stackos_connectors.connectors.reddit.integration:RedditIntegration",
   "name": "Reddit",
   "description": "Reddit research provider using OAuth client credentials.",
   "auth_methods": [

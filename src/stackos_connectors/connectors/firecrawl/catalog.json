@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "firecrawl",
+  "probe_implementation": "stackos_connectors.connectors.firecrawl.integration:FirecrawlIntegration",
   "name": "Firecrawl",
   "description": "Web crawling and scraping provider.",
   "auth_methods": [

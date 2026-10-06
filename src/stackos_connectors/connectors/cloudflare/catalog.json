@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "cloudflare",
+  "probe_implementation": "stackos_connectors.connectors.cloudflare.integration:CloudflareIntegration",
   "name": "Cloudflare DNS",
   "description": "Cloudflare zone discovery and individual DNS record list, get, create, edit, replace, and delete operations.",
   "auth_methods": [

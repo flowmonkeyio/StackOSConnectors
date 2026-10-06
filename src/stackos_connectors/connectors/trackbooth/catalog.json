@@ -156,6 +156,7 @@
     }
   },
   "connector": "trackbooth",
+  "probe_implementation": "stackos_connectors.connectors.trackbooth.probe:Integration",
   "description": "Discover Trackbooth Agent API operations and execute explicitly registered native routes.",
   "icon": {
     "kind": "wordmark",

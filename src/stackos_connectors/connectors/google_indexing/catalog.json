@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-indexing",
+  "probe_implementation": "stackos_connectors.connectors.google_indexing.integration:GoogleIndexingIntegration",
   "name": "Google Indexing API",
   "description": "Submit eligible job posting or livestream URL notifications and read notification history. Acceptance does not prove indexing.",
   "auth_methods": [

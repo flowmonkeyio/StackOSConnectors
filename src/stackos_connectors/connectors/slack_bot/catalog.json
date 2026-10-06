@@ -545,6 +545,7 @@
     }
   },
   "connector": "slack-bot",
+  "probe_implementation": "stackos_connectors.connectors.slack_bot.probe:Integration",
   "description": "Call Slack Web API methods for identity, messages, conversations, reactions and external file uploads.",
   "icon": {
     "kind": "icon",

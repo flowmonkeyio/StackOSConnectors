@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "google-analytics",
+  "probe_implementation": "stackos_connectors.connectors.google_analytics.integration:GoogleAnalyticsIntegration",
   "name": "Google Analytics 4",
   "description": "GA4 account discovery, metadata, standard reports, and realtime report reads.",
   "auth_methods": [

@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "aws-s3",
+  "probe_implementation": "stackos_connectors.connectors.aws_s3.probe:Integration",
   "name": "Amazon S3",
   "description": "Amazon S3 general-purpose bucket and optional path connection for bounded object listing, transfer, marker, delete, and exact-object move operations.",
   "auth_methods": [

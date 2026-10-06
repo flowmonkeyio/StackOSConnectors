@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "ftp",
+  "probe_implementation": "stackos_connectors.connectors.ftp.probe:Integration",
   "name": "FTP / Explicit FTPS",
   "description": "Protocol connection for stateless remote browsing, recursive agent-selected transfers, and exact remote path management.",
   "auth_methods": [

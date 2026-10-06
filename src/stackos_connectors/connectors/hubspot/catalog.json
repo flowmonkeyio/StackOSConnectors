@@ -4992,6 +4992,7 @@
     }
   },
   "connector": "hubspot",
+  "probe_implementation": "stackos_connectors.connectors.hubspot.integration:HubSpotIntegration",
   "description": "Fixed HubSpot CRM, marketing, event, preference and export APIs with native provider IDs and field names.",
   "icon": {
     "kind": "wordmark",

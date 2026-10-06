@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "reve",
+  "probe_implementation": "stackos_connectors.connectors.reve.integration:ReveImagesIntegration",
   "name": "Reve",
   "description": "Reve image create, edit, and remix provider.",
   "auth_methods": [

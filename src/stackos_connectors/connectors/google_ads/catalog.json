@@ -807,6 +807,7 @@
     }
   },
   "connector": "google-ads",
+  "probe_implementation": "stackos_connectors.connectors.google_ads.probe:probe",
   "description": "Google Ads API provider contract for customers, budgets, campaigns, ad groups, assets, ads, reporting, and conversions.",
   "icon": {
     "kind": "icon",

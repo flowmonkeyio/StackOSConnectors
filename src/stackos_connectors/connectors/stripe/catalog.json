@@ -2303,6 +2303,7 @@
     }
   },
   "connector": "stripe",
+  "probe_implementation": "stackos_connectors.connectors.stripe.integration:StripeIntegration",
   "description": "Stripe REST actions for customers, catalog objects, invoices, payments, and balances.",
   "icon": {
     "kind": "icon",

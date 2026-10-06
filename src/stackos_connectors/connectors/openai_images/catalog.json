@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "openai-images",
+  "probe_implementation": "stackos_connectors.connectors.openai_images.integration:OpenAIImagesIntegration",
   "name": "OpenAI Images",
   "description": "Image generation provider.",
   "auth_methods": [

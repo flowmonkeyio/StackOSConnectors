@@ -315,6 +315,7 @@
     }
   },
   "connector": "google-workspace",
+  "probe_implementation": "stackos_connectors.connectors.google_workspace.probe:probe",
   "description": "Gmail send and Google Calendar event provider contract.",
   "icon": {
     "kind": "wordmark",

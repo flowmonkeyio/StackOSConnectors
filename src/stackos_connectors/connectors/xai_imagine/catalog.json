@@ -1,6 +1,7 @@
 {
   "schema_version": "stackos.connector.v1",
   "connector": "xai-imagine",
+  "probe_implementation": "stackos_connectors.connectors.xai_imagine.integration:XAIImagineIntegration",
   "name": "xAI Imagine",
   "description": "Grok Imagine image and video generation provider.",
   "auth_methods": [

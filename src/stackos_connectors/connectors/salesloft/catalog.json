@@ -241,6 +241,7 @@
     }
   },
   "connector": "salesloft",
+  "probe_implementation": "stackos_connectors.connectors.salesloft.integration:SalesloftIntegration",
   "description": "Salesloft cadence provider contract.",
   "icon": {
     "kind": "icon",
