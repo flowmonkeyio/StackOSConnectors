@@ -2690,7 +2690,7 @@
       "key": "oauth2_authorization_code",
       "payload_format": "json",
       "setup": {
-        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer-token authentication; personal keys are the complete Authorization header value.",
         "fields": [
           {
             "description": null,
@@ -2747,7 +2747,7 @@
       "payload_field": "api_key",
       "payload_format": "raw",
       "setup": {
-        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+        "description": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer-token authentication; personal keys are the complete Authorization header value.",
         "fields": [
           {
             "description": null,
@@ -2776,7 +2776,7 @@
       "fallback_reason": "OAuth application creation and callback registration require an authenticated Linear workspace administrator.",
       "fallback_url": "https://linear.app/developers/oauth-2-0-authentication",
       "homepage_url": "https://linear.app/",
-      "setup_note": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer authentication; personal keys are the complete Authorization header value.",
+      "setup_note": "Register a Linear OAuth application with your callback and acquire an access token with read or write scope, or create a personal API key in Linear account settings. OAuth uses bearer-token authentication; personal keys are the complete Authorization header value.",
       "support_url": "https://linear.app/contact",
       "url_confidence": {
         "console_url": "verified",

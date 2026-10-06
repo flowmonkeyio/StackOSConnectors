@@ -4988,7 +4988,20 @@
       "fallback_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/manage-apps-in-hubspot",
       "homepage_url": "https://www.hubspot.com/",
       "signup_url": "https://app.hubspot.com/signup-hubspot/crm",
-      "support_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes"
+      "support_url": "https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes",
+      "verified_at": "2026-07-22",
+      "url_confidence": {
+        "homepage_url": "verified",
+        "signup_url": "verified",
+        "console_url": "directional",
+        "credential_url": "verified",
+        "billing_url": "verified",
+        "docs_url": "verified",
+        "support_url": "verified",
+        "fallback_url": "verified"
+      },
+      "credential_label": "HubSpot OAuth app",
+      "fallback_reason": "HubSpot app screens are account-gated; use the official app-management guide when the direct development console route changes."
     }
   },
   "connector": "hubspot",

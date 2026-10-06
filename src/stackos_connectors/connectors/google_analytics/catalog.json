@@ -467,7 +467,15 @@
     ],
     "scopes": [
       "https://www.googleapis.com/auth/analytics.readonly"
-    ]
+    ],
+    "verified_at": "2026-06-17",
+    "url_confidence": {
+      "homepage_url": "verified",
+      "console_url": "verified",
+      "credential_url": "directional",
+      "docs_url": "verified",
+      "fallback_url": "verified"
+    }
   },
   "implementation": "stackos_connectors.connectors.google_analytics.actions:GoogleAnalyticsActionConnector",
   "icon": {

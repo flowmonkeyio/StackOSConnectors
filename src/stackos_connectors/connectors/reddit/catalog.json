@@ -170,7 +170,15 @@
       "https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki",
       "https://redditinc.com/policies/data-api-terms",
       "https://github.com/reddit-archive/reddit/wiki/oauth2"
-    ]
+    ],
+    "verified_at": "2026-06-11",
+    "url_confidence": {
+      "homepage_url": "verified",
+      "signup_url": "verified",
+      "console_url": "verified",
+      "credential_url": "verified",
+      "docs_url": "verified"
+    }
   },
   "implementation": "stackos_connectors.connectors.reddit.actions:RedditActionConnector",
   "icon": {
