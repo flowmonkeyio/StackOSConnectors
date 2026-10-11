@@ -189,6 +189,8 @@ async def main():
                     "id": "driver-account",
                     "api_domain": "https://fixture.pipedrive.com",
                     "instance_url": "https://fixture.salesforce.com",
+                    "x_refresh_token_expires_in": 86400,
+                    "x_refresh_token_hard_expires_in": 172800,
                 },
             )
 
@@ -218,6 +220,11 @@ async def main():
                 **kwargs,
             )
             assert not http.is_closed
+        if provider == "quickbooks-online":
+            assert dict(result.metadata) == {
+                "x_refresh_token_expires_in": 86400,
+                "x_refresh_token_hard_expires_in": 172800,
+            }
         assert result.access_token == ACCESS and result.scopes_present
         assert ACCESS not in repr(result) and SECRET not in repr(auth)
     assert len(grant_calls) == 17  # Meta explicitly performs its second exchange.

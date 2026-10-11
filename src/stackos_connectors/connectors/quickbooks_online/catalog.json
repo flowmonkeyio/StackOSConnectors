@@ -184,7 +184,11 @@
     "scopes": [
       "com.intuit.quickbooks.accounting"
     ],
-    "response_account_id_field": null
+    "response_account_id_field": null,
+    "response_metadata_fields": [
+      "x_refresh_token_expires_in",
+      "x_refresh_token_hard_expires_in"
+    ]
   },
   "actions": [
     {

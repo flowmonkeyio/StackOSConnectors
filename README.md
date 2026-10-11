@@ -175,14 +175,19 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.4
+python -m pip install stackos-connectors==0.2.5
 ```
 
-Or add `stackos-connectors==0.2.4` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.5` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+### 0.2.5 release notes
+
+- Preserve provider-supplied QuickBooks refresh-token lifetime metadata for explicit code and refresh grants, including an optional hard expiry.
+- Leave missing lifetime evidence absent; callers retain validation, expiration and rotated-token custody.
 
 ### 0.2.4 release notes
 

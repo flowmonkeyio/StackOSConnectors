@@ -8,6 +8,8 @@ The [catalog](../catalog.json) owns fixed Intuit OAuth declarations. Use the pub
 
 The caller owns application secrets, state verification, callback handling, binding the returned `realmId` to the intended company, token custody/expiration, refresh concurrency and permissions. Supply only resolved `access_token` in action auth fields, and `{ "environment": "sandbox", "realm_id": "123456789" }` in action auth config. The environment must be `sandbox` or `production`; endpoints cannot be overridden. Code/token grants accept application fields separately from action execution validation.
 
+Code and refresh grants preserve provider-supplied `x_refresh_token_expires_in` and `x_refresh_token_hard_expires_in` in `TokenResult.metadata`. Missing values stay absent; no lifetime is invented and no hard-expiry opt-in header is added. Metadata values are provider evidence, not validated timestamps: the caller must validate their type and range, derive conservative expiry from request start, retain known hard ceilings and atomically store expiry with any rotated refresh token.
+
 An omitted token response scope remains unknown; the requested accounting scope is not evidence of an actual grant. An omitted refresh token remains absent in `TokenResult`; the caller decides whether to retain a prior value. Unknown refresh outcomes require caller reconciliation, not automatic replay. `CompanyInfo.Id` is a separate entity identifier and need not equal callback `realmId`.
 
 Both method setup forms require an explicit environment and numeric company realm

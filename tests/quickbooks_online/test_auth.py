@@ -40,8 +40,15 @@ def test_declared_accounting_consent_and_explicit_grants():
 
 
 @pytest.mark.parametrize("grant", ["authorization_code", "refresh_token"])
-async def test_explicit_grants_use_fixed_basic_endpoint_once(grant):
+@pytest.mark.parametrize("with_lifetimes", [False, True])
+@pytest.mark.parametrize("rotated_token", [None, "rotated-canary"])
+async def test_explicit_grants_use_fixed_basic_endpoint_once(grant, with_lifetimes, rotated_token):
     calls = []
+    lifetimes = (
+        {"x_refresh_token_expires_in": 86400, "x_refresh_token_hard_expires_in": 172800}
+        if with_lifetimes
+        else {}
+    )
 
     def handler(request):
         calls.append(request)
@@ -62,10 +69,11 @@ async def test_explicit_grants_use_fixed_basic_endpoint_once(grant):
             200,
             json={
                 "access_token": "new-canary",
-                "refresh_token": "rotated-canary",
+                **({"refresh_token": rotated_token} if rotated_token is not None else {}),
                 "expires_in": 3600,
                 "token_type": "bearer",
-                "x_refresh_token_expires_in": 86400,
+                **lifetimes,
+                "private_provider_extension": "private-canary",
             },
         )
 
@@ -78,7 +86,8 @@ async def test_explicit_grants_use_fixed_basic_endpoint_once(grant):
         result = await request_token(PROVIDER, auth=APP, grant_type=grant, http=http, **kwargs)
         assert not http.is_closed
     assert len(calls) == 1
-    assert result.access_token == "new-canary" and result.refresh_token == "rotated-canary"
+    assert result.access_token == "new-canary" and result.refresh_token == rotated_token
+    assert dict(result.metadata) == lifetimes
     assert result.expires_in == 3600
     assert result.account_id is None and not result.scopes_present
     assert "canary" not in repr(result)
