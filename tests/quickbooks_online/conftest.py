@@ -26,12 +26,7 @@ def auth(**config):
 
 
 def page(*invoices, position=1, **metadata):
-    import json
-
-    fields = {"startPosition": position, "maxResults": len(invoices), **metadata}
-    return (
-        '{"QueryResponse":{"Invoice":[' + ",".join(invoices) + "]," + json.dumps(fields)[1:] + "}"
-    )
+    return entity_page("Invoice", *invoices, position=position, **metadata)
 
 
 @pytest.fixture
@@ -55,3 +50,27 @@ def execute():
         return result.output_json, requests
 
     return call
+
+
+def entity_input(entity, *, transaction=False, singleton=False):
+    result = {"entity": entity}
+    if not singleton:
+        result.update(start_position=1, max_results=100)
+    if transaction:
+        result.update(txn_date_from="2026-01-01", txn_date_to="2026-01-31")
+    return result
+
+
+def entity_page(entity, *records, position=1, **metadata):
+    import json
+
+    fields = {"startPosition": position, "maxResults": len(records), **metadata}
+    return (
+        '{"QueryResponse":{"'
+        + entity
+        + '":['
+        + ",".join(records)
+        + "],"
+        + json.dumps(fields)[1:]
+        + "}"
+    )

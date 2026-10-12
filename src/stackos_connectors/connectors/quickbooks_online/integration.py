@@ -10,7 +10,7 @@ import httpx
 from stackos_connectors.errors import ConnectorError, IntegrationDownError, RateLimitedError
 from stackos_connectors.shared.base import BaseIntegration, IntegrationCallResult
 
-from .response import CompanyInfo, InvoicePage
+from .response import CompanyInfo, InvoicePage, RecordsPage
 
 HOSTS = {
     "sandbox": "https://sandbox-quickbooks.api.intuit.com",
@@ -41,7 +41,7 @@ class QuickBooksIntegration(BaseIntegration):
         realm_id: str,
         token: str,
         path: str,
-        parser: Callable[[httpx.Response], CompanyInfo | InvoicePage],
+        parser: Callable[[httpx.Response], CompanyInfo | InvoicePage | RecordsPage],
         params: dict[str, str] | None = None,
     ) -> IntegrationCallResult:
         try:

@@ -1,4 +1,4 @@
-"""Validate QBO envelopes while retaining exact invoice JSON source fragments."""
+"""Validate QBO envelopes while retaining exact native JSON source fragments."""
 
 from __future__ import annotations
 
@@ -13,25 +13,40 @@ import httpx
 from stackos_connectors.errors import ConnectorError
 from stackos_connectors.redaction import redact_secret_values
 
+from .entities import ENTITIES, Entity
+
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
-MAX_INVOICE_BYTES = 16 * 1024
+MAX_RECORD_BYTES = 16 * 1024
+MAX_INVOICE_BYTES = MAX_RECORD_BYTES  # Existing private import compatibility.
 _WS = re.compile(r"[ \t\n\r]*")
 _DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 type JsonValue = dict[str, JsonValue] | list[JsonValue] | str | int | Decimal | bool | None
 
 
-class InvoiceRecord(TypedDict):
+class SourceRecord(TypedDict):
     native_id: str
     raw_json: str
     source_revision: NotRequired[str]
     source_updated_at: NotRequired[str]
 
 
-class InvoicePage(TypedDict):
-    invoices: list[InvoiceRecord]
+class PageMetadata(TypedDict):
     start_position: int
     max_results: int
     count: int
+    total_count: NotRequired[int]
+
+
+class InvoicePage(PageMetadata):
+    invoices: list[SourceRecord]
+
+
+class RecordsPage(TypedDict):
+    entity: str
+    records: list[SourceRecord]
+    count: int
+    start_position: NotRequired[int]
+    max_results: NotRequired[int]
     total_count: NotRequired[int]
 
 
@@ -137,7 +152,7 @@ def _member_text(text: str, member: str) -> str:
     raise ValueError("missing member")
 
 
-def _invoice_fragments(text: str) -> list[str]:
+def _record_fragments(text: str) -> list[str]:
     """Slice already validated array entries; never serialize parsed amounts."""
     result: list[str] = []
     position = _skip(text, 0) + 1
@@ -145,8 +160,6 @@ def _invoice_fragments(text: str) -> list[str]:
         start = position
         _, position = _DECODER.raw_decode(text, start)
         fragment = text[start:position]
-        if len(fragment.encode("utf-8")) > MAX_INVOICE_BYTES:
-            raise ValueError("invoice too large")
         result.append(fragment)
         position = _skip(text, position)
         if text[position] == ",":
@@ -154,32 +167,17 @@ def _invoice_fragments(text: str) -> list[str]:
     return result
 
 
-def _validate_invoice_fields(invoice: dict[str, JsonValue], date_from: str, date_to: str) -> None:
-    transaction_date = calendar_date(invoice.get("TxnDate"))
-    if not date_from <= transaction_date <= date_to:
-        raise ValueError("invoice outside requested dates")
-    if "DueDate" in invoice:
-        calendar_date(invoice["DueDate"])
-    for name in ("TotalAmt", "Balance"):
-        if name in invoice and (type(invoice[name]) not in (int, Decimal)):
-            raise ValueError("invalid amount")
-    for name in ("CustomerRef", "CurrencyRef"):
-        if name in invoice:
-            reference = _object(invoice[name])
-            _identity(reference.get("value"))
-            if "name" in reference and not isinstance(reference["name"], str):
-                raise ValueError("invalid reference name")
-
-
-def _record(invoice: dict[str, JsonValue], raw: str) -> InvoiceRecord:
-    result: InvoiceRecord = {"native_id": _identity(invoice.get("Id")), "raw_json": raw}
-    if "SyncToken" in invoice:
-        revision = _identity(invoice["SyncToken"])
+def _record(value: dict[str, JsonValue], raw: str) -> SourceRecord:
+    if len(raw.encode("utf-8")) > MAX_RECORD_BYTES:
+        raise ValueError("record too large")
+    result: SourceRecord = {"native_id": _identity(value.get("Id")), "raw_json": raw}
+    if "SyncToken" in value:
+        revision = _identity(value["SyncToken"])
         if not re.fullmatch(r"[0-9]+", revision):
             raise ValueError("invalid revision")
         result["source_revision"] = revision
-    if "MetaData" in invoice:
-        metadata = _object(invoice["MetaData"])
+    if "MetaData" in value:
+        metadata = _object(value["MetaData"])
         if "LastUpdatedTime" in metadata:
             timestamp = _identity(metadata["LastUpdatedTime"])
             if datetime.fromisoformat(timestamp).tzinfo is None:
@@ -188,15 +186,14 @@ def _record(invoice: dict[str, JsonValue], raw: str) -> InvoiceRecord:
     return result
 
 
-def _page_metadata(query: dict[str, JsonValue], count: int, start: int, limit: int) -> InvoicePage:
+def _page_metadata(query: dict[str, JsonValue], count: int, start: int, limit: int) -> PageMetadata:
     position = _integer(query.get("startPosition", start), 1)
     maximum = _integer(query.get("maxResults", 0))
     if position != start or maximum != count or count > limit:
         raise ValueError("inconsistent page")
     if count and "startPosition" not in query:
         raise ValueError("missing page position")
-    result: InvoicePage = {
-        "invoices": [],
+    result: PageMetadata = {
         "start_position": position,
         "max_results": maximum,
         "count": count,
@@ -204,6 +201,114 @@ def _page_metadata(query: dict[str, JsonValue], count: int, start: int, limit: i
     if "totalCount" in query:
         result["total_count"] = _integer(query["totalCount"])
     return result
+
+
+def _validate_native_fields(value: dict[str, JsonValue], entity: Entity) -> None:
+    for name in entity.strings:
+        if name in value and not isinstance(value[name], str):
+            raise ValueError("invalid string")
+    for name in entity.numbers:
+        if name in value and type(value[name]) not in (int, Decimal):
+            raise ValueError("invalid number")
+    for name in entity.booleans:
+        if name in value and type(value[name]) is not bool:
+            raise ValueError("invalid boolean")
+    for name in entity.dates:
+        if name in value:
+            calendar_date(value[name])
+    for name in entity.references:
+        if name in value:
+            reference = _object(value[name])
+            _identity(reference.get("value"))
+            if "name" in reference and not isinstance(reference["name"], str):
+                raise ValueError("invalid reference name")
+    if entity.name == "Preferences" and "CurrencyPrefs" in value:
+        preferences = _object(value["CurrencyPrefs"])
+        if (
+            "MultiCurrencyEnabled" in preferences
+            and type(preferences["MultiCurrencyEnabled"]) is not bool
+        ):
+            raise ValueError("invalid currency preference")
+        if "HomeCurrency" in preferences:
+            _identity(_object(preferences["HomeCurrency"]).get("value"))
+
+
+def _validate_record_fields(
+    value: dict[str, JsonValue],
+    entity: Entity,
+    date_from: str | None,
+    date_to: str | None,
+) -> None:
+    if entity.kind == "transaction":
+        assert date_from is not None and date_to is not None
+        transaction_date = calendar_date(value.get("TxnDate"))
+        if not date_from <= transaction_date <= date_to:
+            raise ValueError("transaction outside requested dates")
+    _validate_native_fields(value, entity)
+
+
+def _query_records(
+    text: str,
+    document: dict[str, JsonValue],
+    entity: Entity,
+    start: int,
+    limit: int,
+    date_from: str | None,
+    date_to: str | None,
+) -> RecordsPage:
+    query = _object(document.get("QueryResponse"))
+    if query.keys() - {*entity.response_keys, "startPosition", "maxResults", "totalCount"}:
+        raise ValueError("unexpected query response")
+    present = [key for key in entity.response_keys if key in query]
+    if len(present) > 1:
+        raise ValueError("ambiguous entity response")
+    records = query[present[0]] if present else []
+    if not isinstance(records, list):
+        raise ValueError("expected record array")
+    metadata = _page_metadata(query, len(records), start, limit)
+    fragments = (
+        _record_fragments(_member_text(_member_text(text, "QueryResponse"), present[0]))
+        if records
+        else []
+    )
+    result: RecordsPage = {"entity": entity.name, "records": [], **metadata}
+    identities: set[str] = set()
+    for value, raw in zip(records, fragments, strict=True):
+        native = _object(value)
+        _validate_record_fields(native, entity, date_from, date_to)
+        record = _record(native, raw)
+        if record["native_id"] in identities:
+            raise ValueError("duplicate record identity")
+        identities.add(record["native_id"])
+        result["records"].append(record)
+    return result
+
+
+def parse_records(
+    response: httpx.Response,
+    *,
+    secrets: tuple[str, ...],
+    entity: Entity,
+    start: int | None = None,
+    limit: int | None = None,
+    date_from: str | None = None,
+    date_to: str | None = None,
+) -> RecordsPage:
+    try:
+        text, document = _document(response, secrets)
+        if "Fault" in document:
+            raise ValueError("provider fault")
+        if entity.kind == "singleton":
+            if document.keys() - {entity.name, "time"}:
+                raise ValueError("unexpected singleton response")
+            native = _object(document.get(entity.name))
+            _validate_native_fields(native, entity)
+            record = _record(native, _member_text(text, entity.name))
+            return {"entity": entity.name, "records": [record], "count": 1}
+        assert start is not None and limit is not None
+        return _query_records(text, document, entity, start, limit, date_from, date_to)
+    except (ValueError, TypeError, OverflowError, RecursionError, DecimalException):
+        raise invalid_response() from None
 
 
 def parse_invoice_page(
@@ -215,34 +320,24 @@ def parse_invoice_page(
     date_from: str,
     date_to: str,
 ) -> InvoicePage:
-    try:
-        text, document = _document(response, secrets)
-        query = _object(document.get("QueryResponse"))
-        if query.keys() - {"Invoice", "startPosition", "maxResults", "totalCount"}:
-            raise ValueError("unexpected query response")
-        if "Fault" in document:
-            raise ValueError("provider fault")
-        invoices = query.get("Invoice", [])
-        if not isinstance(invoices, list):
-            raise ValueError("expected invoice array")
-        result = _page_metadata(query, len(invoices), start, limit)
-        fragments = (
-            _invoice_fragments(_member_text(_member_text(text, "QueryResponse"), "Invoice"))
-            if invoices
-            else []
-        )
-        identities: set[str] = set()
-        for value, raw in zip(invoices, fragments, strict=True):
-            invoice = _object(value)
-            _validate_invoice_fields(invoice, date_from, date_to)
-            record = _record(invoice, raw)
-            if record["native_id"] in identities:
-                raise ValueError("duplicate invoice identity")
-            identities.add(record["native_id"])
-            result["invoices"].append(record)
-        return result
-    except (ValueError, TypeError, OverflowError, RecursionError, DecimalException):
-        raise invalid_response() from None
+    page = parse_records(
+        response,
+        secrets=secrets,
+        entity=ENTITIES["Invoice"],
+        start=start,
+        limit=limit,
+        date_from=date_from,
+        date_to=date_to,
+    )
+    result: InvoicePage = {
+        "invoices": page["records"],
+        "start_position": page["start_position"],
+        "max_results": page["max_results"],
+        "count": page["count"],
+    }
+    if "total_count" in page:
+        result["total_count"] = page["total_count"]
+    return result
 
 
 def parse_company_info(

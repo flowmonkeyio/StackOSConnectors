@@ -184,6 +184,17 @@ Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
 
+### 0.2.6 release candidate
+
+- Add `quickbooks-online.records.list` for 30 finite accounting transaction,
+  reference and singleton entity reads, with validated scope and fixed provider
+  destinations. Preserve the existing invoice, company-info and OAuth interfaces.
+- Reuse exact JSON evidence parsing, decimal preservation, credential-echo
+  rejection and bounded transport across the catalog.
+- This is core accounting acquisition, not all QuickBooks products or a financial
+  ledger. See the [provider contract](src/stackos_connectors/connectors/quickbooks_online/docs/quickbooks-online.md)
+  for the supported catalog, exclusions and live verification limitations.
+
 ### 0.2.5 release notes
 
 - Preserve provider-supplied QuickBooks refresh-token lifetime metadata for explicit code and refresh grants, including an optional hard expiry.

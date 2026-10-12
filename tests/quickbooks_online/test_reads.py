@@ -8,11 +8,12 @@ from stackos_connectors import CallOptions, ConnectorError, ValidationError, get
 from .conftest import INPUT, INVOICE, auth, page
 
 
-def test_catalog_has_only_two_reads():
+def test_catalog_has_only_supported_reads():
     described = get_default_client().describe("quickbooks-online")
     assert {a["key"] for a in described["actions"]} == {
         "quickbooks-online.company-info.get",
         "quickbooks-online.invoices.list",
+        "quickbooks-online.records.list",
     }
     assert all(a["risk_level"] == "read" for a in described["actions"])
 

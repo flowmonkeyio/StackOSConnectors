@@ -59,7 +59,7 @@ ACCESS = "driver-access-canary"
 async def quickbooks_reads(client):
     """Exercise the installed QBO action factory through the public API."""
     description = client.describe("quickbooks-online")
-    assert len(description["actions"]) == 2
+    assert len(description["actions"]) == 3
     for method in description["auth_methods"]:
         assert method["setup"]["label"]
         setup_fields = {field["key"]: field for field in method["setup"]["fields"]}
@@ -108,8 +108,8 @@ async def quickbooks_reads(client):
             {
                 "txn_date_from": "2026-01-01",
                 "txn_date_to": "2026-01-31",
-                "start_position": 1,
-                "max_results": 10,
+                "start_position": 1.0,
+                "max_results": 10.0,
             },
             auth,
             options,
@@ -131,6 +131,97 @@ async def quickbooks_reads(client):
         }
         assert not http.is_closed
     assert len(calls) == 3
+
+
+async def quickbooks_records(client):
+    """Check the packaged finite catalog, response owner and native source preservation."""
+    transactions = (
+        "Invoice",
+        "Payment",
+        "SalesReceipt",
+        "RefundReceipt",
+        "CreditMemo",
+        "Bill",
+        "BillPayment",
+        "Purchase",
+        "VendorCredit",
+        "Deposit",
+        "Transfer",
+        "JournalEntry",
+        "Estimate",
+        "PurchaseOrder",
+        "CreditCardPayment",
+        "InventoryAdjustment",
+    )
+    references = (
+        "Account",
+        "Customer",
+        "Vendor",
+        "Employee",
+        "Item",
+        "Class",
+        "Department",
+        "PaymentMethod",
+        "Term",
+        "TaxCode",
+        "TaxRate",
+        "TaxAgency",
+    )
+    singletons = {"CompanyInfo": "companyinfo/123456789", "Preferences": "preferences"}
+    auth = ConnectorAuth(
+        "oauth2_token",
+        {"access_token": ACCESS},
+        config={"environment": "sandbox", "realm_id": "123456789"},
+    )
+    for entity in (*transactions, *references, *singletons):
+        raw = '{ "Id":"41", "NativeNumber":9007199254740993.0100'
+        if entity in transactions:
+            raw += ', "TxnDate":"2026-01-31"'
+        raw += "}"
+        data = {"entity": entity}
+        if entity not in singletons:
+            data.update(start_position=1.0, max_results=100.0)
+        if entity in transactions:
+            data.update(txn_date_from="2026-01-01", txn_date_to="2026-01-31")
+
+        def edge(request, selected=entity, record=raw):
+            assert request.method == "GET"
+            assert request.url.host == "sandbox-quickbooks.api.intuit.com"
+            if selected in singletons:
+                assert request.url.path.endswith("/" + singletons[selected])
+                return httpx.Response(200, content='{"' + selected + '":' + record + "}")
+            identifier = "creditcardpayment" if selected == "CreditCardPayment" else selected
+            predicate = ""
+            if selected in transactions:
+                predicate = " where TxnDate >= '2026-01-01' and TxnDate <= '2026-01-31'"
+            elif selected != "TaxAgency":
+                predicate = " where Active IN (true, false)"
+            assert request.url.params["query"] == (
+                f"select * from {identifier}{predicate} STARTPOSITION 1 MAXRESULTS 100"
+            )
+            key = "CreditCardPaymentTxn" if selected == "CreditCardPayment" else selected
+            return httpx.Response(
+                200,
+                content='{"QueryResponse":{"'
+                + key
+                + '":['
+                + record
+                + '],"startPosition":1,"maxResults":1}}',
+            )
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(edge)) as http:
+            output = await client.execute(
+                "quickbooks-online",
+                "quickbooks-online.records.list",
+                data,
+                auth,
+                CallOptions(http=http),
+            )
+            assert output.output_json["entity"] == entity
+            assert output.output_json["records"] == [{"native_id": "41", "raw_json": raw}]
+            assert output.output_json["count"] == 1
+            assert ("start_position" in output.output_json) == (entity not in singletons)
+            assert not http.is_closed
 
 
 async def main():
@@ -328,6 +419,7 @@ async def main():
     auth_api.request_token = implicit_grant
     oauth_protocol.request_token = implicit_grant
     await quickbooks_reads(client)
+    await quickbooks_records(client)
     client.describe("google-workspace")
     config = project_probe_config(
         "wordpress", {"site_url": "https://fixture.test", "account_ref": "private"}
@@ -422,6 +514,7 @@ async def main():
                     "slack_v0",
                     "hubspot_v3",
                     "quickbooks_exact_reads",
+                    "quickbooks_30_entity_reads",
                     "quickbooks_company_probe",
                 ],
                 "network": "blocked; injected edges only",
