@@ -86,9 +86,27 @@ Use `ConnectorAuth("oauth2_token", {"access_token": token}, config={"environment
 
 Invoice queries use inclusive valid calendar dates on `TxnDate` and provider-order offset pagination. The query uses `STARTPOSITION` and `MAXRESULTS`, matching the [current official PHP SDK query builder](https://github.com/intuit/QuickBooks-V3-PHP-SDK/blob/master/src/QueryFilter/QueryMessage.php). Explicit ordering is omitted because this increment does not require it and Invoice `Id` sort support was not established by primary evidence. Dates must be ordered, start position is 1-based (maximum 2147483647), and page size is 1–100. There is no arbitrary SQL, URL, write, or minor-version override. Sandbox requests use `sandbox-quickbooks.api.intuit.com`; production requests use `quickbooks.api.intuit.com`.
 
-Every invoice carries `native_id`, exact UTF-8 `raw_json`, optional `source_revision` from supplied `SyncToken` and optional `source_updated_at` from supplied offset-aware `MetaData.LastUpdatedTime`. Object text is sliced from the response, retaining whitespace, escaping, numeric precision and scale. Monetary numbers are validated with decimal decoding and are never decoded as binary floats or reserialized. Supplied totals/balances may be zero or negative. Missing currency and other optional fields remain missing; no currency is inferred. Amounts and balances describe the provider's current response, not historical balances or revenue.
+Every invoice carries `native_id`, exact UTF-8 `raw_json`, optional `source_revision` from supplied `SyncToken` and optional `source_updated_at` from supplied `MetaData.LastUpdatedTime`. Object text is sliced from the response, retaining whitespace, escaping, numeric precision and scale. Monetary numbers are validated with decimal decoding and are never decoded as binary floats or reserialized. Supplied totals/balances may be zero or negative. Missing currency and other optional fields remain missing; no currency is inferred. Amounts and balances describe the provider's current response, not historical balances or revenue.
 
-The provider validates the returned envelope and metadata because the public output schema is descriptive. Duplicate JSON keys anywhere, duplicate invoice IDs in a page, invalid identities/amounts/dates, invoices outside the requested dates, inconsistent positions/counts, malformed metadata, records above 16 KiB and response bodies above 2 MiB fail safely. The response-size check occurs after shared HTTP buffering. Credential echoes in raw text or decoded keys/values fail before registry redaction; evidence is never silently scrubbed and returned as exact.
+The provider validates the returned envelope and metadata because the public output schema is descriptive. Duplicate JSON keys anywhere, duplicate invoice IDs in a page, invalid identities/amounts, unselectable transaction dates or dates outside the requested window, inconsistent positions/counts, invalid bounded source metadata, records above 16 KiB and response bodies above 2 MiB fail safely. The response-size check occurs after shared HTTP buffering. Credential echoes in raw text or decoded keys/values fail before registry redaction; evidence is never silently scrubbed and returned as exact.
+
+Returned temporal evidence is separate from strict request dates. Supplied
+`MetaData.LastUpdatedTime` and guarded optional native dates such as Invoice/Bill
+`DueDate` must be nonblank strings of at most 128 characters; they remain exact
+untrusted text, with no parsing, trimming or reformatting. Missing optional values
+stay absent. The consumer owns full temporal validity and any narrower custody
+bounds; a successful read does not certify these strings as canonical values.
+
+For transaction-window containment, a returned `TxnDate` must select a printed
+four-digit `YYYY-MM-DD` from the finite Date/DateTime spelling: optional uppercase
+`T` followed by `HH:MM:SS` and an optional decimal fraction, then optional `Z` or
+`±HH:MM`. Compare that printed day inclusively with the strict request bounds.
+Local times, offsets, fractions and hour 24 retain their supplied spelling; no UTC
+conversion or next-day rollover is performed. Missing, nonstring, blank,
+over-128-character, structurally unselectable or out-of-window transaction values
+fail safely. Gregorian/time/offset validity and field precision remain consumer
+responsibilities. Request dates still require valid unzoned calendar dates.
+The native 16 KiB record and 2 MiB response ceilings are unchanged.
 
 A missing `Invoice` array in an otherwise empty `QueryResponse` means an empty page. Empty pages may omit position/count metadata; returned position then repeats the requested position and count is zero. Nonempty pages require `startPosition` and `maxResults` matching the request and returned count. Supplied `totalCount` is retained only as a nonnegative integer; its semantics are not used for termination.
 

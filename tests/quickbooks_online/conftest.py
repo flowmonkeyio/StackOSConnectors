@@ -74,3 +74,16 @@ def entity_page(entity, *records, position=1, **metadata):
         + json.dumps(fields)[1:]
         + "}"
     )
+
+
+def temporal_record(*, txn_date='"2026-01-31"', due_date=None, updated_at=None):
+    """Literal HTTP record control; arguments are exact JSON member tokens."""
+    fields = ['"Id":"42"', '"SyncToken":"3"']
+    if txn_date is not None:
+        fields.append('"TxnDate":' + txn_date)
+    if due_date is not None:
+        fields.append('"DueDate":' + due_date)
+    fields.extend(['"TotalAmt":9007199254740993.0100', '"Line":[{"Amount":-1e-20}]'])
+    if updated_at is not None:
+        fields.append('"MetaData":{"LastUpdatedTime":' + updated_at + "}")
+    return "{ " + ", ".join(fields) + "}"

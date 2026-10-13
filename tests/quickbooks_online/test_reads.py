@@ -5,7 +5,7 @@ import pytest
 
 from stackos_connectors import CallOptions, ConnectorError, ValidationError, get_default_client
 
-from .conftest import INPUT, INVOICE, auth, page
+from .conftest import INPUT, INVOICE, auth, page, temporal_record
 
 
 def test_catalog_has_only_supported_reads():
@@ -78,6 +78,11 @@ async def test_zero_missing_currency_and_internal_whitespace_preserved(execute):
         {**INPUT, "txn_date_from": "2026-02-30"},
         {**INPUT, "txn_date_to": "2025-12-31"},
         {**INPUT, "txn_date_from": "2026-1-1"},
+        {**INPUT, "txn_date_from": "2026-01-01Z"},
+        {**INPUT, "txn_date_from": "2026-01-01+01:00"},
+        {**INPUT, "txn_date_from": "2026-01-01T01:02:03"},
+        {**INPUT, "txn_date_to": "2026-01-31Z"},
+        {**INPUT, "txn_date_to": "2026-01-31T01:02:03"},
         {**INPUT, "max_results": 101},
         {**INPUT, "max_results": True},
         {**INPUT, "start_position": 0},
@@ -234,7 +239,7 @@ async def test_optional_source_metadata_and_provider_total_are_preserved(execute
         page(INVOICE).replace('"startPosition": 1, ', ""),
         page(INVOICE).replace(', "maxResults": 1', ""),
         page(INVOICE).replace(
-            '"LastUpdatedTime":"2026-02-01T13:01:02-08:00"', '"LastUpdatedTime":"2026-02-01"'
+            '"LastUpdatedTime":"2026-02-01T13:01:02-08:00"', '"LastUpdatedTime":null'
         ),
         page(INVOICE).replace('"Balance":-0.0100', '"Balance":true'),
         page(INVOICE).replace('"TotalAmt":12345678901234567890.123456789', '"TotalAmt":"1.2"'),
@@ -342,3 +347,43 @@ async def test_connector_closes_only_its_owned_client(monkeypatch, valid):
         with pytest.raises(ConnectorError):
             await call
     assert owned.is_closed
+
+
+@pytest.mark.parametrize(
+    "updated_at",
+    ["2028-02-29T01:02:03", "2028-02-29T24:00:00", "not-a-date"],
+)
+async def test_existing_invoice_action_preserves_returned_temporal_custody(execute, updated_at):
+    raw = temporal_record(
+        txn_date='"2026-01-31-12:00"',
+        due_date='"2026-01-31+05:30"',
+        updated_at=json.dumps(updated_at),
+    )
+    output, requests = await execute(page(raw))
+    assert output["invoices"] == [
+        {
+            "native_id": "42",
+            "source_revision": "3",
+            "source_updated_at": updated_at,
+            "raw_json": raw,
+        }
+    ]
+    assert len(requests) == 1
+
+
+async def test_temporal_transport_preserves_exact_literal_http_numeric_and_fraction_bytes(execute):
+    raw = (
+        '{ "Id":"42", "SyncToken":"3", "TxnDate":"2026-01-31-12:00",'
+        ' "DueDate":"2026-01-31+05:30", "TotalAmt":9007199254740993.0100,'
+        ' "Line":[{"Amount":-1e-20}],'
+        ' "MetaData":{"LastUpdatedTime":"2026-01-31T01:02:03.120000000-07:00"}}'
+    )
+    output, _ = await execute(page(raw))
+    assert output["invoices"] == [
+        {
+            "native_id": "42",
+            "source_revision": "3",
+            "source_updated_at": "2026-01-31T01:02:03.120000000-07:00",
+            "raw_json": raw,
+        }
+    ]

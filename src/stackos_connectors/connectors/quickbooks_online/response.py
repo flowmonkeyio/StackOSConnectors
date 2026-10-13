@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal, DecimalException
 from typing import NotRequired, TypedDict, cast
 
@@ -20,6 +20,11 @@ MAX_RECORD_BYTES = 16 * 1024
 MAX_INVOICE_BYTES = MAX_RECORD_BYTES  # Existing private import compatibility.
 _WS = re.compile(r"[ \t\n\r]*")
 _DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
+_SOURCE_CALENDAR = re.compile(
+    r"([0-9]{4}-[0-9]{2}-[0-9]{2})"
+    r"(?:T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?)?"
+    r"(?:Z|[+-][0-9]{2}:[0-9]{2})?"
+)
 type JsonValue = dict[str, JsonValue] | list[JsonValue] | str | int | Decimal | bool | None
 
 
@@ -124,6 +129,21 @@ def _identity(value: JsonValue) -> str:
     return value
 
 
+def _source_text(value: JsonValue) -> str:
+    """Keep bounded untrusted source text exact; the consumer owns semantics."""
+    if not isinstance(value, str) or not value.strip() or len(value) > 128:
+        raise ValueError("invalid source text")
+    return value
+
+
+def _supplied_calendar_date(value: JsonValue) -> str:
+    """Select the printed day from source Date/DateTime, without instant conversion."""
+    match = _SOURCE_CALENDAR.fullmatch(_source_text(value))
+    if match is None:
+        raise ValueError("unselectable source date")
+    return match[1]
+
+
 def _integer(value: JsonValue, minimum: int = 0) -> int:
     if type(value) is not int or value < minimum:
         raise ValueError("invalid integer")
@@ -179,10 +199,7 @@ def _record(value: dict[str, JsonValue], raw: str) -> SourceRecord:
     if "MetaData" in value:
         metadata = _object(value["MetaData"])
         if "LastUpdatedTime" in metadata:
-            timestamp = _identity(metadata["LastUpdatedTime"])
-            if datetime.fromisoformat(timestamp).tzinfo is None:
-                raise ValueError("timestamp must include offset")
-            result["source_updated_at"] = timestamp
+            result["source_updated_at"] = _source_text(metadata["LastUpdatedTime"])
     return result
 
 
@@ -215,7 +232,7 @@ def _validate_native_fields(value: dict[str, JsonValue], entity: Entity) -> None
             raise ValueError("invalid boolean")
     for name in entity.dates:
         if name in value:
-            calendar_date(value[name])
+            _source_text(value[name])
     for name in entity.references:
         if name in value:
             reference = _object(value[name])
@@ -241,7 +258,7 @@ def _validate_record_fields(
 ) -> None:
     if entity.kind == "transaction":
         assert date_from is not None and date_to is not None
-        transaction_date = calendar_date(value.get("TxnDate"))
+        transaction_date = _supplied_calendar_date(value.get("TxnDate"))
         if not date_from <= transaction_date <= date_to:
             raise ValueError("transaction outside requested dates")
     _validate_native_fields(value, entity)

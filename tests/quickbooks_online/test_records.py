@@ -7,7 +7,7 @@ import pytest
 
 from stackos_connectors import CallOptions, ConnectorError, ValidationError, get_default_client
 
-from .conftest import auth, entity_input, entity_page
+from .conftest import auth, entity_input, entity_page, temporal_record
 
 TRANSACTIONS = (
     "Invoice",
@@ -200,7 +200,7 @@ async def test_reference_optional_and_inactive_fields_preserved(execute, raw):
         entity_page("Bill", RAW.replace("2026-01-15", "2026-02-01")),
         entity_page("Bill", RAW.replace("9007199254740993.0100", '"1.5"')),
         entity_page("Bill", RAW.replace("9007199254740993.0100", "NaN")),
-        entity_page("Bill", RAW.replace("2026-01-20T10:20:30Z", "2026-01-20")),
+        entity_page("Bill", RAW.replace("2026-01-20T10:20:30Z", "")),
         entity_page("Bill", RAW, position=2),
         entity_page("Bill", RAW).replace('"maxResults": 1', '"maxResults": 2'),
         entity_page("Bill", RAW.replace('"Id":"42"', '"Id":"fixture-access-canary"')),
@@ -326,3 +326,165 @@ async def test_nonintegral_or_boolean_pagination_never_calls_provider(
                 auth(),
                 options=CallOptions(http=http),
             )
+
+
+@pytest.mark.parametrize("entity", ["Bill", "Account", "Preferences"])
+@pytest.mark.parametrize(
+    "updated_at",
+    [
+        "2028-02-29T01:02:03",
+        "2028-02-29T24:00:00",
+        "2028-02-29T01:02:03.120000000-07:00",
+        "2028-02-29",
+        "not-a-date",
+        " not-a-date ",
+        "x" * 128,
+        "é" * 128,
+    ],
+)
+async def test_returned_metadata_is_exact_bounded_custody(execute, entity, updated_at):
+    raw = temporal_record(updated_at=json.dumps(updated_at))
+    singleton = entity == "Preferences"
+    body = '{"Preferences":' + raw + "}" if singleton else entity_page(entity, raw)
+    output, requests = await execute(
+        body,
+        action="records.list",
+        data=entity_input(entity, transaction=entity == "Bill", singleton=singleton),
+    )
+    assert output["records"] == [
+        {
+            "native_id": "42",
+            "source_revision": "3",
+            "source_updated_at": updated_at,
+            "raw_json": raw,
+        }
+    ]
+    assert len(requests) == 1
+
+
+@pytest.mark.parametrize("entity", ["Invoice", "Bill"])
+@pytest.mark.parametrize("due_date", ["2026-01-31Z", "2026-01-31+05:30", "2026-01-31-12:00"])
+async def test_returned_optional_dates_preserve_zone_spelling(execute, entity, due_date):
+    raw = temporal_record(due_date=json.dumps(due_date))
+    output, _ = await execute(
+        entity_page(entity, raw),
+        action="records.list",
+        data=entity_input(entity, transaction=True),
+    )
+    assert output["records"] == [{"native_id": "42", "source_revision": "3", "raw_json": raw}]
+
+
+@pytest.mark.parametrize("member", ["updated_at", "due_date"])
+@pytest.mark.parametrize("value", [None, False, 42, {}, [], "", " \t ", "x" * 129])
+async def test_returned_temporal_custody_rejects_wrong_types_and_bounds(execute, member, value):
+    raw = temporal_record(**{member: json.dumps(value)})
+    with pytest.raises(ConnectorError) as caught:
+        await execute(
+            entity_page("Bill", raw),
+            action="records.list",
+            data=entity_input("Bill", transaction=True),
+        )
+    assert caught.value.provider_error == {"reason_code": "invalid_response"}
+
+
+@pytest.mark.parametrize(
+    "entity,txn_date",
+    [
+        ("Bill", "2026-01-01"),
+        ("Bill", "2026-01-01+14:00"),
+        ("Bill", "2026-01-31"),
+        ("Bill", "2026-01-31Z"),
+        ("Bill", "2026-01-31-12:00"),
+        ("InventoryAdjustment", "2026-01-01T00:00:00+14:00"),
+        ("InventoryAdjustment", "2026-01-31T23:59:59"),
+        ("InventoryAdjustment", "2026-01-31T23:59:59-12:00"),
+        ("InventoryAdjustment", "2026-01-31T24:00:00.000Z"),
+    ],
+)
+async def test_transaction_scope_uses_inclusive_printed_calendar(execute, entity, txn_date):
+    raw = temporal_record(txn_date=json.dumps(txn_date))
+    output, requests = await execute(
+        entity_page(entity, raw),
+        action="records.list",
+        data=entity_input(entity, transaction=True),
+    )
+    assert output["records"] == [{"native_id": "42", "source_revision": "3", "raw_json": raw}]
+    assert requests[0].url.params["query"] == (
+        f"select * from {entity} where TxnDate >= '2026-01-01' and TxnDate <= '2026-01-31' "
+        "STARTPOSITION 1 MAXRESULTS 100"
+    )
+
+
+@pytest.mark.parametrize(
+    "entity,txn_date",
+    [
+        ("Bill", "2025-12-31-12:00"),
+        ("Bill", "2026-02-01+14:00"),
+        ("InventoryAdjustment", "2025-12-31T24:00:00-12:00"),
+        ("InventoryAdjustment", "2026-02-01T00:00:00+14:00"),
+    ],
+)
+async def test_transaction_scope_rejects_outside_printed_calendar(execute, entity, txn_date):
+    raw = temporal_record(txn_date=json.dumps(txn_date))
+    with pytest.raises(ConnectorError) as caught:
+        await execute(
+            entity_page(entity, raw),
+            action="records.list",
+            data=entity_input(entity, transaction=True),
+        )
+    assert caught.value.provider_error == {"reason_code": "invalid_response"}
+
+
+@pytest.mark.parametrize(
+    "txn_date",
+    [
+        None,
+        "null",
+        "true",
+        "42",
+        '""',
+        '"not-a-date"',
+        '"2026-01-31junk"',
+        '"2026-01-31+05"',
+        '"2026-01-31t01:02:03z"',
+        '"2026-01-31T01:02"',
+        '"2026-01-31T01:02:03,1Z"',
+        '"10000-01-31"',
+        '"-0001-01-31"',
+        '"2026-01-31T01:02:03.' + "0" * 109 + '"',
+    ],
+)
+async def test_transaction_scope_rejects_unselectable_or_overflow_text(execute, txn_date):
+    raw = temporal_record(txn_date=txn_date)
+    with pytest.raises(ConnectorError) as caught:
+        await execute(
+            entity_page("InventoryAdjustment", raw),
+            action="records.list",
+            data=entity_input("InventoryAdjustment", transaction=True),
+        )
+    assert caught.value.provider_error == {"reason_code": "invalid_response"}
+
+
+@pytest.mark.parametrize(
+    "entity,txn_date,due_date",
+    [
+        ("Bill", "2026-01-15+14:01", "not-a-date"),
+        ("InventoryAdjustment", "2026-01-15T24:00:01+15:00", None),
+        ("InventoryAdjustment", "2026-01-15T01:02:03.1234567890", None),
+    ],
+)
+async def test_transport_selection_does_not_claim_canonical_validity(
+    execute, entity, txn_date, due_date
+):
+    raw = temporal_record(
+        txn_date=json.dumps(txn_date),
+        due_date=None if due_date is None else json.dumps(due_date),
+        updated_at='"not-a-date"',
+    )
+    output, _ = await execute(
+        entity_page(entity, raw),
+        action="records.list",
+        data=entity_input(entity, transaction=True),
+    )
+    assert output["records"][0]["raw_json"] == raw
+    assert output["records"][0]["source_updated_at"] == "not-a-date"
