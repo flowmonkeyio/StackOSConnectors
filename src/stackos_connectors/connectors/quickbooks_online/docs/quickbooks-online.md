@@ -52,8 +52,9 @@ attachments/PDFs, budgets, recurring templates, projects/change orders,
 specialized tax workflows, Reports API ingestion and all writes are excluded.
 This catalog is broad core coverage, not all QuickBooks products or complete books.
 
-The shared raw parser applies the same 16 KiB per-record and 2 MiB response bounds
-to every entity. Wrong envelopes, ambiguous aliases, duplicate JSON keys/IDs,
+The shared raw parser bounds the complete HTTP response at 2 MiB for every
+entity. There is no separate per-record size cutoff; valid native records retain
+their exact raw text within that aggregate budget. Wrong envelopes, ambiguous aliases, duplicate JSON keys/IDs,
 malformed supplied metadata and credential echoes fail safely. A missing entity
 array in an otherwise empty query envelope means an empty page. Provider faults,
 denials or unsupported features are errors, never empty successful collections.
@@ -88,7 +89,7 @@ Invoice queries use inclusive valid calendar dates on `TxnDate` and provider-ord
 
 Every invoice carries `native_id`, exact UTF-8 `raw_json`, optional `source_revision` from supplied `SyncToken` and optional `source_updated_at` from supplied `MetaData.LastUpdatedTime`. Object text is sliced from the response, retaining whitespace, escaping, numeric precision and scale. Monetary numbers are validated with decimal decoding and are never decoded as binary floats or reserialized. Supplied totals/balances may be zero or negative. Missing currency and other optional fields remain missing; no currency is inferred. Amounts and balances describe the provider's current response, not historical balances or revenue.
 
-The provider validates the returned envelope and metadata because the public output schema is descriptive. Duplicate JSON keys anywhere, duplicate invoice IDs in a page, invalid identities/amounts, unselectable transaction dates or dates outside the requested window, inconsistent positions/counts, invalid bounded source metadata, records above 16 KiB and response bodies above 2 MiB fail safely. The response-size check occurs after shared HTTP buffering. Credential echoes in raw text or decoded keys/values fail before registry redaction; evidence is never silently scrubbed and returned as exact.
+The provider validates the returned envelope and metadata because the public output schema is descriptive. Duplicate JSON keys anywhere, duplicate invoice IDs in a page, invalid identities/amounts, unselectable transaction dates or dates outside the requested window, inconsistent positions/counts, invalid bounded source metadata and response bodies above 2 MiB fail safely. The response-size check occurs after shared HTTP buffering. Credential echoes in raw text or decoded keys/values fail before registry redaction; evidence is never silently scrubbed and returned as exact.
 
 Returned temporal evidence is separate from strict request dates. Supplied
 `MetaData.LastUpdatedTime` and guarded optional native dates such as Invoice/Bill
@@ -106,7 +107,7 @@ conversion or next-day rollover is performed. Missing, nonstring, blank,
 over-128-character, structurally unselectable or out-of-window transaction values
 fail safely. Gregorian/time/offset validity and field precision remain consumer
 responsibilities. Request dates still require valid unzoned calendar dates.
-The native 16 KiB record and 2 MiB response ceilings are unchanged.
+The 2 MiB complete-response ceiling remains independent of temporal validation.
 
 A missing `Invoice` array in an otherwise empty `QueryResponse` means an empty page. Empty pages may omit position/count metadata; returned position then repeats the requested position and count is zero. Nonempty pages require `startPosition` and `maxResults` matching the request and returned count. Supplied `totalCount` is retained only as a nonnegative integer; its semantics are not used for termination.
 

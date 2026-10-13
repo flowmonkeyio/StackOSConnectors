@@ -16,8 +16,6 @@ from stackos_connectors.redaction import redact_secret_values
 from .entities import ENTITIES, Entity
 
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
-MAX_RECORD_BYTES = 16 * 1024
-MAX_INVOICE_BYTES = MAX_RECORD_BYTES  # Existing private import compatibility.
 _WS = re.compile(r"[ \t\n\r]*")
 _DATE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 _SOURCE_CALENDAR = re.compile(
@@ -188,8 +186,6 @@ def _record_fragments(text: str) -> list[str]:
 
 
 def _record(value: dict[str, JsonValue], raw: str) -> SourceRecord:
-    if len(raw.encode("utf-8")) > MAX_RECORD_BYTES:
-        raise ValueError("record too large")
     result: SourceRecord = {"native_id": _identity(value.get("Id")), "raw_json": raw}
     if "SyncToken" in value:
         revision = _identity(value["SyncToken"])

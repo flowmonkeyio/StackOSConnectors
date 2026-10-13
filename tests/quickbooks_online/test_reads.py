@@ -234,7 +234,6 @@ async def test_optional_source_metadata_and_provider_total_are_preserved(execute
 @pytest.mark.parametrize(
     "body",
     [
-        page(INVOICE.replace("Example", "x" * 16384)),
         " " * (2 * 1024 * 1024) + '{"QueryResponse":{}}',
         page(INVOICE).replace('"startPosition": 1, ', ""),
         page(INVOICE).replace(', "maxResults": 1', ""),
@@ -318,14 +317,17 @@ async def test_unexpected_entities_and_invalid_identity(execute, body):
         await execute(body)
 
 
-async def test_record_exactly_16_kib_is_accepted(execute):
-    template = '{"Id":"19","TxnDate":"2026-01-31","PrivateNote":""}'
+@pytest.mark.parametrize("record_bytes", [16 * 1024, 16 * 1024 + 1, 320 * 1024])
+async def test_large_invoice_records_preserve_exact_raw_evidence(execute, record_bytes):
+    template = INVOICE[:-1] + ',"PrivateNote":""}'
     raw = template.replace(
-        '"PrivateNote":""', '"PrivateNote":"' + "x" * (16384 - len(template)) + '"'
+        '"PrivateNote":""',
+        '"PrivateNote":"' + "x" * (record_bytes - len(template.encode("utf-8"))) + '"',
     )
-    assert len(raw.encode()) == 16384
+    assert len(raw.encode("utf-8")) == record_bytes
     output, _ = await execute(page(raw))
     assert output["invoices"][0]["raw_json"] == raw
+    assert output["invoices"][0]["source_updated_at"] == "2026-02-01T13:01:02-08:00"
 
 
 @pytest.mark.parametrize("valid", [True, False])

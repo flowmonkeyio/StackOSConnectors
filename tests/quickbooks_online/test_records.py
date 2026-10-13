@@ -190,6 +190,36 @@ async def test_reference_optional_and_inactive_fields_preserved(execute, raw):
     assert output["records"] == [{"native_id": "42", "raw_json": raw}]
 
 
+@pytest.mark.parametrize("entity", ["Bill", "Customer", "CompanyInfo"])
+@pytest.mark.parametrize("record_bytes", [16 * 1024 + 1, 320 * 1024])
+async def test_large_records_preserve_exact_raw_evidence_across_read_families(
+    execute, entity, record_bytes
+):
+    singleton = entity in SINGLETONS
+    template = RAW if entity in TRANSACTIONS else RAW.replace(' "TxnDate":"2026-01-15",', "")
+    template = template[:-1] + ',"PrivateNote":""}'
+    raw = template.replace(
+        '"PrivateNote":""',
+        '"PrivateNote":"' + "x" * (record_bytes - len(template.encode("utf-8"))) + '"',
+    )
+    assert len(raw.encode("utf-8")) == record_bytes
+    body = '{"' + entity + '":' + raw + "}" if singleton else entity_page(entity, raw)
+    output, _ = await execute(
+        body,
+        action="records.list",
+        data=entity_input(entity, transaction=entity in TRANSACTIONS, singleton=singleton),
+    )
+    assert output["records"] == [
+        {
+            "native_id": "42",
+            "raw_json": raw,
+            "source_revision": "3",
+            "source_updated_at": "2026-01-20T10:20:30Z",
+        }
+    ]
+    assert output["count"] == 1
+
+
 @pytest.mark.parametrize(
     "body",
     [
@@ -204,7 +234,6 @@ async def test_reference_optional_and_inactive_fields_preserved(execute, raw):
         entity_page("Bill", RAW, position=2),
         entity_page("Bill", RAW).replace('"maxResults": 1', '"maxResults": 2'),
         entity_page("Bill", RAW.replace('"Id":"42"', '"Id":"fixture-access-canary"')),
-        entity_page("Bill", '{"Id":"42","TxnDate":"2026-01-15","Note":"' + "x" * 16384 + '"}'),
         " " * (2 * 1024 * 1024) + '{"QueryResponse":{}}',
     ],
 )
