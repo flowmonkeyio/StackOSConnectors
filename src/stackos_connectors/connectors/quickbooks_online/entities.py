@@ -152,8 +152,19 @@ _ENTITIES = (
             "DiscountDayOfMonth",
         ),
     ),
-    _reference("TaxCode", strings=("Name",)),
-    _reference("TaxRate", strings=("Name",), numbers=("RateValue",)),
+    # These tax entities reject Active query predicates; retain supplied field validation.
+    Entity(
+        "TaxCode", "reference", "TaxCode", ("TaxCode",), strings=("Name",), booleans=("Active",)
+    ),
+    Entity(
+        "TaxRate",
+        "reference",
+        "TaxRate",
+        ("TaxRate",),
+        strings=("Name",),
+        numbers=("RateValue",),
+        booleans=("Active",),
+    ),
     _reference("TaxAgency", strings=("DisplayName",), include_inactive=False),
     Entity(
         "CompanyInfo",

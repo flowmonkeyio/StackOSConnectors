@@ -37,11 +37,10 @@ ACTIVE_REFERENCES = (
     "Department",
     "PaymentMethod",
     "Term",
-    "TaxCode",
-    "TaxRate",
 )
+TAX_REFERENCES = ("TaxCode", "TaxRate")
 SINGLETONS = {"CompanyInfo": "companyinfo/123456789", "Preferences": "preferences"}
-ENTITIES = (*TRANSACTIONS, *ACTIVE_REFERENCES, "TaxAgency", *SINGLETONS)
+ENTITIES = (*TRANSACTIONS, *ACTIVE_REFERENCES, *TAX_REFERENCES, "TaxAgency", *SINGLETONS)
 RAW = (
     '{ "Id":"42", "SyncToken":"3", "TxnDate":"2026-01-15",'
     ' "TotalAmt":9007199254740993.0100,"Line":[{"Amount":-1e-20}],'
@@ -100,7 +99,9 @@ def test_public_schema_enumerates_exactly_the_supported_catalog():
     assert not validator.is_valid({"entity": "Budget", "start_position": 1, "max_results": 100})
 
 
-@pytest.mark.parametrize("entity", (*TRANSACTIONS, *ACTIVE_REFERENCES, "TaxAgency"))
+@pytest.mark.parametrize(
+    "entity", (*TRANSACTIONS, *ACTIVE_REFERENCES, *TAX_REFERENCES, "TaxAgency")
+)
 async def test_empty_query_is_distinct_from_wrong_entity_or_fault(execute, entity):
     data = entity_input(entity, transaction=entity in TRANSACTIONS)
     output, _ = await execute('{"QueryResponse":{}}', action="records.list", data=data)
@@ -248,6 +249,8 @@ async def test_malformed_generic_evidence_is_not_published_or_leaked(execute, bo
     "entity,raw",
     [
         ("Account", '{"Id":"1","Active":"false"}'),
+        ("TaxCode", '{"Id":"1","Active":"false"}'),
+        ("TaxRate", '{"Id":"1","Active":"false"}'),
         ("Vendor", '{"Id":"1","CurrencyRef":{"value":null}}'),
         ("Item", '{"Id":"1","UnitPrice":true}'),
         ("Term", '{"Id":"1","DueDays":"30"}'),
@@ -517,3 +520,22 @@ async def test_transport_selection_does_not_claim_canonical_validity(
     )
     assert output["records"][0]["raw_json"] == raw
     assert output["records"][0]["source_updated_at"] == "not-a-date"
+
+
+@pytest.mark.parametrize("entity", TAX_REFERENCES)
+@pytest.mark.parametrize("position", [1, 101])
+@pytest.mark.parametrize("active", [None, True, False])
+async def test_tax_queries_preserve_returned_activity_without_active_predicate(
+    execute, entity, position, active
+):
+    raw = '{"Id":"42"' + ("" if active is None else ',"Active":' + json.dumps(active)) + "}"
+    output, requests = await execute(
+        entity_page(entity, raw, position=position),
+        action="records.list",
+        data={**entity_input(entity), "start_position": position},
+    )
+    assert requests[0].url.params["query"] == (
+        f"select * from {entity} STARTPOSITION {position} MAXRESULTS 100"
+    )
+    assert output["records"] == [{"native_id": "42", "raw_json": raw}]
+    assert output["start_position"] == position

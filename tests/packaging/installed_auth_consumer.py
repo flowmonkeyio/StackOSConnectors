@@ -194,7 +194,7 @@ async def quickbooks_records(client):
             predicate = ""
             if selected in transactions:
                 predicate = " where TxnDate >= '2026-01-01' and TxnDate <= '2026-01-31'"
-            elif selected != "TaxAgency":
+            elif selected not in {"TaxAgency", "TaxCode", "TaxRate"}:
                 predicate = " where Active IN (true, false)"
             assert request.url.params["query"] == (
                 f"select * from {identifier}{predicate} STARTPOSITION 1 MAXRESULTS 100"

@@ -39,8 +39,12 @@ predicate. `CreditCardPayment` alone uses the SDK's `creditcardpayment` query
 identifier; its only accepted response keys are `CreditCardPayment` and
 `CreditCardPaymentTxn`, never both. InventoryAdjustment uses its native entity
 name and inherited transaction date. Reference reads have no date predicate.
-All reference queries except TaxAgency explicitly use `Active IN (true, false)`;
-TaxAgency has no Active property in the SDK and is read without that predicate.
+Reference queries except TaxAgency, TaxCode and TaxRate use `Active IN (true, false)`.
+TaxAgency has no Active property. TaxCode and TaxRate use unfiltered paginated
+queries because the predicate is rejected in the retained sandbox (HTTP 400,
+Fault 4001). Their supplied Active values remain validated and preserved; no
+client-side activity filter or default is applied. This does not establish
+complete inactive coverage across every tax model.
 CompanyInfo uses `companyinfo/{realm_id}`; Preferences uses `preferences`, with
 no object-ID suffix. No caller query, path, URL or minor version is accepted.
 
