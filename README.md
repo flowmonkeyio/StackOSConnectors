@@ -175,16 +175,24 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.5
+python -m pip install stackos-connectors==0.2.7
 ```
 
-Or add `stackos-connectors==0.2.5` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.7` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
 
-### 0.2.6 release candidate
+### 0.2.7 release notes
+
+- Remove the per-record 16 KiB cutoff from QuickBooks reads. Preserve each exact
+  original within the existing bounded provider response; oversized responses
+  still fail explicitly.
+- Preserve provider-returned date and timestamp text in accounting evidence
+  without converting or discarding valid temporal values.
+
+### 0.2.6 release notes
 
 - Add `quickbooks-online.records.list` for 30 finite accounting transaction,
   reference and singleton entity reads, with validated scope and fixed provider
