@@ -175,14 +175,19 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.7
+python -m pip install stackos-connectors==0.2.8
 ```
 
-Or add `stackos-connectors==0.2.7` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.8` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+### 0.2.8 release notes
+
+- Query QuickBooks TaxCode and TaxRate without the rejected Active predicate.
+  Preserve pagination, exact returned records and supplied Active validation.
 
 ### 0.2.7 release notes
 
