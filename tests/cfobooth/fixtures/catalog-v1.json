@@ -1,0 +1,588 @@
+{
+  "requestId": "operation-wire-fixture",
+  "data": {
+    "version": 1,
+    "catalogHash": "b18342c359424afaa61ecc13a592a5db870050e1281c4b0be40cfea665bb353c",
+    "operations": [
+      {
+        "operationId": "health.live",
+        "title": "Check API liveness",
+        "description": "Check that the API process is responding without checking its dependencies.",
+        "route": {
+          "method": "GET",
+          "path": "/api/health/live",
+          "body": "none",
+          "status": 200
+        },
+        "authentication": {
+          "kind": "public"
+        },
+        "scope": "public",
+        "transport": "json",
+        "effect": "read",
+        "replay": "safe",
+        "execution": {
+          "kind": "excluded",
+          "reason": "Public health probes are not organization business actions."
+        },
+        "responseLimit": 16384,
+        "schemaValidation": "server",
+        "schemas": {
+          "params": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "query": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "body": null,
+          "result": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "const": "ok"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "data"],
+            "additionalProperties": false
+          },
+          "error": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "invalid_request",
+                      "output_limit",
+                      "unauthenticated",
+                      "forbidden",
+                      "not_found",
+                      "dependency_unavailable",
+                      "internal_error",
+                      "transport_error",
+                      "invalid_response",
+                      "conflict",
+                      "run_limit_exceeded",
+                      "rate_limited"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 160
+                  }
+                },
+                "required": ["code", "message"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "error"],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "operationId": "fixture.read",
+        "title": "Read an organization",
+        "description": "Read an authorized organization through its canonical path.",
+        "route": {
+          "method": "GET",
+          "path": "/api/organizations/:organizationId",
+          "body": "none",
+          "status": 200
+        },
+        "authentication": {
+          "kind": "authenticated",
+          "credentials": ["session", "api-key"],
+          "organizationParameter": "organizationId"
+        },
+        "scope": "organization",
+        "transport": "json",
+        "effect": "read",
+        "replay": "safe",
+        "execution": {
+          "kind": "action"
+        },
+        "responseLimit": 16384,
+        "schemaValidation": "server",
+        "schemas": {
+          "params": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "organizationId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              }
+            },
+            "required": ["organizationId"],
+            "additionalProperties": false
+          },
+          "query": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "body": null,
+          "result": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "const": "ok"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "data"],
+            "additionalProperties": false
+          },
+          "error": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "invalid_request",
+                      "output_limit",
+                      "unauthenticated",
+                      "forbidden",
+                      "not_found",
+                      "dependency_unavailable",
+                      "internal_error",
+                      "transport_error",
+                      "invalid_response",
+                      "conflict",
+                      "run_limit_exceeded",
+                      "rate_limited"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 160
+                  }
+                },
+                "required": ["code", "message"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "error"],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "operationId": "fixture.query",
+        "title": "Run a read query",
+        "description": "Read selected data without importing or modifying financial records.",
+        "route": {
+          "method": "POST",
+          "path": "/api/organizations/:organizationId/datasets/semantic/aggregate",
+          "body": "json",
+          "status": 200
+        },
+        "authentication": {
+          "kind": "authenticated",
+          "credentials": ["session", "api-key"],
+          "organizationParameter": "organizationId"
+        },
+        "scope": "organization",
+        "transport": "json",
+        "effect": "read",
+        "replay": "safe",
+        "execution": {
+          "kind": "action"
+        },
+        "responseLimit": 16384,
+        "schemaValidation": "server",
+        "schemas": {
+          "params": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "organizationId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              }
+            },
+            "required": ["organizationId"],
+            "additionalProperties": false
+          },
+          "query": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "body": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          },
+          "result": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "const": "ok"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "data"],
+            "additionalProperties": false
+          },
+          "error": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "invalid_request",
+                      "output_limit",
+                      "unauthenticated",
+                      "forbidden",
+                      "not_found",
+                      "dependency_unavailable",
+                      "internal_error",
+                      "transport_error",
+                      "invalid_response",
+                      "conflict",
+                      "run_limit_exceeded",
+                      "rate_limited"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 160
+                  }
+                },
+                "required": ["code", "message"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "error"],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "operationId": "fixture.create",
+        "title": "Create an organization",
+        "description": "Create an organization explicitly without automatically replaying the mutation.",
+        "route": {
+          "method": "POST",
+          "path": "/api/organizations",
+          "body": "json",
+          "status": 201
+        },
+        "authentication": {
+          "kind": "authenticated",
+          "credentials": ["session"],
+          "organizationParameter": null
+        },
+        "scope": "account",
+        "transport": "json",
+        "effect": "mutation",
+        "replay": "explicit-only",
+        "execution": {
+          "kind": "excluded",
+          "reason": "Account setup is session-only and is not a generated action."
+        },
+        "responseLimit": 16384,
+        "schemaValidation": "server",
+        "schemas": {
+          "params": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "query": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "body": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          },
+          "result": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "const": "ok"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "data"],
+            "additionalProperties": false
+          },
+          "error": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "invalid_request",
+                      "output_limit",
+                      "unauthenticated",
+                      "forbidden",
+                      "not_found",
+                      "dependency_unavailable",
+                      "internal_error",
+                      "transport_error",
+                      "invalid_response",
+                      "conflict",
+                      "run_limit_exceeded",
+                      "rate_limited"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 160
+                  }
+                },
+                "required": ["code", "message"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "error"],
+            "additionalProperties": false
+          }
+        }
+      },
+      {
+        "operationId": "fixture.stream",
+        "title": "Observe a native stream",
+        "description": "Use the specialized streaming adapter under the viewer session.",
+        "route": {
+          "method": "POST",
+          "path": "/api/organizations/:organizationId/agent-runs",
+          "body": "json",
+          "status": 200
+        },
+        "authentication": {
+          "kind": "authenticated",
+          "credentials": ["session"],
+          "organizationParameter": "organizationId"
+        },
+        "scope": "organization",
+        "transport": "sse",
+        "effect": "read",
+        "replay": "safe",
+        "execution": {
+          "kind": "excluded",
+          "reason": "Streaming requires the native SSE adapter and is session-only."
+        },
+        "responseLimit": 16384,
+        "schemaValidation": "server",
+        "schemas": {
+          "params": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "organizationId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              }
+            },
+            "required": ["organizationId"],
+            "additionalProperties": false
+          },
+          "query": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "body": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "readOnly": true,
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+          },
+          "result": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "const": "ok"
+                  }
+                },
+                "required": ["status"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "data"],
+            "additionalProperties": false
+          },
+          "error": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "properties": {
+              "requestId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "error": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "enum": [
+                      "invalid_request",
+                      "output_limit",
+                      "unauthenticated",
+                      "forbidden",
+                      "not_found",
+                      "dependency_unavailable",
+                      "internal_error",
+                      "transport_error",
+                      "invalid_response",
+                      "conflict",
+                      "run_limit_exceeded",
+                      "rate_limited"
+                    ]
+                  },
+                  "message": {
+                    "type": "string",
+                    "maxLength": 160
+                  }
+                },
+                "required": ["code", "message"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["requestId", "error"],
+            "additionalProperties": false
+          }
+        }
+      }
+    ]
+  }
+}

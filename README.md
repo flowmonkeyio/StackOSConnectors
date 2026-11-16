@@ -196,6 +196,23 @@ icon = description["actions"][0]["icon"]
 icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read_bytes()
 ```
 
+## CFOBooth native API keys
+
+The private 0.2.9 candidate adds CFOBooth's native `api_key` authentication,
+explicit `api_base_url` and Account `organization_id`. The endpoint is editable;
+`https://cfobooth.com` is display-only placeholder text and receives no requests.
+Owned loopback HTTP and explicit remote HTTPS are supported. A key-only identity
+probe verifies the safe subject/key/organization binding. Explicit catalog export
+and `connectors.cfobooth.catalog_actions` declare fixed JSON actions through the
+shared schema/HTTP owners, preserving effects and response envelopes without
+per-call catalog fetching or session refresh.
+
+See the [provider contract](src/stackos_connectors/connectors/cfobooth/docs/cfobooth.md)
+for setup, supported schema projection, safety boundaries and local-proof limits.
+This source candidate has not been published; the public installation pin below
+continues to describe the existing release. Host inventory/custody and final
+actual-server integration remain with their existing owners.
+
 ## Installation
 
 Python 3.12 or newer is required. Source:

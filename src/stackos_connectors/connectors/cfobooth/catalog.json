@@ -1,0 +1,110 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "cfobooth",
+  "name": "CFOBooth",
+  "description": "Use an explicitly configured CFOBooth organization API with an operator-supplied API key.",
+  "implementation": "stackos_connectors.connectors.cfobooth.actions:CFOBoothActionConnector",
+  "probe_implementation": "stackos_connectors.connectors.cfobooth.probe:probe",
+  "icon": {
+    "kind": "fallback",
+    "media_type": "image/svg+xml",
+    "path": "shared/icons/integration.svg"
+  },
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "fields_schema": {
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "config_schema": {
+        "type": "object",
+        "required": [
+          "api_base_url",
+          "organization_id"
+        ],
+        "properties": {
+          "api_base_url": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organization_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "additionalProperties": false
+      },
+      "payload_format": "json",
+      "evidence_source": "provider_probe",
+      "description": "Resolved CFOBooth API key with explicit endpoint and organization binding.",
+      "setup": {
+        "auth_type": "api_key",
+        "interactive": false,
+        "description": "Create an API key in your CFOBooth organization and provide it through the host Account credential owner. Configure your own endpoint; no remote deployment has been verified.",
+        "fields": [
+          {
+            "key": "api_key",
+            "label": "API key",
+            "secret": true,
+            "required": true,
+            "type": "password"
+          },
+          {
+            "key": "api_base_url",
+            "label": "API base URL",
+            "required": true,
+            "placeholder": "https://cfobooth.com",
+            "description": "Editable example only. Use your owned local HTTP loopback or remote HTTPS endpoint.",
+            "type": "text",
+            "secret": false
+          },
+          {
+            "key": "organization_id",
+            "label": "Organization ID",
+            "required": true,
+            "type": "text",
+            "secret": false
+          }
+        ],
+        "label": "CFOBooth API key"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "cfobooth.catalog.export",
+      "operation": "catalog.export",
+      "description": "Fetch and validate the complete permission-filtered organization operation catalog.",
+      "guidance": "Use Account credentials and configuration. Register eligible fixed routes explicitly; no catalog preflight occurs during operation execution.",
+      "auth_methods": [
+        "api_key"
+      ],
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "config": {},
+      "metadata": {
+        "name": "Export CFOBooth Catalog",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    }
+  ],
+  "auth_type": "api_key"
+}

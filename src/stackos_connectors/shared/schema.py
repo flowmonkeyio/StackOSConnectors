@@ -4,7 +4,7 @@ from collections.abc import Iterator, Mapping
 from typing import Any
 from urllib.parse import quote, unquote
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft7Validator, Draft202012Validator
 from jsonschema.exceptions import SchemaError
 
 from stackos_connectors.contracts import thaw
@@ -12,7 +12,7 @@ from stackos_connectors.errors import ValidationError
 
 type JsonSchema = dict[str, Any] | bool
 
-_MAP_SCHEMAS = {"properties", "patternProperties", "$defs", "dependentSchemas"}
+_MAP_SCHEMAS = {"properties", "patternProperties", "$defs", "definitions", "dependentSchemas"}
 _LIST_SCHEMAS = {"allOf", "anyOf", "oneOf", "prefixItems"}
 _SINGLE_SCHEMAS = {
     "additionalProperties",
@@ -120,10 +120,72 @@ def project_schema(raw: Any, *, prefix: str = "#") -> JsonSchema:
     return schema
 
 
+def normalize_draft7_schema(raw: Any) -> JsonSchema:
+    """Opt in to the shared structural subset of Draft 7 without weakening it.
+
+    Tuple items, dependencies and reference siblings have different semantics
+    across dialects and fail explicitly. Annotation values remain opaque.
+    Existing consumers of project_schema retain their dialect contract.
+    """
+    schema = thaw(raw)
+    if not isinstance(schema, dict) or schema.get("$schema") != Draft7Validator.META_SCHEMA["$id"]:
+        return project_schema(schema)
+    try:
+        Draft7Validator.check_schema(schema)
+    except SchemaError:
+        raise ValidationError("invalid Draft 7 operation schema") from None
+    modern_only = {
+        "$defs",
+        "dependentSchemas",
+        "dependentRequired",
+        "prefixItems",
+        "unevaluatedProperties",
+        "unevaluatedItems",
+        "minContains",
+        "maxContains",
+    }
+    annotations = {"$ref", "$comment", "title", "description", "default", "examples"}
+
+    # Inspect shape before walking: Draft 7 tuple items are not schema objects.
+    def convert(node: Any) -> None:
+        if not isinstance(node, dict):
+            return
+        if modern_only & node.keys() or isinstance(node.get("items"), list):
+            raise ValidationError("unsupported Draft 7 operation schema feature")
+        if "$ref" in node and node.keys() - annotations:
+            raise ValidationError("unsupported Draft 7 reference siblings")
+        if "$schema" in node:
+            if node["$schema"] != Draft7Validator.META_SCHEMA["$id"]:
+                raise ValidationError("mixed operation schema dialects")
+            del node["$schema"]
+        for key, value in node.items():
+            if key in _MAP_SCHEMAS:
+                for child in value.values():
+                    convert(child)
+            elif key in _LIST_SCHEMAS:
+                for child in value:
+                    convert(child)
+            elif key in _SINGLE_SCHEMAS:
+                convert(value)
+
+    convert(schema)
+    return project_schema(schema)
+
+
 def operation_input_schema(detail: Mapping[str, Any]) -> dict[str, Any]:
     """Wrap complete path/query/body schemas in the connector input envelope."""
     properties: dict[str, Any] = {}
     required: list[str] = []
+    if "path_params_schema" in detail:
+        if detail.get("path_params"):
+            raise ValidationError("operation declares conflicting path schemas")
+        if not isinstance(detail.get("path_required", True), bool):
+            raise ValidationError("operation path required flag must be boolean")
+        properties["path_params"] = project_schema(
+            detail["path_params_schema"], prefix="#/properties/path_params"
+        )
+        if detail.get("path_required", True):
+            required.append("path_params")
     path_params = detail.get("path_params")
     if isinstance(path_params, list | tuple) and path_params:
         path_properties = {
