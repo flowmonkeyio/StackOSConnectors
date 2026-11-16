@@ -1,0 +1,164 @@
+"""Lossless structural JSON Schema embedding for declared operation inputs."""
+
+from collections.abc import Iterator, Mapping
+from typing import Any
+from urllib.parse import unquote
+
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import SchemaError
+
+from stackos_connectors.contracts import thaw
+from stackos_connectors.errors import ValidationError
+
+type JsonSchema = dict[str, Any] | bool
+
+_MAP_SCHEMAS = {"properties", "patternProperties", "$defs", "dependentSchemas"}
+_LIST_SCHEMAS = {"allOf", "anyOf", "oneOf", "prefixItems"}
+_SINGLE_SCHEMAS = {
+    "additionalProperties",
+    "unevaluatedProperties",
+    "propertyNames",
+    "items",
+    "unevaluatedItems",
+    "contains",
+    "not",
+    "if",
+    "then",
+    "else",
+}
+_KEYWORDS = (
+    _MAP_SCHEMAS
+    | _LIST_SCHEMAS
+    | _SINGLE_SCHEMAS
+    | {
+        "$schema",
+        "$ref",
+        "$comment",
+        "type",
+        "enum",
+        "const",
+        "required",
+        "dependentRequired",
+        "minProperties",
+        "maxProperties",
+        "minItems",
+        "maxItems",
+        "uniqueItems",
+        "minContains",
+        "maxContains",
+        "minLength",
+        "maxLength",
+        "pattern",
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+        "title",
+        "description",
+        "default",
+        "examples",
+        "deprecated",
+        "readOnly",
+        "writeOnly",
+        "format",
+        "discriminator",
+    }
+)
+
+
+def _pointer(path: tuple[str, ...]) -> str:
+    return "#" + "".join("/" + part.replace("~", "~0").replace("/", "~1") for part in path)
+
+
+def _schema_nodes(
+    schema: JsonSchema, path: tuple[str, ...] = ()
+) -> Iterator[tuple[str, JsonSchema]]:
+    yield _pointer(path), schema
+    if not isinstance(schema, dict):
+        return
+    for key, value in schema.items():
+        if key in _MAP_SCHEMAS:
+            for name, child in value.items():
+                yield from _schema_nodes(child, (*path, key, name))
+        elif key in _LIST_SCHEMAS:
+            for index, child in enumerate(value):
+                yield from _schema_nodes(child, (*path, key, str(index)))
+        elif key in _SINGLE_SCHEMAS:
+            yield from _schema_nodes(value, (*path, key))
+
+
+def project_schema(raw: Any, *, prefix: str = "#") -> JsonSchema:
+    """Detach and embed a schema; local pointers retain their original resource scope.
+
+    Resource IDs, anchors, remote references, other dialects and unknown keywords
+    are rejected. Extensions and annotation values are opaque, never traversed.
+    """
+    if not isinstance(raw, Mapping | bool):
+        raise ValidationError("operation schema must be an object or boolean")
+    schema = thaw(raw)
+    try:
+        Draft202012Validator.check_schema(schema)
+    except SchemaError:
+        raise ValidationError("invalid operation JSON Schema") from None
+    nodes = dict(_schema_nodes(schema))
+    for node in nodes.values():
+        if not isinstance(node, dict):
+            continue
+        for key in node:
+            if key not in _KEYWORDS and not key.startswith(("x-", "x_")):
+                raise ValidationError("unsupported operation schema keyword")
+        if "$schema" in node and node["$schema"] != Draft202012Validator.META_SCHEMA["$id"]:
+            raise ValidationError("unsupported operation schema dialect")
+        if "$ref" in node:
+            ref = unquote(node["$ref"])
+            if not ref.startswith("#") or ref not in nodes:
+                raise ValidationError("operation schema requires a supported local reference")
+            node["$ref"] = prefix + ref[1:]
+    return schema
+
+
+def operation_input_schema(detail: Mapping[str, Any]) -> dict[str, Any]:
+    """Wrap complete path/query/body schemas in the connector input envelope."""
+    properties: dict[str, Any] = {}
+    required: list[str] = []
+    path_params = detail.get("path_params")
+    if isinstance(path_params, list | tuple) and path_params:
+        path_properties = {
+            str(item["name"]): project_schema(
+                item.get("schema", {"type": "string"}),
+                prefix="#/properties/path_params/properties/"
+                + str(item["name"]).replace("~", "~0").replace("/", "~1"),
+            )
+            for item in path_params
+            if isinstance(item, Mapping) and item.get("name")
+        }
+        if path_properties:
+            properties["path_params"] = {
+                "type": "object",
+                "additionalProperties": False,
+                "required": list(path_properties),
+                "properties": path_properties,
+            }
+            required.append("path_params")
+
+    for source, target in (("query_params", "query"), ("request_body", "body")):
+        raw = detail.get(source)
+        if raw is None:
+            continue
+        schema = project_schema(raw, prefix=f"#/properties/{target}")
+        properties[target] = schema
+        explicit = detail.get(f"{target}_required")
+        if explicit is not None and not isinstance(explicit, bool):
+            raise ValidationError("operation envelope required flag must be boolean")
+        if (
+            explicit
+            if explicit is not None
+            else isinstance(schema, dict) and schema.get("required")
+        ):
+            required.append(target)
+
+    schema = {"type": "object", "additionalProperties": False, "properties": properties}
+    if required:
+        schema["required"] = required
+    return schema

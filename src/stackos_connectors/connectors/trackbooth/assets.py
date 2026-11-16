@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import json
 from collections.abc import Mapping
-from copy import deepcopy
 from functools import cached_property
 from importlib import resources
 from typing import Any
 
+from stackos_connectors.errors import ValidationError
+from stackos_connectors.shared.schema import JsonSchema
+
 from .contract import PATH_PARAM_RE as _PATH_PARAM_RE
 from .contract import JsonObject
+from .schema import _schema_property
 
 
 class TrackboothAssets:
@@ -105,13 +108,14 @@ class TrackboothAssets:
             ("body", body_schema),
             ("response", response_schema),
         ):
-            if schema and schema.get("weak"):
+            if isinstance(schema, Mapping) and schema.get("x_trackbooth_schema_warning"):
                 weak.append(label)
         return {
             **summary,
             "path_params": path_params,
             "query_params": query_schema,
             "request_body": body_schema,
+            "body_required": _body_required(endpoint, body_schema),
             "response": response_schema,
             "schema_warnings": weak,
             "source": {
@@ -121,7 +125,7 @@ class TrackboothAssets:
             },
         }
 
-    def expand_schema(self, descriptor: Any) -> JsonObject | None:
+    def expand_schema(self, descriptor: Any) -> JsonSchema | None:
         return _expand_schema_descriptor(descriptor, self.openapi_schemas)
 
 
@@ -162,7 +166,7 @@ def _detail_from_endpoint(
         ("body", body_schema),
         ("response", response_schema),
     ):
-        if schema and schema.get("weak"):
+        if isinstance(schema, Mapping) and schema.get("x_trackbooth_schema_warning"):
             schema_warnings.append(label)
     return {
         "operation_id": operation_id,
@@ -183,6 +187,7 @@ def _detail_from_endpoint(
         "path_params": _path_param_details(endpoint),
         "query_params": query_schema,
         "request_body": body_schema,
+        "body_required": _body_required(endpoint, body_schema),
         "response": response_schema,
         "schema_warnings": schema_warnings,
         "source": {
@@ -218,19 +223,34 @@ def _risk_metadata(
 def _expand_schema_descriptor(
     descriptor: Any,
     openapi_schemas: Mapping[str, Any],
-) -> JsonObject | None:
-    if not isinstance(descriptor, Mapping):
+) -> JsonSchema | None:
+    if descriptor is None:
         return None
+    if not isinstance(descriptor, Mapping):
+        raise ValidationError("Trackbooth schema descriptor must be an object")
 
-    json_schema = descriptor.get("json_schema")
-    if isinstance(json_schema, Mapping):
-        return deepcopy(dict(json_schema))
+    if "json_schema" in descriptor:
+        json_schema = descriptor["json_schema"]
+        if not isinstance(json_schema, Mapping | bool):
+            raise ValidationError("Trackbooth json_schema must be an object or boolean")
+        return _schema_property(json_schema)
 
     component_name = str(descriptor.get("component_name") or "")
     openapi_component = openapi_schemas.get(component_name)
     if isinstance(openapi_component, Mapping):
-        return deepcopy(dict(openapi_component))
-    return None
+        return _schema_property(openapi_component)
+    raise ValidationError("Trackbooth schema descriptor has no supported schema")
+
+
+def _body_required(endpoint: Mapping[str, Any], schema: Any) -> bool:
+    descriptor = _schema_descriptor(endpoint, "body_schema")
+    if isinstance(descriptor, Mapping) and "required" in descriptor:
+        required = descriptor["required"]
+        if not isinstance(required, bool):
+            raise ValidationError("Trackbooth body required flag must be boolean")
+        return required
+    # Legacy catalogs do not carry envelope presence separately.
+    return isinstance(schema, Mapping) and bool(schema.get("required"))
 
 
 def _schema_descriptor(endpoint: Mapping[str, Any], key: str) -> Any:

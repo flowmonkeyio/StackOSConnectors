@@ -139,6 +139,35 @@ using `stackos_connectors.catalog.load_registry` and the provider-local resource
 paths above. Register custom HTTP or Trackbooth declarations on that scoped client
 before execution; request data cannot override a declaration's provider or route.
 
+Shared REST declarations use `shared.operations.declare_operation` and the existing
+immutable `ActionDefinition`. Providers normalize their own catalog envelopes and
+validate their HTTP method, route, destination and authentication. The shared
+input projection accepts `path_params` (named entries with optional `schema`),
+`query_params` and `request_body` schemas, with explicit `query_required` and
+`body_required` envelope flags. Without a flag, the legacy required-member
+heuristic applies. Trackbooth retains its public `declare_action` and
+`connectors.trackbooth.schema.operation_input_schema` imports; its body descriptor's
+boolean `required` flag now controls body presence independently of body members.
+
+`shared.schema.project_schema` preserves complete supported Draft 2020-12
+structural schemas, including strict objects, unions, bounds, boolean schemas and
+document-local JSON Pointer references. Embedding rebases those references into
+their original query/body/path schema scope. Resource IDs, anchors, external or
+unresolved references, other dialects, content validation and unknown keywords
+fail at declaration rather than becoming permissive objects. Extensions (`x-`
+and legacy `x_`), descriptions, defaults, examples, `format` and discriminator
+annotations remain descriptive. Branch constraints enforce unions; the local
+validator does not execute custom server refinements or format checks. Server
+authorization and semantic validation remain authoritative.
+
+The shared `http.request_json` helper makes one request, bounds decoded response
+bytes to 16 MiB by default and closes its response on success or failure. It
+preserves caller-owned clients/timeouts, disables redirects and never retries.
+Provider adapters retain response-envelope and URL/auth policy; read-only POST
+metadata never grants automatic replay. The independent S1 structural fixture at
+`tests/core/fixtures/structural-operation.json` and Trackbooth admission tests
+cover structural fidelity without a live provider or downstream host claim.
+
 `ConnectorResult.output_json` contains native response data for in-process use,
 including signed download URLs and pagination tokens. Exact resolved credential
 values are scrubbed from that data. The consumer must project or redact it before
