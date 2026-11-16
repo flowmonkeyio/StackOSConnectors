@@ -10,7 +10,11 @@ from jsonschema import Draft202012Validator
 
 from stackos_connectors import CallOptions
 from stackos_connectors.connectors.trackbooth import declare_action
-from stackos_connectors.connectors.trackbooth.schema import operation_input_schema
+from stackos_connectors.connectors.trackbooth.schema import (
+    _schema_property,
+    _schema_required_fields,
+    operation_input_schema,
+)
 from stackos_connectors.contracts import thaw
 from stackos_connectors.errors import ConnectorError, ValidationError
 
@@ -223,6 +227,15 @@ def test_legacy_warning_annotations_and_import_remain_available():
         "additionalProperties": False,
         "x_trackbooth_schema_warning": "server refinement",
         "x_trackbooth_type_script": "FixtureInput",
+    }
+
+
+def test_retained_host_schema_helper_imports_and_metadata():
+    assert _schema_required_fields({"required": ["name", "mode"]}) == ["name", "mode"]
+    assert _schema_required_fields(None) == []
+    assert _schema_property({"type": "object", "additionalProperties": False}) == {
+        "type": "object",
+        "additionalProperties": False,
     }
 
 

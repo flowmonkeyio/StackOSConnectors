@@ -32,4 +32,14 @@ def operation_input_schema(detail: Mapping[str, Any]) -> dict[str, Any]:
     )
 
 
+def _schema_required_fields(raw: Any) -> list[str]:
+    """Compatibility for existing host manifest body-required metadata."""
+    if not isinstance(raw, Mapping):
+        return []
+    required = raw.get("required")
+    if isinstance(required, list | tuple):
+        return [item for item in required if isinstance(item, str)]
+    return []
+
+
 __all__ = ["operation_input_schema"]
