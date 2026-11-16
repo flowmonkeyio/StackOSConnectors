@@ -2,7 +2,7 @@
 
 from collections.abc import Iterator, Mapping
 from typing import Any
-from urllib.parse import unquote
+from urllib.parse import quote, unquote
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
@@ -93,6 +93,7 @@ def project_schema(raw: Any, *, prefix: str = "#") -> JsonSchema:
 
     Resource IDs, anchors, remote references, other dialects and unknown keywords
     are rejected. Extensions and annotation values are opaque, never traversed.
+    The prefix is a JSON Pointer fragment before URI percent encoding.
     """
     if not isinstance(raw, Mapping | bool):
         raise ValidationError("operation schema must be an object or boolean")
@@ -111,10 +112,11 @@ def project_schema(raw: Any, *, prefix: str = "#") -> JsonSchema:
         if "$schema" in node and node["$schema"] != Draft202012Validator.META_SCHEMA["$id"]:
             raise ValidationError("unsupported operation schema dialect")
         if "$ref" in node:
-            ref = unquote(node["$ref"])
-            if not ref.startswith("#") or ref not in nodes:
+            ref = node["$ref"]
+            if not ref.startswith("#") or unquote(ref) not in nodes:
                 raise ValidationError("operation schema requires a supported local reference")
-            node["$ref"] = prefix + ref[1:]
+            # Decode only for lookup; the validator decodes the emitted URI once.
+            node["$ref"] = "#" + quote(prefix[1:], safe="/~") + ref[1:]
     return schema
 
 

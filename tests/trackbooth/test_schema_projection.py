@@ -44,6 +44,43 @@ def structural_endpoint():
     }
 
 
+@pytest.mark.parametrize("surface", ["body", "query", "path", "response"])
+def test_encoded_reference_preserves_public_admission_and_response(surface):
+    source = json.loads(
+        (Path(__file__).parents[1] / "core/fixtures/encoded-reference.json").read_text()
+    )
+    canonical = Draft202012Validator(source)
+    assert [canonical.is_valid(value) for value in (7, "wrong")] == [True, False]
+    endpoint = {"operation_id": "Fixture.reference", "method": "POST", "path": "/api/check"}
+    if surface == "body":
+        endpoint["body_schema"] = {"required": True, "json_schema": source}
+        allowed, denied = {"body": 7}, {"body": "wrong"}
+    elif surface == "query":
+        endpoint["query_schema"] = {
+            "json_schema": {
+                "$defs": source["$defs"],
+                "type": "object",
+                "required": ["value"],
+                "properties": {"value": {"$ref": source["$ref"]}},
+            }
+        }
+        allowed, denied = {"query": {"value": 7}}, {"query": {"value": "wrong"}}
+    elif surface == "path":
+        endpoint["path"] = "/api/check/{id}"
+        endpoint["path_params"] = [{"name": "id", "schema": source}]
+        allowed, denied = {"path_params": {"id": 7}}, {"path_params": {"id": "wrong"}}
+    else:
+        endpoint["response_schema"] = {"json_schema": source}
+    action = declare_action("trackbooth.reference", endpoint)
+    if surface == "response":
+        projected = Draft202012Validator(thaw(action.config["response_schema"]))
+        assert [projected.is_valid(value) for value in (7, "wrong")] == [True, False]
+    else:
+        bound = client().register_actions([action])
+        assert not bound.validate_data("trackbooth", action.key, allowed)
+        assert bound.validate_data("trackbooth", action.key, denied)
+
+
 def test_root_constraints_are_not_replaced_by_permissive_object():
     schema = thaw(declare_action("trackbooth.s1", structural_endpoint()).input_schema)
     body = schema["properties"]["body"]

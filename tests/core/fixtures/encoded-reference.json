@@ -1,0 +1,7 @@
+{
+  "$defs": {
+    "a%62": {"type": "integer"},
+    "ab": {"type": "string"}
+  },
+  "$ref": "#/$defs/a%2562"
+}

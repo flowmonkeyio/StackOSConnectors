@@ -1,10 +1,52 @@
 """Shared embedding keeps each schema resource and structural constraints intact."""
 
+import json
+from pathlib import Path
+
 import pytest
 from jsonschema import Draft202012Validator
 
 from stackos_connectors.errors import ValidationError
 from stackos_connectors.shared.schema import operation_input_schema, project_schema
+
+
+@pytest.fixture
+def encoded_reference_schema():
+    return json.loads((Path(__file__).parent / "fixtures/encoded-reference.json").read_text())
+
+
+@pytest.mark.parametrize("include_decoy", [True, False])
+def test_encoded_reference_preserves_standalone_target(encoded_reference_schema, include_decoy):
+    source = encoded_reference_schema
+    if not include_decoy:
+        del source["$defs"]["ab"]
+    canonical = Draft202012Validator(source)
+    assert [canonical.is_valid(value) for value in (7, "wrong")] == [True, False]
+    projected = project_schema(source)
+    assert projected == source
+    validator = Draft202012Validator(projected)
+    assert [validator.is_valid(value) for value in (7, "wrong")] == [True, False]
+
+
+def test_encoded_reference_prefix_keeps_percent_pointer_escapes_and_unicode(
+    encoded_reference_schema,
+):
+    name = "item%62 /~é"
+    schema = operation_input_schema(
+        {
+            "path_params": [
+                {
+                    "name": name,
+                    "schema": encoded_reference_schema,
+                }
+            ]
+        }
+    )
+    canonical = Draft202012Validator(encoded_reference_schema)
+    assert [canonical.is_valid(value) for value in (7, "wrong")] == [True, False]
+    validator = Draft202012Validator(schema)
+    assert validator.is_valid({"path_params": {name: 7}})
+    assert not validator.is_valid({"path_params": {name: "wrong"}})
 
 
 def test_union_reference_scopes_and_opaque_annotation_data():
