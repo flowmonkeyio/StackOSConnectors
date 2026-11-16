@@ -144,13 +144,15 @@ def operation_input_schema(detail: Mapping[str, Any]) -> dict[str, Any]:
 
     for source, target in (("query_params", "query"), ("request_body", "body")):
         raw = detail.get(source)
-        if raw is None:
-            continue
-        schema = project_schema(raw, prefix=f"#/properties/{target}")
-        properties[target] = schema
         explicit = detail.get(f"{target}_required")
         if explicit is not None and not isinstance(explicit, bool):
             raise ValidationError("operation envelope required flag must be boolean")
+        if raw is None:
+            if explicit:
+                raise ValidationError("required operation envelope has no schema")
+            continue
+        schema = project_schema(raw, prefix=f"#/properties/{target}")
+        properties[target] = schema
         if (
             explicit
             if explicit is not None

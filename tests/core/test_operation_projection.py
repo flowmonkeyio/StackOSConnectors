@@ -66,6 +66,19 @@ def test_boolean_and_explicit_optional_envelopes():
     assert not Draft202012Validator(schema).is_valid({"body": {}})
 
 
+@pytest.mark.parametrize(
+    "detail",
+    [
+        {"body_required": True},
+        {"query_required": True},
+        {"body_required": "yes"},
+    ],
+)
+def test_required_envelopes_cannot_silently_omit_their_schema(detail):
+    with pytest.raises(ValidationError):
+        operation_input_schema(detail)
+
+
 def test_path_parameter_schema_has_its_own_reference_scope():
     schema = operation_input_schema(
         {
