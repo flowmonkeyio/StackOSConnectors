@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Mapping
+from copy import deepcopy
 from typing import Any
 
 from .contract import JsonObject
@@ -52,16 +53,8 @@ def operation_input_schema(detail: Mapping[str, Any]) -> JsonObject:
 def _schema_property(raw: Any) -> JsonObject | None:
     if not isinstance(raw, Mapping):
         return None
-    schema: JsonObject = {
-        "type": "object",
-        "additionalProperties": True,
-    }
-    properties = raw.get("properties")
-    if isinstance(properties, Mapping) and properties:
-        schema["properties"] = dict(properties)
-    required = raw.get("required")
-    if isinstance(required, list) and required:
-        schema["required"] = [str(item) for item in required if isinstance(item, str)]
+    # assets.py already expands the authoritative descriptor/component schema.
+    schema: JsonObject = deepcopy(dict(raw))
     if raw.get("weak"):
         schema["x_trackbooth_schema_warning"] = raw.get("warning") or "weak live schema"
     if raw.get("type_script"):
