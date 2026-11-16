@@ -58,7 +58,8 @@ def test_canonical_and_component_fallback_keep_asset_owner():
     assert (
         _schema_property(_expand_schema_descriptor(descriptor, {"Legacy": component})) == component
     )
-    assert _schema_property(_expand_schema_descriptor(descriptor, {})) is None
+    with pytest.raises(ValidationError, match="no supported schema"):
+        _expand_schema_descriptor(descriptor, {})
 
 
 def declaration():

@@ -1,20 +1,18 @@
 """Explicit Trackbooth catalog requests and immutable native route declarations."""
 
 from collections.abc import Mapping
-from contextlib import asynccontextmanager
 from typing import Any
 from urllib.parse import quote
-
-import httpx
 
 from stackos_connectors import ActionDefinition, AuthMethodDefinition, ConnectorResult
 from stackos_connectors.contracts import thaw
 from stackos_connectors.errors import ConnectorError, ValidationError
+from stackos_connectors.shared.http import NO_BODY, request_json
+from stackos_connectors.shared.operations import declare_operation
 from stackos_connectors.shared.provider_utils import credential_config, credential_value, issue
 
 from .assets import TrackboothAssets, _detail_from_endpoint
 from .integration import normalize_trackbooth_base_url, trackbooth_headers
-from .schema import operation_input_schema
 from .transport import (
     _extract_catalog_export,
     _extract_catalog_items,
@@ -54,25 +52,11 @@ def declare_action(key: str, endpoint: Mapping[str, Any]) -> ActionDefinition:
     if not isinstance(operation_id, str) or not operation_id.strip():
         raise ValidationError("Trackbooth declaration requires an operation_id")
     detail = _detail_from_endpoint(endpoint, openapi_schemas=TrackboothAssets().openapi_schemas)
-    return ActionDefinition(
+    return declare_operation(
         connector="trackbooth",
         key=key,
-        operation="operation.execute",
+        detail=detail,
         auth_methods=(AUTH_METHOD,),
-        input_schema=operation_input_schema(detail),
-        output_schema={"type": "object", "additionalProperties": True},
-        config={
-            "operation_id": operation_id,
-            "method": method,
-            "path": path,
-            "has_body": detail.get("request_body") is not None,
-            "response_schema": detail.get("response"),
-        },
-        description=str(detail.get("description") or detail.get("title") or operation_id),
-        guidance=(
-            "Pass this operation's path parameters, query and body. The registered route is fixed."
-        ),
-        metadata={"name": str(detail.get("title") or operation_id)},
     )
 
 
@@ -103,7 +87,7 @@ class TrackboothActionConnector:
         headers = trackbooth_headers(credential_value(request, "api_key"), acting_as_account=acting)
         method = "GET"
         params = []
-        body = None
+        body = NO_BODY
         if request.operation == "catalog.list":
             path = "/api/agent-api/catalog"
         elif request.operation == "catalog.export":
@@ -119,9 +103,15 @@ class TrackboothActionConnector:
             )
             params = _serialize_query(request.input_json.get("query"))
             if request.config_json.get("has_body"):
-                body = request.input_json.get("body")
-        status, response, response_headers = await _request_json(
-            request, method=method, url=base_url + path, headers=headers, params=params, body=body
+                body = request.input_json.get("body", NO_BODY)
+        status, response, response_headers = await request_json(
+            request,
+            vendor="trackbooth",
+            method=method,
+            url=base_url + path,
+            headers=headers,
+            params=params,
+            body=body,
         )
         metadata = {
             "vendor": "trackbooth",
@@ -161,60 +151,3 @@ class TrackboothActionConnector:
             exc.metadata_json["retry_safe"] = method == "GET"
             raise
         return ConnectorResult(output_json=output, metadata_json=metadata)
-
-
-@asynccontextmanager
-async def _http(request):
-    if request.options.http is not None:
-        yield request.options.http
-    else:
-        async with httpx.AsyncClient(timeout=60.0, follow_redirects=False) as client:
-            yield client
-
-
-async def _request_json(request, *, method, url, headers, params, body=None):
-    kwargs = {
-        "method": method,
-        "url": url,
-        "headers": headers,
-        "params": params,
-        "follow_redirects": False,
-    }
-    if body is not None:
-        kwargs["json"] = body
-    if request.options.timeout is not None:
-        kwargs["timeout"] = request.options.timeout
-    try:
-        async with _http(request) as http:
-            response = await http.request(**kwargs)
-    except httpx.HTTPError as exc:
-        raise ConnectorError(
-            "Trackbooth request outcome is unknown",
-            metadata_json={
-                "provider_executed": True,
-                "outcome_unknown": True,
-                "retry_safe": method == "GET",
-            },
-        ) from exc
-    if response.status_code >= 400:
-        try:
-            provider_error = response.json()
-        except ValueError:
-            provider_error = {"message": response.text[:1000]}
-        raise ConnectorError(
-            f"Trackbooth returned status {response.status_code}",
-            provider_status_code=response.status_code,
-            provider_error=provider_error,
-            metadata_json={
-                "vendor": "trackbooth",
-                "status_code": response.status_code,
-                "provider_executed": True,
-                "retry_safe": method == "GET",
-                "outcome_unknown": response.status_code >= 500,
-            },
-        )
-    try:
-        body = response.json()
-    except ValueError:
-        body = response.text
-    return response.status_code, body, response.headers

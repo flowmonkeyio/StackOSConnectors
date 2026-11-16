@@ -8,6 +8,7 @@
     "connectors/aws_s3/catalog.json",
     "connectors/byteplus_seedance/catalog.json",
     "connectors/byteplus_seedream/catalog.json",
+    "connectors/cfobooth/catalog.json",
     "connectors/clay/catalog.json",
     "connectors/cloudflare/catalog.json",
     "connectors/dataforseo/catalog.json",

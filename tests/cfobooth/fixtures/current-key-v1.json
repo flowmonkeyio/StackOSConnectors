@@ -1,0 +1,12 @@
+{
+  "requestId": "contract837-probe",
+  "data": {
+    "keyId": "53761da2-37bc-40ab-afbb-489fb72a67a1",
+    "organizationId": "73837d14-fbd6-40ca-81f4-19e2ce031fc9",
+    "user": {
+      "id": "576bb550-1dcc-430b-bbf2-c3327f603027",
+      "email": "contract@example.test"
+    },
+    "expiresAt": null
+  }
+}

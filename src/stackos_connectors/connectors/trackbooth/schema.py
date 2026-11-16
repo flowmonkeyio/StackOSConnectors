@@ -1,71 +1,45 @@
-"""Provider schema projection for explicit operation declarations."""
-
-from __future__ import annotations
+"""Trackbooth annotations around the shared structural projection."""
 
 from collections.abc import Mapping
-from copy import deepcopy
 from typing import Any
 
-from .contract import JsonObject
+from stackos_connectors.contracts import thaw
+from stackos_connectors.shared.schema import operation_input_schema as _operation_input_schema
 
 
-def operation_input_schema(detail: Mapping[str, Any]) -> JsonObject:
-    properties: JsonObject = {}
-    required: list[str] = []
-    path_params = detail.get("path_params")
-    if isinstance(path_params, list) and path_params:
-        path_properties = {
-            str(item.get("name")): {"type": "string"}
-            for item in path_params
-            if isinstance(item, Mapping) and item.get("name")
+def _schema_property(raw: Any) -> Any:
+    schema = thaw(raw)
+    if isinstance(schema, dict):
+        if schema.pop("weak", False):
+            schema["x_trackbooth_schema_warning"] = schema.get("warning") or "weak live schema"
+        schema.pop("warning", None)
+        if schema.get("type_script"):
+            schema["x_trackbooth_type_script"] = schema["type_script"]
+        schema.pop("type_script", None)
+    return schema
+
+
+def operation_input_schema(detail: Mapping[str, Any]) -> dict[str, Any]:
+    return _operation_input_schema(
+        {
+            **detail,
+            **{
+                key: _schema_property(detail[key])
+                for key in ("query_params", "request_body")
+                if key in detail
+            },
         }
-        if path_properties:
-            properties["path_params"] = {
-                "type": "object",
-                "additionalProperties": False,
-                "required": list(path_properties),
-                "properties": path_properties,
-            }
-            required.append("path_params")
-
-    query_schema = _schema_property(detail.get("query_params"))
-    if query_schema is not None:
-        properties["query"] = query_schema
-        if query_schema.get("required"):
-            required.append("query")
-
-    body_schema = _schema_property(detail.get("request_body"))
-    if body_schema is not None:
-        properties["body"] = body_schema
-        if body_schema.get("required"):
-            required.append("body")
-
-    schema: JsonObject = {
-        "type": "object",
-        "additionalProperties": False,
-        "properties": properties,
-    }
-    if required:
-        schema["required"] = required
-    return schema
-
-
-def _schema_property(raw: Any) -> JsonObject | None:
-    if not isinstance(raw, Mapping):
-        return None
-    # assets.py already expands the authoritative descriptor/component schema.
-    schema: JsonObject = deepcopy(dict(raw))
-    if raw.get("weak"):
-        schema["x_trackbooth_schema_warning"] = raw.get("warning") or "weak live schema"
-    if raw.get("type_script"):
-        schema["x_trackbooth_type_script"] = raw["type_script"]
-    return schema
+    )
 
 
 def _schema_required_fields(raw: Any) -> list[str]:
+    """Compatibility for existing host manifest body-required metadata."""
     if not isinstance(raw, Mapping):
         return []
     required = raw.get("required")
-    if isinstance(required, list):
-        return [str(item) for item in required if isinstance(item, str)]
+    if isinstance(required, list | tuple):
+        return [item for item in required if isinstance(item, str)]
     return []
+
+
+__all__ = ["operation_input_schema"]

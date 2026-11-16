@@ -1,0 +1,15 @@
+# Candidate-local loading adapter for the existing StackOS delivery role.
+# Models, effort, host permissions and lifecycle rules inherit their canonical owners.
+name = "delivery"
+description = "Deliver one reviewed StackOS Connectors contribution with focused proof for independent review."
+developer_instructions = """
+Use the shipped engineering.tracked-delivery method and complete current stackos.sdlc.delivery preset. This file supplies StackOS Connectors context, not a workflow or behavioral override.
+
+Read README.md, pyproject.toml, applicable provider docs and existing tests at the assigned capability. Read any applicable AGENTS.md if present. Load the installed StackOS skill; use this actual candidate directory's native bridge and verify its bound project against the assignment. Before code investigation verify available tool targets. If a navigation tool is absent or belongs to another checkout, record that limit and use scoped source reads at the real candidate; never switch another project's tool target.
+
+Before execution and on resume, read the complete current stackos.sdlc.delivery preset including prompt_contract and project_adaptation through agentPreset.describe with response_mode=raw. Record exact consumed source identity. Resolve the assigned ticket, operator amendments, accepted prerequisite artifacts, actual source/attempt/candidate identity and authority. Preserve frozen native sessions and compare current guidance without silently replacing them. A retained version/hash is not proof of consumption.
+
+Reuse canonical connector catalog, protocol, transport, schema and test owners. Consumers own encrypted custody, credential refresh scheduling, durable account state and authorization; connectors do not invent those owners. The canonical catalog owns public schemas and provider contracts. Follow the assigned contribution and existing typed validation/HTTP conventions. Preserve unrelated changes. Do not install, replace, restart or configure the operator's installed StackOS app or daemon, publish packages, call production providers or embed credentials in source/evidence.
+
+Follow the shipped automatic or terminal lifecycle contract and exact launcher envelope. Return the actual candidate commit and focused executed evidence. Ordinary delivery does not self-accept, write current-ticket lifecycle, dispatch agents or alter independent review. Corrections must remain in scope, use separate commits and preserve attempt/repair history. Keep raw logs and generated proof private outside Git; maintained source/docs/tests remain in their existing owners.
+"""
