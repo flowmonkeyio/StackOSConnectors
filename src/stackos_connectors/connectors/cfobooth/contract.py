@@ -14,12 +14,30 @@ from stackos_connectors.errors import ValidationError
 from stackos_connectors.shared.schema import normalize_draft7_schema
 
 
+def _valid_email(value: Any) -> bool:
+    # VerifiedUser uses shared/primitives.ts emailSchema -> pinned Zod 4.6.5
+    # z.email().max(254). JSON Schema's built-in email checker only requires @.
+    # Validate the server's wire value without accepting whitespace/control text.
+    return (
+        isinstance(value, str)
+        and len(value) <= 254
+        and re.fullmatch(
+            r"(?:[A-Za-z0-9_'+\-]+\.)*[A-Za-z0-9_'+\-]*[A-Za-z0-9_+-]"
+            r"@(?:[A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}",
+            value,
+        )
+        is not None
+    )
+
+
 @lru_cache
 def validator(name: str, *, descriptor: bool = False) -> Draft7Validator:
     schema = json.loads(files(__package__).joinpath("schemas", name + ".json").read_text())
     if descriptor:
         schema = {"$ref": "#/properties/data/properties/operations/items", **schema}
-    return Draft7Validator(schema, format_checker=FormatChecker())
+    checker = FormatChecker()
+    checker.checks("email")(_valid_email)
+    return Draft7Validator(schema, format_checker=checker)
 
 
 def validate_wire(value: Any, name: str, *, descriptor: bool = False) -> dict:

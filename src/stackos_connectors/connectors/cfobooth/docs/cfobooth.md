@@ -15,15 +15,17 @@ editable. `https://cfobooth.com` is display-only example text and is rejected as
 request destination. No remote deployment is verified. Remote endpoints require
 HTTPS; HTTP is permitted only for `localhost`, `127.0.0.1` and `[::1]`, with an
 optional port. The native Trackbooth URL policy is reused with CFO's explicit
-configuration requirement. Normalize trailing slashes and preserve a deployment
-path prefix. Reject userinfo, query/fragment, escapes, backslashes, traversal and
+configuration requirement. Check the final IDNA-normalized wire host before
+dispatch and preserve the deployment path prefix, including semicolon parameters.
+Normalize trailing slashes. Reject userinfo, query/fragment, escapes, backslashes, traversal and
 invalid ports before dispatch. Provider context cannot override URL, headers or
 organization. Caller-owned HTTP clients remain trusted transport dependencies;
 the caller owns their middleware, authentication, proxy and TLS configuration.
 
 `probe_credentials("cfobooth", ...)` performs one key-only
 `GET /api/organizations/:organizationId/api-keys/current` with `X-API-Key`. It
-validates the canonical envelope, UUID key/user/organization identity, email,
+validates the canonical envelope, UUID key/user/organization identity, bounded
+email syntax from CFOBooth's shared VerifiedUser contract,
 configured organization and nullable future UTC expiration. It returns safe
 `identity` and native account evidence, including key ID and subject; no key or
 digest is returned. A malformed, expired, revoked or foreign key fails safely.

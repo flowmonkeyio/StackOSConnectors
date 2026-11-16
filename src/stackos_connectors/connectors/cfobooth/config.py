@@ -20,23 +20,25 @@ def normalize_api_base_url(raw: str | None) -> str:
     if re.search(r"[\s\\%?#]", raw):
         raise ValidationError("CFOBooth API URL contains unsupported components")
     try:
-        parsed = urlsplit(normalize_trackbooth_base_url(raw))
+        parsed = urlsplit(raw)
         if parsed.port is not None and not 1 <= parsed.port <= 65535:
             raise ValueError
-        if parsed.hostname.lower().rstrip(".") in {"cfobooth.com", "www.cfobooth.com"}:
-            raise ValidationError("cfobooth.com is a display-only example; configure your endpoint")
-        if parsed.scheme == "http" and parsed.hostname.lower() not in {
-            "localhost",
-            "127.0.0.1",
-            "::1",
-        }:
-            raise ValueError
-        if any(part in {".", ".."} for part in parsed.path.split("/")) or "//" in parsed.path:
+        path = parsed.path.rstrip("/")
+        if any(part in {".", ".."} for part in path.split("/")) or "//" in path:
             raise ValueError
         if parsed.netloc.endswith(":") or "@" in parsed.netloc:
             raise ValueError
         url = httpx.URL(parsed.geturl())
         if not url.host or not url.is_absolute_url:
+            raise ValueError
+        # Apply native policy to the final wire destination, after HTTPX's IDNA
+        # normalization. Use its validation, not its path rewrite: urlparse-based
+        # rewriting drops a configured final segment's semicolon parameters.
+        normalize_trackbooth_base_url(str(url))
+        host = url.raw_host.decode("ascii").lower().rstrip(".")
+        if host in {"cfobooth.com", "www.cfobooth.com"}:
+            raise ValidationError("cfobooth.com is a display-only example; configure your endpoint")
+        if url.scheme == "http" and host not in {"localhost", "127.0.0.1", "::1"}:
             raise ValueError
     except (ValueError, httpx.InvalidURL):
         raise ValidationError("CFOBooth API URL must use HTTPS or exact loopback HTTP") from None
