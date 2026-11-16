@@ -10,6 +10,7 @@ from stackos_connectors.shared.http import NO_BODY, request_json
 from stackos_connectors.validation import schema_issues
 
 from .config import path_value
+from .contract import PUBLIC_ERROR_MESSAGES
 
 
 def _check_organization(value: Any, org: str) -> None:
@@ -45,7 +46,13 @@ def operation_payload(request, org: str) -> tuple[str, str, list[tuple[str, str]
     return route["method"], path, query, data.get("body", NO_BODY)
 
 
-def response_error(status: int, method: str, reason: str) -> ConnectorError:
+def _retry_safe(method: str, descriptor: Mapping | None) -> bool:
+    return method == "GET" and (descriptor is None or descriptor["replay"] == "safe")
+
+
+def response_error(
+    status: int, method: str, reason: str, descriptor: Mapping | None = None
+) -> ConnectorError:
     return ConnectorError(
         "CFOBooth returned an invalid response",
         provider_status_code=status,
@@ -55,12 +62,12 @@ def response_error(status: int, method: str, reason: str) -> ConnectorError:
             "status_code": status,
             "reason_code": reason,
             "outcome_unknown": True,
-            "retry_safe": method == "GET",
+            "retry_safe": _retry_safe(method, descriptor),
         },
     )
 
 
-def _safe_error(exc: ConnectorError, descriptor: Mapping | None) -> ConnectorError:
+def _safe_error(exc: ConnectorError, descriptor: Mapping | None, method: str) -> ConnectorError:
     error = exc.provider_error
     safe = None
     if (
@@ -72,17 +79,22 @@ def _safe_error(exc: ConnectorError, descriptor: Mapping | None) -> ConnectorErr
         and isinstance(error["error"], dict)
         and set(error["error"]) == {"code", "message"}
         and isinstance(error["error"]["code"], str)
-        and re.fullmatch(r"[a-z_]{1,64}", error["error"]["code"])
+        and error["error"]["code"] in PUBLIC_ERROR_MESSAGES
         and isinstance(error["error"]["message"], str)
         and len(error["error"]["message"]) <= 160
-        and not schema_issues(descriptor["schemas"]["error"], error)
     ):
-        safe = error
+        code = error["error"]["code"]
+        candidate = {
+            "requestId": error["requestId"],
+            "error": {"code": code, "message": PUBLIC_ERROR_MESSAGES[code]},
+        }
+        if not schema_issues(descriptor["schemas"]["error"], candidate):
+            safe = candidate
     return ConnectorError(
         exc.detail,
         provider_status_code=exc.provider_status_code,
         provider_error=safe,
-        metadata_json=exc.metadata_json,
+        metadata_json={**exc.metadata_json, "retry_safe": _retry_safe(method, descriptor)},
     )
 
 
@@ -114,19 +126,19 @@ async def execute_request(
             max_response_bytes=descriptor["responseLimit"] if descriptor else 16 * 1024 * 1024,
         )
     except ConnectorError as exc:
-        raise _safe_error(exc, descriptor) from None
+        raise _safe_error(exc, descriptor, method) from None
     if status < 200 or status >= 300 or not isinstance(output, dict):
-        raise response_error(status, method, "invalid_json_or_status")
+        raise response_error(status, method, "invalid_json_or_status", descriptor)
     media_type = headers.get("content-type", "").split(";", 1)[0].strip().lower()
     if media_type != "application/json" and not media_type.endswith("+json"):
-        raise response_error(status, method, "invalid_content_type")
+        raise response_error(status, method, "invalid_content_type", descriptor)
     if descriptor is None and status != 200:
         raise response_error(status, method, "invalid_setup_status")
     if descriptor is not None and (
         status != descriptor["route"]["status"]
         or schema_issues(descriptor["schemas"]["result"], output)
     ):
-        raise response_error(status, method, "invalid_operation_response")
+        raise response_error(status, method, "invalid_operation_response", descriptor)
     return (
         status,
         output,

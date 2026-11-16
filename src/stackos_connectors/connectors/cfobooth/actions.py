@@ -81,6 +81,10 @@ def catalog_actions(catalog: Mapping, *, prefix: str = "cfobooth") -> tuple[Acti
     operations = catalog["data"]["operations"]
     if len({item["operationId"] for item in operations}) != len(operations):
         raise ValidationError("duplicate CFOBooth operation identity")
+    if len({(item["route"]["method"], item["route"]["path"]) for item in operations}) != len(
+        operations
+    ):
+        raise ValidationError("duplicate CFOBooth operation route")
     return tuple(
         declare_action(prefix + "." + item["operationId"], item)
         for item in operations

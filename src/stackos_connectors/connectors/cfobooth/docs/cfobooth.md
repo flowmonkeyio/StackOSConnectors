@@ -35,8 +35,10 @@ There is no login, password acquisition, token grant, refresh or remote logout.
 Execute `cfobooth.catalog.export` to fetch
 `GET /api/organizations/:organizationId/operation-catalog`. It preserves the
 canonical `{requestId,data:{version,catalogHash,operations}}` envelope. Version1,
-512-operation and16MiB ceilings, unique operation identities, descriptor shapes
+512-operation and16MiB ceilings, unique operation identities and method/path bindings, descriptor shapes
 and eligible schema projection are checked before returning a complete catalog.
+Scope, authentication, transport and effect consistency are validated for all
+descriptors before eligibility filtering, including excluded operations.
 `catalog_actions(result.output_json)` returns an immutable tuple of eligible
 `ActionDefinition`s for explicit `client.register_actions`. An empty supported
 catalog returns an empty tuple. It never registers a partial catalog itself.
@@ -52,6 +54,8 @@ missing, extra, conflicting or traversal parameters reject before dispatch.
 Query scalars stringify, arrays repeat keys, absent values are omitted, and
 null/object entries reject. JSON bodies retain the complete canonical schema.
 Read-only POST remains read-only; a mutation requires explicit-only replay.
+GET must declare a read effect. Retry metadata also respects explicit-only replay,
+including for GET; a read-only POST does not acquire automatic replay permission.
 
 Shared projection preserves supported strict objects, required bodies, unions,
 bounds, nested constraints and local references. Draft7 opts into the shared
@@ -67,7 +71,9 @@ Requests reuse `shared.http.request_json`: bounded decoded responses, response
 closure, caller-owned clients/timeouts, redirects disabled and no retries.
 Operation success must match its declared status and result schema. Failures
 retain only structurally valid canonical error identity/correlation; unsafe raw
-bodies are discarded and resolved credential echoes are scrubbed at the native
+bodies are discarded. Canonical error codes and correlation IDs retain only the
+fixed public message from CFOBooth's wire contract, never provider-supplied text.
+Resolved credential echoes are scrubbed at the native
 boundary. A write timeout or invalid response stays an uncertain outcome, with
 no automatic replay. The operation response envelope is preserved.
 

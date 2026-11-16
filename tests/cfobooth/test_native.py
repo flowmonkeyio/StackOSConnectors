@@ -50,7 +50,10 @@ async def test_loopback_probe_catalog_register_execute_and_denial(native, peer):
     assert all("Authorization" not in call[2] for call in peer.calls)
     assert peer.calls[-1][3] == b'{"name":"preview"}'
     peer.status = 403
-    peer.output = {"requestId": "denied-c09", "error": {"code": "forbidden", "message": "revoked"}}
+    peer.output = {
+        "requestId": "denied-c09",
+        "error": {"code": "forbidden", "message": "Access is denied."},
+    }
     import pytest
 
     with pytest.raises(ConnectorError) as failed:

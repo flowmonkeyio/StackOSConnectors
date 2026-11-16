@@ -13,6 +13,23 @@ from stackos_connectors.contracts import thaw
 from stackos_connectors.errors import ValidationError
 from stackos_connectors.shared.schema import normalize_draft7_schema
 
+# CFOBooth libs/contracts/src/shared/errors.ts, sdk837-wire-r6. The JSON
+# Schema export omits the message/code refinement; provider text is not public.
+PUBLIC_ERROR_MESSAGES = {
+    "invalid_request": "The request is invalid.",
+    "output_limit": "The complete result exceeds the supported output limit.",
+    "unauthenticated": "Authentication is required.",
+    "forbidden": "Access is denied.",
+    "not_found": "The operation was not found.",
+    "conflict": "The operation conflicts with the current state.",
+    "run_limit_exceeded": "The run reached a processing limit.",
+    "rate_limited": "Too many requests. Try again later.",
+    "dependency_unavailable": "A required service is unavailable.",
+    "internal_error": "The request could not be completed.",
+    "transport_error": "The server could not be reached.",
+    "invalid_response": "The server returned an invalid response.",
+}
+
 
 def _valid_email(value: Any) -> bool:
     # VerifiedUser uses shared/primitives.ts emailSchema -> pinned Zod 4.6.5
@@ -44,7 +61,42 @@ def validate_wire(value: Any, name: str, *, descriptor: bool = False) -> dict:
     value = thaw(value)
     if not validator(name, descriptor=descriptor).is_valid(value):
         raise ValidationError("invalid CFOBooth " + name + " response")
+    if name == "catalog-v1":
+        for item in [value] if descriptor else value["data"]["operations"]:
+            _validate_policy(item)
     return value
+
+
+def _validate_policy(descriptor: Mapping) -> None:
+    """Retain catalog wire refinements from CFO assertOperationPolicy, before filtering."""
+    auth, route = descriptor["authentication"], descriptor["route"]
+    public = auth["kind"] == "public"
+    organization = descriptor["scope"] == "organization"
+    if (
+        (descriptor["scope"] == "public") != public
+        or (not public and organization != (auth["organizationParameter"] is not None))
+        or (
+            organization
+            and not re.match(r"/api/organizations/:organizationId(?:/|$)", route["path"])
+        )
+    ):
+        raise ValidationError("CFOBooth scope conflicts with its authentication binding")
+    credentials = [] if public else auth["credentials"]
+    if len(credentials) != len(set(credentials)):
+        raise ValidationError("duplicate CFOBooth credential kind")
+    api_key = "api-key" in credentials
+    if api_key and (not organization or descriptor["transport"] != "json"):
+        raise ValidationError("CFOBooth API keys require organization JSON operations")
+    if descriptor["execution"]["kind"] == "action" and (
+        descriptor["transport"] != "json" or not api_key
+    ):
+        raise ValidationError("CFOBooth actions require explicit API-key JSON eligibility")
+    if (
+        (descriptor["transport"] == "multipart") != (route["body"] == "multipart")
+        or (descriptor["effect"] == "mutation" and descriptor["replay"] != "explicit-only")
+        or (route["method"] == "GET" and descriptor["effect"] != "read")
+    ):
+        raise ValidationError("CFOBooth transport or effect metadata is inconsistent")
 
 
 def eligible(descriptor: Mapping) -> bool:
@@ -107,7 +159,7 @@ def normalize_descriptor(raw: Mapping) -> dict:
         raise ValidationError("CFOBooth body binding conflicts with its schema")
     if route["method"] == "GET" and schemas["body"] is not None:
         raise ValidationError("CFOBooth GET body is unsupported")
-    if descriptor["effect"] == "mutation" and descriptor["replay"] != "explicit-only":
-        raise ValidationError("CFOBooth mutations require explicit-only replay")
+    if not isinstance(schemas["query"], dict) or schemas["query"].get("type") != "object":
+        raise ValidationError("unsupported CFOBooth query parameter schema")
     descriptor["schemas"] = schemas
     return descriptor
