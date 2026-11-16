@@ -6,7 +6,7 @@ from pathlib import Path
 
 import httpx
 import pytest
-from jsonschema import Draft7Validator
+from jsonschema import Draft7Validator, Draft202012Validator
 
 from stackos_connectors import CallOptions
 from stackos_connectors.connectors.cfobooth import catalog_actions, declare_action
@@ -95,6 +95,94 @@ def test_draft7_lossless_subset_and_reference_scope():
         )
     assert projected["examples"] == [{"$ref": "opaque"}]
     assert source["$schema"].endswith("draft-07/schema#")
+
+
+def fixed_tuple_schema():
+    return {
+        "type": "array",
+        "items": [{"const": "document_id"}, {"const": "line_id"}],
+        "minItems": 2,
+        "maxItems": 2,
+        "additionalItems": False,
+    }
+
+
+@pytest.mark.parametrize(
+    "value,valid",
+    [
+        (["document_id", "line_id"], True),
+        (["line_id", "document_id"], False),
+        (["document_id"], False),
+        (["document_id", "line_id", "extra"], False),
+        (["document_id", 2], False),
+        ([], False),
+        ("document_id", False),
+    ],
+)
+def test_draft7_fixed_tuple_constraints_match_source(value, valid):
+    source = {
+        "$schema": Draft7Validator.META_SCHEMA["$id"],
+        "definitions": {"pair": fixed_tuple_schema()},
+        "type": "object",
+        "properties": {"components": {"$ref": "#/definitions/pair"}},
+        "required": ["components"],
+        "additionalProperties": False,
+    }
+    projected = normalize_draft7_schema(source)
+    assert Draft7Validator(source).is_valid({"components": value}) is valid
+    assert Draft202012Validator(projected).is_valid({"components": value}) is valid
+    assert not Draft202012Validator(projected).is_valid({"components": value, "extra": 1})
+
+
+def test_draft7_nested_fixed_tuple_preserves_refs_annotations_and_input():
+    inner = fixed_tuple_schema()
+    source = {
+        "$schema": Draft7Validator.META_SCHEMA["$id"],
+        **fixed_tuple_schema(),
+        "items": [inner, {"$ref": "#/definitions/amount"}],
+        "definitions": {"amount": {"type": "integer", "minimum": 1}},
+        "examples": [{"items": [{"$ref": "opaque"}]}],
+        "x-context": {"additionalItems": True, "items": [{"$ref": "opaque"}]},
+    }
+    original = copy.deepcopy(source)
+    projected = normalize_draft7_schema(source)
+    for value, valid in [
+        ([["document_id", "line_id"], 1], True),
+        ([["document_id", "line_id"], 0], False),
+        ([["line_id", "document_id"], 1], False),
+    ]:
+        assert Draft7Validator(source).is_valid(value) is valid
+        assert Draft202012Validator(projected).is_valid(value) is valid
+    assert source == original
+    assert projected["examples"] == source["examples"]
+    assert projected["x-context"] == source["x-context"]
+
+
+@pytest.mark.parametrize("suffix", ["items", "items/0", "items%2F0"])
+def test_draft7_references_to_renamed_tuple_locations_fail(suffix):
+    source = {
+        "$schema": Draft7Validator.META_SCHEMA["$id"],
+        "definitions": {"pair": fixed_tuple_schema()},
+        "properties": {"value": {"$ref": "#/definitions/pair/" + suffix}},
+    }
+    with pytest.raises(ValidationError, match="tuple reference"):
+        normalize_draft7_schema(source)
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        lambda d: d.pop("maxItems"),
+        lambda d: d.update(minItems=1),
+        lambda d: d.update(additionalItems=True),
+        lambda d: d.pop("additionalItems"),
+    ],
+)
+def test_draft7_nonfixed_or_open_tuple_fails(change):
+    source = {"$schema": Draft7Validator.META_SCHEMA["$id"], **fixed_tuple_schema()}
+    change(source)
+    with pytest.raises(ValidationError):
+        normalize_draft7_schema(source)
 
 
 @pytest.mark.parametrize(

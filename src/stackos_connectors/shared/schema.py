@@ -123,8 +123,8 @@ def project_schema(raw: Any, *, prefix: str = "#") -> JsonSchema:
 def normalize_draft7_schema(raw: Any) -> JsonSchema:
     """Opt in to the shared structural subset of Draft 7 without weakening it.
 
-    Tuple items, dependencies and reference siblings have different semantics
-    across dialects and fail explicitly. Annotation values remain opaque.
+    Closed fixed tuples retain position and cardinality. Other tuple forms,
+    dependencies and reference siblings fail explicitly. Annotations stay opaque.
     Existing consumers of project_schema retain their dialect contract.
     """
     schema = thaw(raw)
@@ -145,30 +145,47 @@ def normalize_draft7_schema(raw: Any) -> JsonSchema:
         "maxContains",
     }
     annotations = {"$ref", "$comment", "title", "description", "default", "examples"}
+    tuple_paths: set[str] = set()
+    references: list[str] = []
 
-    # Inspect shape before walking: Draft 7 tuple items are not schema objects.
-    def convert(node: Any) -> None:
+    def convert(node: Any, path: tuple[str, ...] = ()) -> None:
         if not isinstance(node, dict):
             return
-        if modern_only & node.keys() or isinstance(node.get("items"), list):
+        if modern_only & node.keys():
             raise ValidationError("unsupported Draft 7 operation schema feature")
+        items = node.get("items")
+        if isinstance(items, list):
+            if (
+                node.get("additionalItems") is not False
+                or node.get("minItems") != len(items)
+                or node.get("maxItems") != len(items)
+            ):
+                raise ValidationError("unsupported Draft 7 tuple shape")
+            tuple_paths.add(_pointer((*path, "items")))
         if "$ref" in node and node.keys() - annotations:
             raise ValidationError("unsupported Draft 7 reference siblings")
+        if "$ref" in node:
+            references.append(unquote(node["$ref"]))
         if "$schema" in node:
             if node["$schema"] != Draft7Validator.META_SCHEMA["$id"]:
                 raise ValidationError("mixed operation schema dialects")
             del node["$schema"]
         for key, value in node.items():
             if key in _MAP_SCHEMAS:
-                for child in value.values():
-                    convert(child)
-            elif key in _LIST_SCHEMAS:
-                for child in value:
-                    convert(child)
+                for name, child in value.items():
+                    convert(child, (*path, key, name))
+            elif key in _LIST_SCHEMAS or (key == "items" and isinstance(value, list)):
+                for index, child in enumerate(value):
+                    convert(child, (*path, key, str(index)))
             elif key in _SINGLE_SCHEMAS:
-                convert(value)
+                convert(value, (*path, key))
+        if isinstance(items, list):
+            node["prefixItems"] = items
+            node["items"] = node.pop("additionalItems")
 
     convert(schema)
+    if any(ref == path or ref.startswith(path + "/") for ref in references for path in tuple_paths):
+        raise ValidationError("unsupported Draft 7 tuple reference")
     return project_schema(schema)
 
 

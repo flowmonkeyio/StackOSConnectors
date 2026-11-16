@@ -59,9 +59,12 @@ including for GET; a read-only POST does not acquire automatic replay permission
 
 Shared projection preserves supported strict objects, required bodies, unions,
 bounds, nested constraints and local references. Draft7 opts into the shared
-structural subset; tuple items, dependencies, reference siblings, unknown
-features and external references fail explicitly. Annotation values remain
-opaque. Fixed organization specialization supports a finite object parameter
+structural subset, including closed fixed tuples with exact minimum/maximum
+lengths and `additionalItems:false`; positional constraints are preserved as
+`prefixItems` with `items:false`. Other tuple forms and references into renamed
+tuple item locations fail explicitly, as do dependencies, reference siblings,
+unknown features and external references. Annotation values remain opaque.
+Fixed organization specialization supports a finite object parameter
 schema with declared required path properties; other root parameter constraints
 reject rather than disappear. Full original parameters are also validated after
 organization injection. Structural validation does not execute server semantic
