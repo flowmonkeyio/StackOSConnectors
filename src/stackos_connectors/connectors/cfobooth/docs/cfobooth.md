@@ -11,8 +11,9 @@ and synthetic identity; it does not prove server implementation or key issuance.
 Use native `ConnectorAuth(method="api_key", fields={"api_key": ...},
 config={"api_base_url": ..., "organization_id": ...})`. The host's Account owns
 secret custody and the selected organization. Configuration is required and
-editable. `https://cfobooth.com` is display-only example text and is rejected as a
-request destination. No remote deployment is verified. Remote endpoints require
+editable. Explicit `https://cfobooth.com` and `https://www.cfobooth.com` URLs are
+accepted under the same destination policy as other HTTPS endpoints. No default
+URL, automatic production request or remote deployment proof is implied. Remote endpoints require
 HTTPS; HTTP is permitted only for `localhost`, `127.0.0.1` and `[::1]`, with an
 optional port. The native Trackbooth URL policy is reused with CFO's explicit
 configuration requirement. Check the final IDNA-normalized wire host before

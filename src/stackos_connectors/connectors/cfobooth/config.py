@@ -36,8 +36,6 @@ def normalize_api_base_url(raw: str | None) -> str:
         # rewriting drops a configured final segment's semicolon parameters.
         normalize_trackbooth_base_url(str(url))
         host = url.raw_host.decode("ascii").lower().rstrip(".")
-        if host in {"cfobooth.com", "www.cfobooth.com"}:
-            raise ValidationError("cfobooth.com is a display-only example; configure your endpoint")
         if url.scheme == "http" and host not in {"localhost", "127.0.0.1", "::1"}:
             raise ValueError
     except (ValueError, httpx.InvalidURL):

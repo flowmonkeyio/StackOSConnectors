@@ -26,6 +26,8 @@ from .conftest import KEY, auth, descriptor
         "http://127.0.0.1:8123/",
         "http://[::1]:8123/",
         "https://owned.test/prefix///",
+        "https://cfobooth.com",
+        "https://www.cfobooth.com",
     ],
 )
 def test_explicit_native_urls(base):
@@ -38,9 +40,6 @@ def test_explicit_native_urls(base):
         None,
         "",
         " ",
-        "https://cfobooth.com",
-        "https://CFOBOOTH.COM/prefix",
-        "https://www.cfobooth.com",
         "http://remote.test",
         "http://127.0.0.2",
         "https://10.0.0.1",
