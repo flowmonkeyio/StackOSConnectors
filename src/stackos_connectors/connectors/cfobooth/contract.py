@@ -12,6 +12,7 @@ from jsonschema import Draft7Validator, FormatChecker
 from stackos_connectors.contracts import thaw
 from stackos_connectors.errors import ValidationError
 from stackos_connectors.shared.schema import normalize_draft7_schema
+from stackos_connectors.validation import schema_issues
 
 # CFOBooth libs/contracts/src/shared/errors.ts, sdk837-wire-r6. The JSON
 # Schema export omits the message/code refinement; provider text is not public.
@@ -29,6 +30,81 @@ PUBLIC_ERROR_MESSAGES = {
     "transport_error": "The server could not be reached.",
     "invalid_response": "The server returned an invalid response.",
 }
+
+_ISSUE_REQUIRED = {"reason", "path"}
+_ISSUE_FIELDS = _ISSUE_REQUIRED | {"field"}
+_ISSUE_LIMIT = 4
+_MAX_SCHEMA_CHOICES = 16
+_ISSUE_TOKEN = re.compile(r"[A-Za-z][A-Za-z0-9_.]{0,63}")
+
+
+def _closed_properties(schema: Any) -> Mapping:
+    if (
+        isinstance(schema, Mapping)
+        and schema.get("type") == "object"
+        and schema.get("additionalProperties") is False
+        and not schema.get("patternProperties")
+    ):
+        return schema.get("properties", {})
+    return {}
+
+
+def _issue_token(value: Any) -> bool:
+    return isinstance(value, str) and _ISSUE_TOKEN.fullmatch(value) is not None
+
+
+def _finite_issue_branch(schema: Any) -> bool:
+    properties = _closed_properties(schema)
+    if not _ISSUE_REQUIRED <= properties.keys() <= _ISSUE_FIELDS:
+        return False
+    if not _ISSUE_REQUIRED.issubset(schema.get("required", ())):
+        return False
+    for name, leaf in properties.items():
+        if not isinstance(leaf, Mapping):
+            return False
+        choices = (leaf["const"],) if "const" in leaf else leaf.get("enum", ())
+        # A branch binds one reason to its paths and any permitted field names.
+        limit = 1 if name == "reason" else _MAX_SCHEMA_CHOICES
+        if not 1 <= len(choices) <= limit or not all(map(_issue_token, choices)):
+            return False
+    return True
+
+
+def with_query_issues(schema: Mapping, base: dict, issues: Any) -> dict:
+    """Extend a safe envelope only when the catalog bounds the whole issue list."""
+    if not isinstance(issues, list) or not 1 <= len(issues) <= _ISSUE_LIMIT:
+        return base
+    error = _closed_properties(schema).get("error")
+    array = _closed_properties(error).get("issues")
+    if (
+        not isinstance(array, Mapping)
+        or array.get("type") != "array"
+        or "prefixItems" in array
+        or array.get("minItems", 0) < 1
+        or not 1 <= array.get("maxItems", 0) <= _ISSUE_LIMIT
+    ):
+        return base
+    items = array.get("items")
+    if not isinstance(items, Mapping):
+        return base
+    branches = items.get("oneOf", items.get("anyOf", (items,)))
+    if not 1 <= len(branches) <= _MAX_SCHEMA_CHOICES:
+        return base
+    if not all(map(_finite_issue_branch, branches)):
+        return base
+    for issue in issues:
+        if (
+            not isinstance(issue, dict)
+            or not _ISSUE_REQUIRED <= issue.keys() <= _ISSUE_FIELDS
+            or not all(map(_issue_token, issue.values()))
+        ):
+            return base
+    detailed = {**base, "error": {**base["error"], "issues": issues}}
+    try:
+        return base if schema_issues(schema, detailed) else detailed
+    except RecursionError:
+        # A detail-only recursive schema can leave the legacy envelope valid.
+        return base
 
 
 def _valid_email(value: Any) -> bool:

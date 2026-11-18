@@ -1,0 +1,48 @@
+{
+  "type": "array",
+  "minItems": 1,
+  "maxItems": 4,
+  "items": {
+    "oneOf": [
+      {
+        "type": "object",
+        "required": ["reason", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "reason": {"type": "string", "const": "presentation_group_count"},
+          "path": {"type": "string", "const": "definition.operation.groupBy"}
+        }
+      },
+      {
+        "type": "object",
+        "required": ["reason", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "reason": {"type": "string", "const": "financial_period_selection"},
+          "path": {"type": "string", "const": "definition.operation.filter.equals"},
+          "field": {
+            "type": "string",
+            "enum": ["measure_key", "scope_key", "scenario_key", "currency", "period_kind", "basis", "status"]
+          }
+        }
+      },
+      {
+        "type": "object",
+        "required": ["reason", "path"],
+        "additionalProperties": false,
+        "properties": {
+          "reason": {"type": "string", "const": "financial_period_window"},
+          "path": {
+            "type": "string",
+            "enum": [
+              "definition.operation.range",
+              "definition.operation.filter.dateRange",
+              "definition.operation.baseline",
+              "definition.operation.current"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

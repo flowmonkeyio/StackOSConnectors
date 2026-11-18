@@ -10,7 +10,7 @@ from stackos_connectors.shared.http import NO_BODY, request_json
 from stackos_connectors.validation import schema_issues
 
 from .config import path_value
-from .contract import PUBLIC_ERROR_MESSAGES
+from .contract import PUBLIC_ERROR_MESSAGES, with_query_issues
 
 
 def _check_organization(value: Any, org: str) -> None:
@@ -77,7 +77,7 @@ def _safe_error(exc: ConnectorError, descriptor: Mapping | None, method: str) ->
         and isinstance(error["requestId"], str)
         and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", error["requestId"])
         and isinstance(error["error"], dict)
-        and set(error["error"]) == {"code", "message"}
+        and error["error"].keys() - {"issues"} == {"code", "message"}
         and isinstance(error["error"]["code"], str)
         and error["error"]["code"] in PUBLIC_ERROR_MESSAGES
         and isinstance(error["error"]["message"], str)
@@ -88,8 +88,17 @@ def _safe_error(exc: ConnectorError, descriptor: Mapping | None, method: str) ->
             "requestId": error["requestId"],
             "error": {"code": code, "message": PUBLIC_ERROR_MESSAGES[code]},
         }
-        if not schema_issues(descriptor["schemas"]["error"], candidate):
+        schema = descriptor["schemas"]["error"]
+        if not schema_issues(schema, candidate):
             safe = candidate
+            if (
+                descriptor["operationId"] == "datasets.executeQuery"
+                and method == "POST"
+                and exc.provider_status_code == 400
+                and code == "invalid_request"
+                and "issues" in error["error"]
+            ):
+                safe = with_query_issues(schema, candidate, error["error"]["issues"])
     return ConnectorError(
         exc.detail,
         provider_status_code=exc.provider_status_code,
