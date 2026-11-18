@@ -100,7 +100,7 @@ async def test_speech_sends_one_exact_post_and_preserves_alignments(tmp_path, mo
 
     def handle(request):
         seen.append(request)
-        assert list(tmp_path.iterdir()) == []
+        assert list(target.iterdir()) == []
         assert request.method == "POST"
         assert request.url == httpx.URL(
             "https://api.elevenlabs.io/v1/text-to-speech/voice%2Fone/with-timestamps"
@@ -270,7 +270,10 @@ async def test_paid_failure_counts_actual_sends(
     if status == 429:
         assert metadata["retry_after"] == 1
     assert KEY not in str(error.value) + str(metadata) + str(error.value.output_json)
-    assert not target.exists()
+    if action == SPEECH:
+        assert list(target.iterdir()) == []
+    else:
+        assert not target.exists()
 
 
 @pytest.mark.parametrize("action", [SPEECH, ALIGN])
@@ -328,12 +331,12 @@ async def test_speech_save_failure_retains_receipts_without_resubmission(tmp_pat
     def fail(*_):
         raise OSError("private disk path")
 
-    monkeypatch.setattr(media.os, "replace", fail)
     seen = []
 
     def handle(request):
         seen.append(request)
         assert request.method == "POST"
+        monkeypatch.setattr(media.os, "replace", fail)
         return httpx.Response(
             200,
             json={"audio_base64": base64.b64encode(AUDIO).decode()},
@@ -417,6 +420,47 @@ async def test_speech_rejects_unwritable_output_before_dispatch(tmp_path, nested
         assert list(directory.iterdir()) == []
     finally:
         directory.chmod(0o755)
+
+
+@pytest.mark.parametrize("denied", ["mkdir", "file_in_parent"])
+async def test_speech_checks_permissions_of_requested_directory(tmp_path, monkeypatch, denied):
+    parent = tmp_path.resolve()
+    target = parent / "output"
+    mkdir = Path.mkdir
+    temporary_file = media.tempfile.NamedTemporaryFile
+
+    def restricted_mkdir(path, *args, **kwargs):
+        if denied == "mkdir" and path == target:
+            raise PermissionError("subdirectory creation denied")
+        return mkdir(path, *args, **kwargs)
+
+    def restricted_temporary_file(*args, dir=None, **kwargs):
+        if denied == "file_in_parent" and dir is not None and Path(dir) == parent:
+            raise PermissionError("file creation denied in parent")
+        return temporary_file(*args, dir=dir, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", restricted_mkdir)
+    monkeypatch.setattr(media.tempfile, "NamedTemporaryFile", restricted_temporary_file)
+    sends = []
+
+    def handle(request):
+        sends.append(request.method)
+        return httpx.Response(200, json={"audio_base64": base64.b64encode(AUDIO).decode()})
+
+    if denied == "mkdir":
+        with pytest.raises(ValidationError) as error:
+            await execute(SPEECH, SPEECH_DATA, handle, output_dir=target)
+        assert error.value.metadata_json["provider_executed"] is False
+        assert sends == []
+        assert not target.exists()
+    else:
+        result = await execute(SPEECH, SPEECH_DATA, handle, output_dir=target)
+        assert sends == ["POST"]
+        (file,) = result.files
+        saved = Path(file.path)
+        assert saved.parent == target
+        assert saved.read_bytes() == AUDIO
+        assert list(target.iterdir()) == [saved]
 
 
 @pytest.mark.parametrize("problem", ["missing", "directory", "empty", "oversize", "mime"])

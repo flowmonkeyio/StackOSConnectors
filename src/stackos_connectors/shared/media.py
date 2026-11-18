@@ -28,20 +28,17 @@ _REDIRECT_STATUSES = {301, 302, 303, 307, 308}
 _UNSAFE_HOSTNAMES = frozenset({"localhost", "localhost.localdomain"})
 
 
-def check_media_output_directory(output_dir: Path) -> None:
-    """Probe file creation in the output directory or its nearest existing parent."""
+def _prepare_output_directory(output_dir: Path) -> Path:
     directory = Path(output_dir).resolve()
-    while True:
-        try:
-            directory.stat()
-        except FileNotFoundError:
-            if directory == directory.parent:
-                raise
-            directory = directory.parent
-        else:
-            break
-    with tempfile.NamedTemporaryFile(dir=directory, prefix=".media-"):
-        pass
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory
+
+
+def check_media_output_directory(output_dir: Path) -> None:
+    """Prepare the requested directory and verify a temporary file can be written inside it."""
+    directory = _prepare_output_directory(output_dir)
+    with tempfile.NamedTemporaryFile(dir=directory, prefix=".media-") as stream:
+        stream.write(b"\0")
 
 
 def write_media_file(
@@ -62,8 +59,7 @@ def write_media_file(
         raise ValueError("output_dir is required for generated media")
     if not re.fullmatch(r"[A-Za-z0-9_-]+", prefix) or not re.fullmatch(r"[a-z0-9]+", ext):
         raise ValueError("media prefix and extension must be filename components")
-    directory = Path(output_dir).resolve()
-    directory.mkdir(parents=True, exist_ok=True)
+    directory = _prepare_output_directory(output_dir)
     filename = f"{prefix}-{hashlib.sha256(raw).hexdigest()[:32]}.{ext}"
     target = directory / filename
     temporary = None

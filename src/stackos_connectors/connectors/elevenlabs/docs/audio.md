@@ -16,6 +16,11 @@ body fields include `model_id`, `voice_settings`, `previous_text`, `next_text`,
 or passing null selects the provider's latest version. An explicitly selected
 `output_format` goes in the query. The provider default is `mp3_44100_128`.
 
+The connector creates the requested output directory if needed and verifies
+that it can write a temporary file there before sending the request. The
+temporary file is removed before dispatch. A newly created directory may
+remain empty if the provider request fails.
+
 The connector returns the decoded audio in `result.files[0]` with the format's
 extension and MIME type. `result.output_json` reports the effective
 `output_format` and preserves each supplied `alignment` and
