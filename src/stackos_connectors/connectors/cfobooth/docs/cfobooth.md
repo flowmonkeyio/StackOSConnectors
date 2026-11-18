@@ -77,12 +77,16 @@ refinements or establish authorization.
 
 Requests reuse `shared.http.request_json`: bounded decoded responses, response
 closure, caller-owned clients/timeouts, redirects disabled and no retries.
-Operation success must match its declared status and result schema. Failures
-retain only structurally valid canonical error identity/correlation; unsafe raw
-bodies are discarded. Canonical error codes and correlation IDs retain only the
-fixed public message from CFOBooth's wire contract, never provider-supplied text.
-Resolved credential echoes are scrubbed at the native
-boundary. A write timeout or invalid response stays an uncertain outcome, with
+Operation success must match its declared status and result schema. On failure,
+the connector discards the raw body. When the error envelope is valid, it
+returns the request ID, error code and the fixed public message for that code.
+For a `datasets.executeQuery` POST returning HTTP 400 with `invalid_request`,
+the connector can also return one to four issues in server order. Each carries
+a `reason`, a `path` and, when supplied, a `field`. The catalog's error schema
+must explicitly allow every combination. If the schema or any issue fails
+these checks, the connector returns the valid base error without the list.
+Resolved credential echoes are scrubbed at the native boundary.
+A write timeout or invalid response stays an uncertain outcome, with
 no automatic replay. The operation response envelope is preserved.
 
 The host owns durable inventory, full versus limited synchronization, stale
