@@ -198,14 +198,15 @@ icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read
 
 ## CFOBooth native API keys
 
-The private 0.2.9 candidate adds CFOBooth's native `api_key` authentication,
-explicit `api_base_url` and Account `organization_id`. The endpoint is editable;
-`https://cfobooth.com` is display-only placeholder text and receives no requests.
-Owned loopback HTTP and explicit remote HTTPS are supported. A key-only identity
-probe verifies the safe subject/key/organization binding. Explicit catalog export
-and `connectors.cfobooth.catalog_actions` declare fixed JSON actions through the
-shared schema/HTTP owners, preserving effects and response envelopes without
-per-call catalog fetching or session refresh.
+The private 0.2.9 candidate verifies CFOBooth Accounts with an explicit
+`api_base_url` and an `api_key`. The endpoint field is editable and shows
+`https://cfobooth.com` as an example. Owned loopback HTTP and explicit remote
+HTTPS are supported. `GET /api/api-keys/current` returns the verified subject,
+key ID and organization. The host supplies that verified organization as
+`organization_id` for catalog export and action execution. Explicit catalog
+export and `connectors.cfobooth.catalog_actions` declare fixed JSON actions
+through the shared schema and HTTP helpers, preserving effects and response
+envelopes without per-call catalog fetching or session refresh.
 
 See the [provider contract](src/stackos_connectors/connectors/cfobooth/docs/cfobooth.md)
 for setup, supported schema projection, safety boundaries and local-proof limits.

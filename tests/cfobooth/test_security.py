@@ -7,7 +7,7 @@ import traceback
 import httpx
 import pytest
 
-from stackos_connectors import CallOptions
+from stackos_connectors import CallOptions, ConnectorAuth
 from stackos_connectors.connectors.cfobooth import (
     catalog_actions,
     declare_action,
@@ -16,7 +16,7 @@ from stackos_connectors.connectors.cfobooth import (
 from stackos_connectors.errors import ConnectorError, IntegrationDownError, ValidationError
 from stackos_connectors.probe import probe_credentials
 
-from .conftest import KEY, auth, descriptor
+from .conftest import KEY, ORG, auth, descriptor
 
 
 @pytest.mark.parametrize(
@@ -69,6 +69,34 @@ async def test_invalid_url_never_dispatches(native, base):
             )
         with pytest.raises(ValidationError):
             await probe_credentials("cfobooth", auth=auth(base), options=CallOptions(http=http))
+
+
+async def test_probe_requires_an_explicit_url():
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda _: pytest.fail("sent"))
+    ) as http:
+        with pytest.raises(ValidationError):
+            await probe_credentials(
+                "cfobooth",
+                auth=ConnectorAuth("api_key", {"api_key": KEY}, {"organization_id": ORG}),
+                options=CallOptions(http=http),
+            )
+
+
+@pytest.mark.parametrize("org", [None, "Formx"])
+async def test_catalog_and_action_require_runtime_organization(native, catalog, org):
+    bound = native.register_actions(catalog_actions(catalog))
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(lambda _: pytest.fail("sent"))
+    ) as http:
+        for action in ("cfobooth.catalog.export", "cfobooth.fixture.read"):
+            with pytest.raises(ValidationError) as failure:
+                await bound.execute(
+                    "cfobooth", action, {}, auth(org=org), CallOptions(http=http)
+                )
+            assert any(
+                "verified organization_id" in issue.message for issue in failure.value.issues
+            )
 
 
 @pytest.mark.parametrize(
@@ -169,7 +197,7 @@ def test_session_only_public_and_specialized_descriptors_do_not_execute(catalog,
     "update",
     [
         {"keyId": "not-uuid"},
-        {"organizationId": "53761da2-37bc-40ab-afbb-489fb72a67a1"},
+        {"organizationId": "not-uuid"},
         {"user": {"id": "bad", "email": "bad"}},
         {"expiresAt": "2020-01-01T00:00:00Z"},
         {"expiresAt": "2099-02-30T00:00:00Z"},
@@ -178,7 +206,7 @@ def test_session_only_public_and_specialized_descriptors_do_not_execute(catalog,
         {"keyId": None},
     ],
 )
-async def test_probe_rejects_malformed_foreign_expired_identity(identity, update):
+async def test_probe_rejects_malformed_or_expired_identity(identity, update):
     identity["data"].update(update)
     async with httpx.AsyncClient(
         transport=httpx.MockTransport(lambda _: httpx.Response(200, json=identity))
@@ -186,6 +214,7 @@ async def test_probe_rejects_malformed_foreign_expired_identity(identity, update
         with pytest.raises(IntegrationDownError) as failed:
             await probe_credentials("cfobooth", auth=auth(), options=CallOptions(http=http))
     assert KEY not in str(failed.value) + str(failed.value.data)
+    assert "identity" not in failed.value.data
 
 
 @pytest.mark.parametrize("status", [401, 403, 302, 503])
@@ -254,22 +283,57 @@ async def test_invalid_header_key_does_not_dispatch(native, key):
             await probe_credentials("cfobooth", auth=auth(key=key), options=CallOptions(http=http))
 
 
-async def test_future_expiry_and_explicit_replacement(identity):
+@pytest.mark.parametrize("change", ["key", "url"])
+async def test_changed_credential_discovers_new_identity_or_fails(identity, change):
     identity["data"]["expiresAt"] = "2099-01-01T00:00:00.000Z"
+    next_identity = copy.deepcopy(identity)
+    next_identity["data"].update(
+        keyId="53761da2-37bc-40ab-afbb-489fb72a67a2",
+        organizationId="73837d14-fbd6-40ca-81f4-19e2ce031fca",
+    )
+    base = "https://owned.test/prefix"
+    next_base = "https://replacement.test/prefix" if change == "url" else base
+    next_key = "synthetic-replacement" if change == "key" else KEY
+    current_route = "/api/api-keys/current"
     seen = []
 
     def handle(request):
-        seen.append(request.headers["x-api-key"])
-        return httpx.Response(200, json=identity)
+        target = (str(request.url), request.headers["x-api-key"])
+        seen.append(target)
+        if target == (base + current_route, KEY):
+            return httpx.Response(200, json=identity)
+        if target == (next_base + current_route, next_key):
+            return httpx.Response(200, json=next_identity)
+        return httpx.Response(401, json={"message": "synthetic-denied"})
 
     async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:
-        first = await probe_credentials("cfobooth", auth=auth(), options=CallOptions(http=http))
-        identity["data"]["keyId"] = "53761da2-37bc-40ab-afbb-489fb72a67a2"
+        options = CallOptions(http=http)
+        first = await probe_credentials("cfobooth", auth=auth(base, org=None), options=options)
         replacement = await probe_credentials(
-            "cfobooth", auth=auth(key="synthetic-replacement"), options=CallOptions(http=http)
+            "cfobooth", auth=auth(next_base, org=ORG, key=next_key), options=options
         )
-    assert seen == [KEY, "synthetic-replacement"]
-    assert first["identity"]["keyId"] != replacement["identity"]["keyId"]
+        with pytest.raises(IntegrationDownError) as failed:
+            await probe_credentials(
+                "cfobooth", auth=auth(next_base, key="synthetic-denied"), options=options
+            )
+    assert first["identity"] == identity["data"]
+    assert replacement["identity"] == next_identity["data"]
+    assert replacement["api_base_url"] == next_base
+    assert replacement["metadata"]["evidence"]["account"]["metadata"] == {
+        "organization_id": next_identity["data"]["organizationId"],
+        "key_id": next_identity["data"]["keyId"],
+        "expires_at": next_identity["data"]["expiresAt"],
+    }
+    assert failed.value.data == {
+        "stage": "test",
+        "reason_code": "invalid_key_identity",
+        "status": 401,
+    }
+    assert seen == [
+        (base + current_route, KEY),
+        (next_base + current_route, next_key),
+        (next_base + current_route, "synthetic-denied"),
+    ]
 
 
 async def test_canonical_error_canary_is_redacted(native):

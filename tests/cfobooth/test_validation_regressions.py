@@ -25,9 +25,9 @@ async def invoke(native, catalog, entry, base, http):
 
 @pytest.mark.parametrize("entry", ["probe", "catalog", "operation"])
 @pytest.mark.parametrize(
-    "base", ["https://cfobooth\u3002com", "https://WWW.CFOBOOTH\uff0eCOM./tenant"]
+    "base", ["http://cfobooth\u3002com", "http://WWW.CFOBOOTH\uff0eCOM./tenant"]
 )
-async def test_canonical_placeholder_host_rejects_before_dispatch(native, catalog, entry, base):
+async def test_normalized_remote_http_rejects_before_dispatch(native, catalog, entry, base):
     async with httpx.AsyncClient(
         transport=httpx.MockTransport(lambda _: pytest.fail("credential dispatched"))
     ) as http:
@@ -43,7 +43,7 @@ async def test_loopback_preserves_parameterized_prefix(native, peer):
     bound = native.register_actions(catalog_actions(exported.output_json))
     await bound.execute("cfobooth", "cfobooth.fixture.read", {}, credential)
     assert [call[1] for call in peer.calls] == [
-        f"/prefix;partition=review/api/organizations/{ORG}/api-keys/current",
+        "/prefix;partition=review/api/api-keys/current",
         f"/prefix;partition=review/api/organizations/{ORG}/operation-catalog",
         f"/prefix;partition=review/api/organizations/{ORG}",
     ]

@@ -7,6 +7,7 @@ from urllib.parse import unquote, urlsplit
 import httpx
 
 from stackos_connectors.connectors.trackbooth.integration import normalize_trackbooth_base_url
+from stackos_connectors.contracts import CallOptions, ConnectorAuth
 from stackos_connectors.errors import ValidationError
 
 from .contract import validator
@@ -49,21 +50,25 @@ def organization_id(config: Mapping) -> str:
         "organizationId"
     ]["pattern"]
     if not isinstance(value, str) or re.fullmatch(pattern, value) is None:
-        raise ValidationError("CFOBooth organization_id must be a UUID")
+        raise ValidationError("CFOBooth requires a verified organization_id UUID from the host")
     return value
 
 
-def validate_auth(auth, options) -> tuple[str, str, str]:
+def validate_credential(auth: ConnectorAuth | None, options: CallOptions) -> tuple[str, str]:
     if auth is None or auth.method != "api_key":
         raise ValidationError("CFOBooth requires native api_key authentication")
     base = normalize_api_base_url(auth.config.get("api_base_url"))
-    org = organization_id(auth.config)
     if options.provider_context:
         raise ValidationError("CFOBooth does not accept caller URL, header or scope overrides")
     key = auth.fields.get("api_key")
     if not isinstance(key, str) or not key or re.search(r"[^\x21-\x7e]", key):
         raise ValidationError("CFOBooth api_key must be an opaque nonempty header value")
-    return base, org, key
+    return base, key
+
+
+def validate_auth(auth, options) -> tuple[str, str, str]:
+    base, key = validate_credential(auth, options)
+    return base, organization_id(auth.config), key
 
 
 def path_value(value: str) -> str:

@@ -38,9 +38,10 @@ def native():
 
 
 def auth(base="https://owned.test/prefix", org=ORG, key=KEY):
-    return ConnectorAuth(
-        "api_key", {"api_key": key}, {"api_base_url": base, "organization_id": org}
-    )
+    config = {"api_base_url": base}
+    if org is not None:
+        config["organization_id"] = org
+    return ConnectorAuth("api_key", {"api_key": key}, config)
 
 
 def descriptor(*, method="POST", mutation=False):

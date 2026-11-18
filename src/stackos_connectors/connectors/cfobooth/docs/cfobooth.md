@@ -1,37 +1,41 @@
 # CFOBooth API-key protocol
 
-This provider implements the independently reviewed `sdk837-wire-r6` agreement
-for plan837. The bundled `schemas/catalog-v1.json` and
+Catalog and action execution follow the independently reviewed `sdk837-wire-r6`
+agreement for plan837. Credential verification uses the key's self endpoint
+from plan864. The bundled `schemas/catalog-v1.json` and
 `schemas/current-key-v1.json` are protocol validation resources from that
 agreement, not a second business-operation registry. The catalog transport schema
 uses an open, safe `/api` path-template shape rather than the sample's route enum.
 The test fixture under `tests/cfobooth/fixtures` is the frozen illustrative catalog
 and synthetic identity; it does not prove server implementation or key issuance.
 
-Use native `ConnectorAuth(method="api_key", fields={"api_key": ...},
-config={"api_base_url": ..., "organization_id": ...})`. The host's Account owns
-secret custody and the selected organization. Configuration is required and
-editable. Explicit `https://cfobooth.com` and `https://www.cfobooth.com` URLs are
-accepted under the same destination policy as other HTTPS endpoints. No default
-URL, automatic production request or remote deployment proof is implied. Remote endpoints require
-HTTPS; HTTP is permitted only for `localhost`, `127.0.0.1` and `[::1]`, with an
-optional port. The native Trackbooth URL policy is reused with CFO's explicit
-configuration requirement. Check the final IDNA-normalized wire host before
-dispatch and preserve the deployment path prefix, including semicolon parameters.
-Normalize trailing slashes. Reject userinfo, query/fragment, escapes, backslashes, traversal and
-invalid ports before dispatch. Provider context cannot override URL, headers or
-organization. Caller-owned HTTP clients remain trusted transport dependencies;
-the caller owns their middleware, authentication, proxy and TLS configuration.
+For Account verification, use native
+`ConnectorAuth(method="api_key", fields={"api_key": ...}, config={"api_base_url": ...})`.
+Enter an explicit, editable server URL. The host's Account owns secret custody.
+Remote endpoints require HTTPS. HTTP is permitted only for `localhost`,
+`127.0.0.1` and `[::1]`, with an optional port. The native Trackbooth URL policy
+is reused with CFOBooth's explicit configuration requirement. Check the final
+IDNA-normalized wire host before dispatch and preserve the deployment path
+prefix, including semicolon parameters. Normalize trailing slashes. Reject
+userinfo, query/fragment, escapes, backslashes, traversal and invalid ports before
+dispatch. Provider context cannot override URL, headers or organization.
+Caller-owned HTTP clients remain trusted transport dependencies. The caller owns
+their middleware, authentication, proxy and TLS configuration.
 
-`probe_credentials("cfobooth", ...)` performs one key-only
-`GET /api/organizations/:organizationId/api-keys/current` with `X-API-Key`. It
-validates the canonical envelope, UUID key/user/organization identity, bounded
-email syntax from CFOBooth's shared VerifiedUser contract,
-configured organization and nullable future UTC expiration. It returns safe
-`identity` and native account evidence, including key ID and subject; no key or
-digest is returned. A malformed, expired, revoked or foreign key fails safely.
-The server remains authoritative for key validity and current permissions.
+`probe_credentials("cfobooth", ...)` projects the explicit URL before
+validation and discards any legacy `organization_id`. It performs one
+`GET /api/api-keys/current` with `X-API-Key`. It validates the canonical envelope,
+UUID key/user/organization identity, bounded email syntax from CFOBooth's shared
+VerifiedUser contract and nullable future UTC expiration. It returns safe
+`identity` and native account evidence with the key ID, organization and subject.
+Invalid replies and expired or rejected keys fail safely. The server remains
+authoritative for key validity and current permissions.
 There is no login, password acquisition, token grant, refresh or remote logout.
+
+For catalog and action calls, the host projects its verified `organization_id`
+into runtime `ConnectorAuth.config` alongside `api_base_url`. The strict native
+schema declares `organization_id` as optional for verification. Catalog and
+actions require a valid runtime organization UUID before dispatch.
 
 Execute `cfobooth.catalog.export` to fetch
 `GET /api/organizations/:organizationId/operation-catalog`. It preserves the
@@ -49,9 +53,9 @@ IDs and safe organization routes need no handwritten handler.
 
 An action stores the declared route, status, schemas, effect, replay and key
 eligibility metadata. Ordinary execution uses that stored binding without
-fetching the catalog. The organization path comes only from Account config and
-is removed from model inputs. Other path values are encoded as one segment;
-missing, extra, conflicting or traversal parameters reject before dispatch.
+fetching the catalog. The organization path uses the host-supplied verified
+binding. Other path values are encoded as one segment. Missing, extra,
+conflicting or traversal parameters reject before dispatch.
 Query scalars stringify, arrays repeat keys, absent values are omitted, and
 null/object entries reject. JSON bodies retain the complete canonical schema.
 Read-only POST remains read-only; a mutation requires explicit-only replay.

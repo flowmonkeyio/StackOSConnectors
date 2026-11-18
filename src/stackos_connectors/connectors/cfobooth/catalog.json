@@ -2,7 +2,7 @@
   "schema_version": "stackos.connector.v1",
   "connector": "cfobooth",
   "name": "CFOBooth",
-  "description": "Use an explicitly configured CFOBooth organization API with an operator-supplied API key.",
+  "description": "Connect to a CFOBooth API using its server URL and an API key.",
   "implementation": "stackos_connectors.connectors.cfobooth.actions:CFOBoothActionConnector",
   "probe_implementation": "stackos_connectors.connectors.cfobooth.probe:probe",
   "icon": {
@@ -29,8 +29,7 @@
       "config_schema": {
         "type": "object",
         "required": [
-          "api_base_url",
-          "organization_id"
+          "api_base_url"
         ],
         "properties": {
           "api_base_url": {
@@ -46,11 +45,11 @@
       },
       "payload_format": "json",
       "evidence_source": "provider_probe",
-      "description": "Resolved CFOBooth API key with explicit endpoint and organization binding.",
+      "description": "CFOBooth API key with an explicit endpoint. Catalog and actions require the verified organization binding supplied by the host.",
       "setup": {
         "auth_type": "api_key",
         "interactive": false,
-        "description": "Create an API key in your CFOBooth organization and provide it through the host Account credential owner. Configure your own endpoint; no remote deployment has been verified.",
+        "description": "Enter your CFOBooth server URL and API key to verify the key and discover its organization.",
         "fields": [
           {
             "key": "api_key",
@@ -67,13 +66,6 @@
             "description": "Editable example only. Use your owned local HTTP loopback or remote HTTPS endpoint.",
             "type": "text",
             "secret": false
-          },
-          {
-            "key": "organization_id",
-            "label": "Organization ID",
-            "required": true,
-            "type": "text",
-            "secret": false
           }
         ],
         "label": "CFOBooth API key"
@@ -85,7 +77,7 @@
       "key": "cfobooth.catalog.export",
       "operation": "catalog.export",
       "description": "Fetch and validate the complete permission-filtered organization operation catalog.",
-      "guidance": "Use Account credentials and configuration. Register eligible fixed routes explicitly; no catalog preflight occurs during operation execution.",
+      "guidance": "Use Account credentials and the host's verified organization binding. Register eligible fixed routes explicitly; no catalog preflight occurs during operation execution.",
       "auth_methods": [
         "api_key"
       ],

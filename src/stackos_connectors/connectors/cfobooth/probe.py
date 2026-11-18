@@ -1,21 +1,25 @@
 """One key-only current-identity probe, without password acquisition or refresh."""
 
 import re
+from collections.abc import Mapping
 from datetime import UTC, datetime
 
 from stackos_connectors.errors import ConnectorError, IntegrationDownError, ValidationError
 from stackos_connectors.probe import probe_request
 
-from .config import validate_auth
+from .config import validate_credential
 from .contract import validate_wire
 from .transport import execute_request
 
 
-def _identity(response, org):
+def project_config(config: Mapping[str, object]) -> dict[str, object]:
+    """Project credential setup only, leaving scope discovery to the server."""
+    return {"api_base_url": config["api_base_url"]} if "api_base_url" in config else {}
+
+
+def _identity(response):
     response = validate_wire(response, "current-key-v1")
     identity = response["data"]
-    if identity["organizationId"] != org:
-        raise ValidationError("CFOBooth probe organization does not match Account")
     expires = identity["expiresAt"]
     if expires is not None:
         if not re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d+)?Z", expires):
@@ -30,17 +34,17 @@ def _identity(response, org):
 
 
 async def probe(*, auth, options, context):
-    base, org, key = validate_auth(auth, options)
+    base, key = validate_credential(auth, options)
     request = probe_request("cfobooth", auth, options)
     try:
         _, response, _ = await execute_request(
             request,
             method="GET",
-            url=base + f"/api/organizations/{org}/api-keys/current",
+            url=base + "/api/api-keys/current",
             key=key,
             params=[],
         )
-        identity = _identity(response, org)
+        identity = _identity(response)
     except (ConnectorError, ValidationError) as exc:
         raise IntegrationDownError(
             "CFOBooth key identity could not be verified",
@@ -62,7 +66,7 @@ async def probe(*, auth, options, context):
                     "provider_account_id": identity["user"]["id"],
                     "display_name": identity["user"]["email"],
                     "metadata": {
-                        "organization_id": org,
+                        "organization_id": identity["organizationId"],
                         "key_id": identity["keyId"],
                         "expires_at": identity["expiresAt"],
                     },
