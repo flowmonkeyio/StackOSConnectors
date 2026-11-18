@@ -3,6 +3,11 @@
   "connector": "elevenlabs",
   "name": "ElevenLabs",
   "description": "Discover subscription usage, available models and voices, and voice settings.",
+  "icon": {
+    "path": "shared/icons/integration.svg",
+    "media_type": "image/svg+xml",
+    "kind": "fallback"
+  },
   "implementation": "stackos_connectors.connectors.elevenlabs.actions:ElevenLabsActionConnector",
   "probe_implementation": "stackos_connectors.connectors.elevenlabs.integration:ElevenLabsIntegration",
   "auth_methods": [
