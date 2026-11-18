@@ -199,6 +199,28 @@ def test_default_catalog_and_public_functions_use_catalog(monkeypatch, document)
         stackos_connectors.get_default_client.cache_clear()
 
 
+def test_elevenlabs_catalog_describes_read_routes_and_resolved_auth():
+    client = stackos_connectors.get_default_client()
+    assert "elevenlabs" in client.list_connectors()
+    description = client.describe("elevenlabs")
+    (method,) = description["auth_methods"]
+    assert method["key"] == "api_key"
+    assert method["fields_schema"]["required"] == ["api_key"]
+    assert method["setup"]["fields"][0]["secret"] is True
+    reads = {
+        "elevenlabs.subscription.get",
+        "elevenlabs.models.list",
+        "elevenlabs.voices.list",
+        "elevenlabs.voices.settings.default.get",
+        "elevenlabs.voices.settings.get",
+    }
+    actions = {action["key"]: action for action in description["actions"]}
+    assert reads <= actions.keys()
+    for key in reads:
+        assert actions[key]["read_only"] is True
+        assert actions[key]["auth_optional"] is False
+
+
 @pytest.mark.asyncio
 @pytest.mark.parametrize(
     "optional,auth,allowed",

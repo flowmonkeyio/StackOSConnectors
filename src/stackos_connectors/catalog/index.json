@@ -12,6 +12,7 @@
     "connectors/clay/catalog.json",
     "connectors/cloudflare/catalog.json",
     "connectors/dataforseo/catalog.json",
+    "connectors/elevenlabs/catalog.json",
     "connectors/firecrawl/catalog.json",
     "connectors/ftp/catalog.json",
     "connectors/ghost/catalog.json",

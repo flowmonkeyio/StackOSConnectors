@@ -365,6 +365,57 @@ async def test_probe_redacts_exact_secret_echo_and_safe_provider_failure(monkeyp
     assert caught.value.__cause__ is None
 
 
+@pytest.mark.parametrize("status", [200, 401, 403])
+async def test_elevenlabs_probe_uses_one_subscription_read(status):
+    auth = ConnectorAuth(method="api_key", fields={"api_key": "probe-canary"})
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        assert request.method == "GET"
+        assert request.url == httpx.URL("https://api.elevenlabs.io/v1/user/subscription")
+        assert request.headers["xi-api-key"] == "probe-canary"
+        assert not request.content
+        return httpx.Response(
+            status,
+            json={
+                "tier": "free",
+                "character_count": 0,
+                "character_limit": 0,
+                "detail": "provider echoed probe-canary",
+            },
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:
+        options = CallOptions(http=http)
+        if status == 200:
+            assert await probe_credentials("elevenlabs", auth=auth, options=options) == {
+                "ok": True,
+                "vendor": "elevenlabs",
+                "tier": "free",
+                "character_count": 0,
+                "character_limit": 0,
+            }
+        else:
+            with pytest.raises(IntegrationDownError) as caught:
+                await probe_credentials("elevenlabs", auth=auth, options=options)
+            assert caught.value.data == {"status": status}
+            assert "probe-canary" not in str(caught.value)
+        assert not http.is_closed
+    assert len(seen) == 1
+
+
+async def test_elevenlabs_probe_rejects_an_invalid_subscription_response():
+    def handle(request):
+        return httpx.Response(200, json={"tier": "free", "character_count": False})
+
+    auth = ConnectorAuth(method="api_key", fields={"api_key": "probe-canary"})
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:
+        with pytest.raises(IntegrationDownError) as caught:
+            await probe_credentials("elevenlabs", auth=auth, options=CallOptions(http=http))
+    assert caught.value.data == {"reason_code": "invalid_response"}
+
+
 def test_probe_bindings_are_fixed_and_metadata_discovery_does_not_probe(monkeypatch):
     def forbidden(*args, **kwargs):
         raise AssertionError("discovery must not probe")
@@ -385,5 +436,5 @@ def test_probe_bindings_are_fixed_and_metadata_discovery_does_not_probe(monkeypa
         for key, metadata in get_default_client().registry.connector_metadata.items()
         if metadata.get("probe_implementation")
     }
-    assert len(bound) == 39
+    assert len(bound) == 40
     assert all(project_probe_config(key, {}) == {} for key in bound)

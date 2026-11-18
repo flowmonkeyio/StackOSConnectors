@@ -1,0 +1,439 @@
+{
+  "schema_version": "stackos.connector.v1",
+  "connector": "elevenlabs",
+  "name": "ElevenLabs",
+  "description": "Discover subscription usage, available models and voices, and voice settings.",
+  "implementation": "stackos_connectors.connectors.elevenlabs.actions:ElevenLabsActionConnector",
+  "probe_implementation": "stackos_connectors.connectors.elevenlabs.integration:ElevenLabsIntegration",
+  "auth_methods": [
+    {
+      "key": "api_key",
+      "description": "Send the resolved ElevenLabs API key in the xi-api-key header.",
+      "fields_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "api_key": {
+            "type": "string",
+            "minLength": 1,
+            "not": {
+              "pattern": "\\s"
+            }
+          }
+        },
+        "required": [
+          "api_key"
+        ]
+      },
+      "config_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "payload_format": "raw",
+      "payload_field": "api_key",
+      "setup": {
+        "label": "API key",
+        "description": "Supply a resolved ElevenLabs API key with access to the desired endpoints. The credential probe requires permission to read the subscription.",
+        "fields": [
+          {
+            "key": "api_key",
+            "label": "ElevenLabs API key",
+            "type": "secret",
+            "required": true,
+            "secret": true
+          }
+        ]
+      }
+    }
+  ],
+  "setup": {
+    "homepage_url": "https://elevenlabs.io/",
+    "docs_url": "https://elevenlabs.io/docs/api-reference/authentication",
+    "credential_label": "ElevenLabs API key",
+    "setup_note": "Supply a resolved ElevenLabs API key with access to the desired endpoints. The credential probe requires permission to read the subscription."
+  },
+  "actions": [
+    {
+      "key": "elevenlabs.subscription.get",
+      "operation": "subscription.get",
+      "description": "Read the subscription tier, current character usage and character allowance.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tier": {
+            "type": "string"
+          },
+          "character_count": {
+            "type": "integer"
+          },
+          "character_limit": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tier",
+          "character_count",
+          "character_limit"
+        ]
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Get ElevenLabs subscription",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.models.list",
+      "operation": "models.list",
+      "description": "Return provider models, including non-text-to-speech models, with the capabilities and limits the provider supplies.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "model_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "can_do_text_to_speech": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "can_use_style": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "can_use_speaker_boost": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "languages": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "language_id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": true
+                  }
+                },
+                "maximum_text_length_per_request": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "model_id"
+              ]
+            }
+          }
+        },
+        "required": [
+          "models"
+        ]
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "List ElevenLabs models",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.voices.list",
+      "operation": "voices.list",
+      "description": "Read one page of voices available to the user.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "Requested page size. The first page can contain additional default voices."
+          },
+          "page_token": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1,
+            "description": "Opaque next_page_token returned by the previous page."
+          }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "voices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "voice_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "voice_id"
+              ]
+            }
+          },
+          "page_size": {
+            "type": "integer"
+          },
+          "page_token": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "has_more": {
+            "type": "boolean"
+          },
+          "next_page_token": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "voices",
+          "page_size",
+          "page_token",
+          "has_more",
+          "next_page_token"
+        ]
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "List ElevenLabs voices",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.voices.settings.default.get",
+      "operation": "voices.settings.default.get",
+      "description": "Read the provider's default voice settings.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "stability": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Voice consistency on a 0–1 scale.",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "similarity_boost": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Similarity to the source voice on a 0–1 scale.",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "style": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Style exaggeration, when supported by the model."
+          },
+          "speed": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Speech speed multiplier, when supported. The documented control range is 0.7–1.2."
+          },
+          "use_speaker_boost": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Speaker similarity boost, when supported by the model."
+          },
+          "clone_strength": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Applies to professional voice clones fine-tuned for the selected v4 model.",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Get default ElevenLabs voice settings",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.voices.settings.get",
+      "operation": "voices.settings.get",
+      "description": "Read provider settings saved for the supplied voice.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "voice_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "not": {
+              "enum": [
+                ".",
+                ".."
+              ]
+            }
+          }
+        },
+        "required": [
+          "voice_id"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "stability": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Voice consistency on a 0–1 scale.",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "similarity_boost": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Similarity to the source voice on a 0–1 scale.",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "style": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Style exaggeration, when supported by the model."
+          },
+          "speed": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Speech speed multiplier, when supported. The documented control range is 0.7–1.2."
+          },
+          "use_speaker_boost": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "Speaker similarity boost, when supported by the model."
+          },
+          "clone_strength": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Applies to professional voice clones fine-tuned for the selected v4 model.",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Get saved ElevenLabs voice settings",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    }
+  ]
+}
