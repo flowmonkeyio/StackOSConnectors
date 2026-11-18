@@ -89,6 +89,7 @@ async def test_speech_sends_one_exact_post_and_preserves_alignments(tmp_path, mo
     encoded = base64.b64encode(AUDIO).decode()
     seen = []
     decode_calls = []
+    target = tmp_path / "fresh" / "audio"
     original_decode = media.base64.b64decode
 
     def decode(value, **kwargs):
@@ -99,6 +100,7 @@ async def test_speech_sends_one_exact_post_and_preserves_alignments(tmp_path, mo
 
     def handle(request):
         seen.append(request)
+        assert list(tmp_path.iterdir()) == []
         assert request.method == "POST"
         assert request.url == httpx.URL(
             "https://api.elevenlabs.io/v1/text-to-speech/voice%2Fone/with-timestamps"
@@ -121,7 +123,7 @@ async def test_speech_sends_one_exact_post_and_preserves_alignments(tmp_path, mo
         SPEECH,
         {**body, "voice_id": "voice/one", "output_format": "wav_24000"},
         handle,
-        output_dir=tmp_path,
+        output_dir=target,
         timeout=12.0,
     )
     assert len(seen) == 1
@@ -135,7 +137,7 @@ async def test_speech_sends_one_exact_post_and_preserves_alignments(tmp_path, mo
     assert result.metadata_json["history_item_id"] == "history-1"
     (file,) = result.files
     path = Path(file.path)
-    assert path.parent == tmp_path.resolve()
+    assert path.parent == target.resolve()
     assert path.name == file.name
     assert path.suffix == ".wav"
     assert file.mime_type == "audio/wav"
@@ -258,6 +260,7 @@ async def test_paid_failure_counts_actual_sends(
     assert len(seen) == 1
     assert error.value.provider_status_code == status
     metadata = error.value.metadata_json
+    assert metadata["provider_executed"] is True
     assert metadata["outcome_unknown"] is unknown
     assert metadata["charge_possible"] is unknown
     assert metadata["retry_safe"] is False
@@ -268,6 +271,57 @@ async def test_paid_failure_counts_actual_sends(
         assert metadata["retry_after"] == 1
     assert KEY not in str(error.value) + str(metadata) + str(error.value.output_json)
     assert not target.exists()
+
+
+@pytest.mark.parametrize("action", [SPEECH, ALIGN])
+@pytest.mark.parametrize("status", [200, 429])
+async def test_paid_body_timeout_retains_headers(tmp_path, alignment_input, action, status):
+    class TimedOutBody(httpx.AsyncByteStream):
+        closed = False
+
+        async def __aiter__(self):
+            yield b"{"
+            raise httpx.ReadTimeout(f"timeout containing {KEY}")
+
+        async def aclose(self):
+            self.closed = True
+
+    stream = TimedOutBody()
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        return httpx.Response(
+            status,
+            headers={
+                "request-id": "known-request",
+                "history-item-id": "known-history",
+                "retry-after": "10",
+            },
+            stream=stream,
+        )
+
+    data = SPEECH_DATA if action == SPEECH else alignment_input
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handle)) as http:
+        with pytest.raises(ConnectorError) as error:
+            await get_default_client().execute(
+                "elevenlabs", action, data, AUTH, CallOptions(http=http, output_dir=tmp_path)
+            )
+        assert not http.is_closed
+
+    assert [request.method for request in seen] == ["POST"]
+    assert stream.closed
+    assert error.value.provider_status_code == status
+    metadata = error.value.metadata_json
+    assert metadata["provider_request_id"] == "known-request"
+    assert metadata["history_item_id"] == "known-history"
+    assert metadata["provider_executed"] is True
+    assert metadata["outcome_unknown"] is (status == 200)
+    assert metadata["charge_possible"] is (status == 200)
+    assert metadata["retry_safe"] is False
+    if status == 429:
+        assert metadata["retry_after"] == 10
+    assert KEY not in str(error.value) + str(metadata) + str(error.value.output_json)
 
 
 async def test_speech_save_failure_retains_receipts_without_resubmission(tmp_path, monkeypatch):
@@ -336,6 +390,33 @@ async def test_speech_output_directory_cannot_be_an_existing_file(tmp_path):
             SPEECH, SPEECH_DATA, lambda request: pytest.fail("speech dispatched"), output_dir=target
         )
     assert target.read_bytes() == AUDIO
+
+
+@pytest.mark.parametrize("nested", [False, True])
+async def test_speech_rejects_unwritable_output_before_dispatch(tmp_path, nested):
+    directory = tmp_path / "read-only"
+    directory.mkdir()
+    directory.chmod(0o555)
+    try:
+        probe = directory / "check-permission"
+        try:
+            probe.touch(exist_ok=False)
+        except PermissionError:
+            pass
+        else:
+            probe.unlink()
+            pytest.skip("test user can write in a mode-0555 directory")
+
+        def handle(request):
+            pytest.fail("speech dispatched with an unwritable output directory")
+
+        target = directory / "nested" if nested else directory
+        with pytest.raises(ValidationError) as error:
+            await execute(SPEECH, SPEECH_DATA, handle, output_dir=target)
+        assert error.value.metadata_json["provider_executed"] is False
+        assert list(directory.iterdir()) == []
+    finally:
+        directory.chmod(0o755)
 
 
 @pytest.mark.parametrize("problem", ["missing", "directory", "empty", "oversize", "mime"])

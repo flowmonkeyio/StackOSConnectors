@@ -13,7 +13,11 @@ import httpx
 from stackos_connectors.contracts import ConnectorFile
 from stackos_connectors.errors import IntegrationDownError, ValidationError
 from stackos_connectors.shared.base import BaseIntegration
-from stackos_connectors.shared.media import decode_base64_media, write_media_file
+from stackos_connectors.shared.media import (
+    check_media_output_directory,
+    decode_base64_media,
+    write_media_file,
+)
 
 _MODEL_FIELDS = (
     "model_id",
@@ -97,7 +101,7 @@ def _valid_timed_items(value: Any) -> bool:
 def _paid_failure_data(*, charge_possible: bool, outcome_unknown: bool) -> dict[str, Any]:
     return {
         "automatic_retry_count": 0,
-        "provider_executed": charge_possible,
+        "provider_executed": True,
         "charge_possible": charge_possible,
         "outcome_unknown": outcome_unknown,
         "retry_safe": False,
@@ -178,6 +182,13 @@ class ElevenLabsIntegration(BaseIntegration):
         form: dict[str, str] | None = None,
         files: dict[str, tuple[str, BinaryIO, str]] | None = None,
     ) -> tuple[dict[str, Any], dict[str, Any]]:
+        receipt: dict[str, Any] = {}
+
+        def capture_headers(response: httpx.Response) -> None:
+            receipt.update(status=response.status_code, **self._response_ids(response))
+            if response.status_code == 429:
+                receipt["retry_after"] = self._parse_retry_after(response)
+
         try:
             response = await self._request_with_retry(
                 "POST",
@@ -189,26 +200,28 @@ class ElevenLabsIntegration(BaseIntegration):
                 params=params,
                 data=form,
                 files=files,
+                on_response_headers=capture_headers,
             )
-        except IntegrationDownError as exc:
-            status = exc.data.get("status")
-            unknown = status is None or status >= 500
+        except (IntegrationDownError, OSError) as exc:
+            error = (
+                exc
+                if isinstance(exc, IntegrationDownError)
+                else IntegrationDownError("ElevenLabs request could not be completed")
+            )
+            status = receipt.get("status", error.data.get("status"))
+            unknown = status is None or not 400 <= status < 500
             ids = {
                 key: value
-                for key, value in exc.data.get("provider_error", {}).items()
+                for key, value in error.data.get("provider_error", {}).items()
                 if key in {"provider_request_id", "history_item_id"}
             }
-            exc.data.update(
-                ids, **_paid_failure_data(charge_possible=unknown, outcome_unknown=unknown)
+            error.data.update(
+                receipt,
+                **ids,
+                **_paid_failure_data(charge_possible=unknown, outcome_unknown=unknown),
             )
-            raise
-        except OSError:
-            raise IntegrationDownError(
-                "ElevenLabs request could not be completed",
-                data=_paid_failure_data(charge_possible=True, outcome_unknown=True),
-            ) from None
+            raise error from None
 
-        receipt = {"status": response.status_code, **self._response_ids(response)}
         try:
             data = _parse_json(response)
         except (IntegrationDownError, RecursionError):
@@ -240,14 +253,9 @@ class ElevenLabsIntegration(BaseIntegration):
         if output_dir is None:
             raise ValidationError("output_dir is required for generated speech")
         try:
-            target = Path(output_dir).stat()
-        except FileNotFoundError:
-            pass  # The media writer can create the directory.
-        except (OSError, ValueError):
-            raise ValidationError("output_dir is not accessible") from None
-        else:
-            if not stat.S_ISDIR(target.st_mode):
-                raise ValidationError("output_dir must be a directory")
+            check_media_output_directory(output_dir)
+        except (OSError, ValueError, RuntimeError):
+            raise ValidationError("output_dir must allow creating an audio file") from None
         segment = quote(voice_id, safe="")
         data, receipt = await self._post(
             "speech.generate",

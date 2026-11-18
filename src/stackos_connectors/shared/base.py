@@ -189,6 +189,7 @@ class BaseIntegration:
         follow_redirects: bool = False,
         max_retries: int = DEFAULT_MAX_RETRIES,
         backoff_base: float = DEFAULT_BACKOFF_BASE,
+        on_response_headers: Callable[[httpx.Response], None] | None = None,
     ) -> httpx.Response:
         """Issue ``method url`` with rate-limit + retry handling.
 
@@ -197,24 +198,29 @@ class BaseIntegration:
         with exponential backoff; the final failure surfaces as
         ``IntegrationDownError`` so callers can branch on the typed
         error. Providers may override response retryability, never the limit.
+        An optional header observer runs before the response body is read.
         """
+        request_kwargs = {
+            "json": json,
+            "data": data,
+            "files": files,
+            "content": content,
+            "params": params,
+            "headers": headers,
+            "auth": auth,
+            "follow_redirects": follow_redirects,
+            **({"timeout": self._timeout} if self._timeout is not None else {}),
+        }
         last_status: int | None = None
         for attempt in range(max_retries + 1):
             await self._bucket().acquire(1)
             try:
-                response = await self._http.request(
-                    method,
-                    url,
-                    json=json,
-                    data=data,
-                    files=files,
-                    content=content,
-                    params=params,
-                    headers=headers,
-                    auth=auth,
-                    follow_redirects=follow_redirects,
-                    **({"timeout": self._timeout} if self._timeout is not None else {}),
-                )
+                if on_response_headers is None:
+                    response = await self._http.request(method, url, **request_kwargs)
+                else:
+                    async with self._http.stream(method, url, **request_kwargs) as response:
+                        on_response_headers(response)
+                        await response.aread()
             except httpx.HTTPError:
                 if attempt >= max_retries:
                     raise IntegrationDownError(

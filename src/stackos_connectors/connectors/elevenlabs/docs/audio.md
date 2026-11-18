@@ -8,7 +8,7 @@ requested endpoint. The provider may charge for these operations.
 | `elevenlabs.speech.generate` | `POST /v1/text-to-speech/{voice_id}/with-timestamps` | One audio file and any supplied character alignments |
 | `elevenlabs.alignment.create` | `POST /v1/forced-alignment` | Provider word timings and any supplied character timings and loss |
 
-For speech, pass `voice_id`, `text` and `CallOptions(output_dir=...)`. Optional
+For speech, pass `voice_id`, `text` and a writable `CallOptions(output_dir=...)`. Optional
 body fields include `model_id`, `voice_settings`, `previous_text`, `next_text`,
 `seed` (0 through 4294967295) and up to three ordered
 `pronunciation_dictionary_locators`. Each locator takes a
@@ -30,10 +30,12 @@ character records retain provider `text`, `start` and `end` in seconds.
 Word-level and response-level `loss` values are preserved when supplied.
 [Create forced alignment](https://elevenlabs.io/docs/api-reference/forced-alignment/create)
 
-Each invocation sends at most one POST. A 429 retains its retry delay when
-provided. Timeouts, server errors and malformed successes can leave the
-provider outcome and charge uncertain. When generation succeeds and saving
-fails, the error reports provider execution and possible charge. Failures
+Each invocation sends at most one POST. A 429 records dispatch separately from
+possible charge and retains any retry delay. Timeouts, server errors and malformed
+successes can leave the provider outcome and charge uncertain. Any safe IDs
+already received in the headers remain available if reading the body times out.
+When generation succeeds and saving fails, the error reports provider execution
+and possible charge. Failures
 after dispatch carry `retry_safe: false` and retain safe request or history
 IDs when available. Inspect these details before choosing whether to submit
 a new request. [ElevenLabs errors](https://elevenlabs.io/docs/eleven-api/resources/errors)

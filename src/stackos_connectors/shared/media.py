@@ -28,6 +28,22 @@ _REDIRECT_STATUSES = {301, 302, 303, 307, 308}
 _UNSAFE_HOSTNAMES = frozenset({"localhost", "localhost.localdomain"})
 
 
+def check_media_output_directory(output_dir: Path) -> None:
+    """Probe file creation in the output directory or its nearest existing parent."""
+    directory = Path(output_dir).resolve()
+    while True:
+        try:
+            directory.stat()
+        except FileNotFoundError:
+            if directory == directory.parent:
+                raise
+            directory = directory.parent
+        else:
+            break
+    with tempfile.NamedTemporaryFile(dir=directory, prefix=".media-"):
+        pass
+
+
 def write_media_file(
     raw: bytes,
     *,
@@ -252,6 +268,7 @@ def image_mime_type(suffix: str) -> str | None:
 
 
 __all__ = [
+    "check_media_output_directory",
     "data_url_payload",
     "decode_base64_media",
     "download_generated_media",
