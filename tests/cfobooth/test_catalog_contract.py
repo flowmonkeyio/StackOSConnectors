@@ -492,6 +492,18 @@ async def test_recursive_financial_issue_schema_falls_back(
     assert_public_query_error(failed, 400, PUBLIC_ERROR, caplog)
 
 
+async def test_recursive_base_error_schema_preserves_http_failure(
+    execute_financial_query, financial_catalog, caplog
+):
+    _, item = financial_catalog
+    error_schema = item["schemas"]["error"]
+    del error_schema["$schema"]
+    request_id_schema = error_schema["properties"]["requestId"]
+    request_id_schema["$ref"] = "#/properties/requestId"
+    failed = await execute_financial_query(400, query_error([GROUP_COUNT]))
+    assert_public_query_error(failed, 400, None, caplog)
+
+
 async def test_valid_financial_query_keeps_native_result(execute_financial_query):
     reply = {"requestId": "query-success.fixture", "data": {"status": "ok"}}
     result = await execute_financial_query(200, reply)

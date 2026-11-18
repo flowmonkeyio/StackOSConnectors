@@ -89,7 +89,12 @@ def _safe_error(exc: ConnectorError, descriptor: Mapping | None, method: str) ->
             "error": {"code": code, "message": PUBLIC_ERROR_MESSAGES[code]},
         }
         schema = descriptor["schemas"]["error"]
-        if not schema_issues(schema, candidate):
+        try:
+            base_is_valid = not schema_issues(schema, candidate)
+        except RecursionError:
+            # An indeterminate schema affects disclosure, never the observed HTTP failure.
+            base_is_valid = False
+        if base_is_valid:
             safe = candidate
             if (
                 descriptor["operationId"] == "datasets.executeQuery"
