@@ -5,6 +5,8 @@ the native client. Requests send the key in `xi-api-key` to
 `https://api.elevenlabs.io`. The caller owns key custody and selection.
 [ElevenLabs API authentication](https://elevenlabs.io/docs/api-reference/authentication)
 
+See [speech and forced alignment](audio.md) for the paid audio actions.
+
 | Native action | ElevenLabs route | Result |
 | --- | --- | --- |
 | `elevenlabs.subscription.get` | `GET /v1/user/subscription` | `tier`, `character_count` and `character_limit` |
