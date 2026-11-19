@@ -123,7 +123,11 @@ async def test_design_sends_one_post_and_persists_each_preview(tmp_path, automat
 
 @pytest.mark.parametrize(
     ("middle_type", "middle_suffix"),
-    [("application/octet-stream", ".bin"), ("audio/L16;\trate=16000", ".pcm")],
+    [
+        ("application/octet-stream", ".bin"),
+        ("audio/L16;\trate=16000", ".pcm"),
+        ('application/vnd.example+binary; label="take; \\"one\\""', ".bin"),
+    ],
 )
 async def test_design_saves_all_previews_with_mixed_media_types(
     tmp_path, middle_type, middle_suffix
@@ -161,6 +165,54 @@ async def test_design_saves_all_previews_with_mixed_media_types(
         assert path.read_bytes() == audio
         paths.append(path)
     assert len(result.files) == len(set(paths)) == 3
+
+
+@pytest.mark.parametrize(
+    "middle_type",
+    ["", " \t", "audio/", "audio/*", 'audio/ogg; note="unfinished', "audio/ogg;\r\nrate=16000"],
+)
+async def test_design_keeps_valid_previews_when_one_media_type_is_malformed(tmp_path, middle_type):
+    audio = [b"first preview", b"middle preview", b"last preview"]
+    previews = [
+        preview("first", 1, "audio/mpeg", audio[0]),
+        preview("middle", 2.5, middle_type, audio[1]),
+        preview("last", 3, "audio/ogg", audio[2]),
+    ]
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        assert_post(request, "/v1/text-to-voice/design")
+        return httpx.Response(200, json={"text": TEXT, "previews": previews})
+
+    result = await execute(DESIGN, DESIGN_INPUT, handle, output_dir=tmp_path)
+    assert len(seen) == 1
+    assert result.output_json == {
+        "status": "partial",
+        "text": TEXT,
+        "previews": [
+            {
+                "generated_voice_id": "first",
+                "duration_secs": 1,
+                "media_type": "audio/mpeg",
+                "file_index": 0,
+            },
+            {
+                "generated_voice_id": "middle",
+                "duration_secs": 2.5,
+                "reason_code": "invalid_preview",
+            },
+            {
+                "generated_voice_id": "last",
+                "duration_secs": 3,
+                "media_type": "audio/ogg",
+                "file_index": 1,
+            },
+        ],
+    }
+    assert [file.mime_type for file in result.files] == ["audio/mpeg", "audio/ogg"]
+    assert [Path(file.path).read_bytes() for file in result.files] == [audio[0], audio[2]]
+    assert set(tmp_path.iterdir()) == {Path(file.path) for file in result.files}
 
 
 @pytest.mark.parametrize("failure", ["write", "malformed_audio", "all_writes"])

@@ -30,7 +30,9 @@ Design reports `success` when all previews are saved, `partial` when some are
 saved, and `failed` when no preview is saved from a returned batch. Failed rows
 retain valid provider fields, including any known generated ID, and carry
 `reason_code` instead of a file index. The connector attempts subsequent
-previews in the same batch after a malformed preview or write failure.
+previews in the same batch after a malformed preview or write failure. A preview
+with a malformed MIME type reports `invalid_preview` and keeps its known ID and
+duration.
 
 To create a permanent voice, separately pass the chosen `generated_voice_id`,
 `voice_name` and `voice_description`. Each invocation sends at most one POST.

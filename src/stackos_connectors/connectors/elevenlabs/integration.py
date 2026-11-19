@@ -68,6 +68,14 @@ _PREVIEW_EXTENSIONS = {
     "audio/pcmu": "ulaw",
     "application/ogg": "ogg",
 }
+# Concrete media names follow RFC 6838. Parameter syntax follows RFC 9110.
+_MEDIA_NAME = r"[A-Za-z0-9][A-Za-z0-9!#$&^_.+-]{0,126}"
+_HTTP_TOKEN = r"[A-Za-z0-9!#$%&'*+.^_\x60|~-]+"
+_HTTP_QUOTED_STRING = r'"(?:[\t\x20\x21\x23-\x5b\x5d-\x7e\x80-\xff]|\\[\t\x20-\x7e\x80-\xff])*"'
+_PREVIEW_MEDIA_TYPE = re.compile(
+    rf"(?P<base>{_MEDIA_NAME}/{_MEDIA_NAME})"
+    rf"(?:[ \t]*+;[ \t]*+(?:{_HTTP_TOKEN}=(?:{_HTTP_TOKEN}|{_HTTP_QUOTED_STRING}))?)*"
+)
 _MAX_ALIGNMENT_FILE_BYTES = 1_000_000_000
 
 
@@ -392,7 +400,12 @@ class ElevenLabsIntegration(BaseIntegration):
         if _finite_number(duration) and duration >= 0:
             row["duration_secs"] = duration
         media_type = preview.get("media_type")
-        if isinstance(media_type, str) and media_type:
+        media_type_match = (
+            _PREVIEW_MEDIA_TYPE.fullmatch(media_type.strip(" \t"))
+            if isinstance(media_type, str)
+            else None
+        )
+        if media_type_match is not None:
             row["media_type"] = media_type
         language = preview.get("language")
         if "language" in preview and (language is None or isinstance(language, str)):
@@ -402,7 +415,7 @@ class ElevenLabsIntegration(BaseIntegration):
         if (
             "generated_voice_id" not in row
             or "duration_secs" not in row
-            or "media_type" not in row
+            or media_type_match is None
             or not isinstance(encoded, str)
             or not encoded
         ):
@@ -416,7 +429,7 @@ class ElevenLabsIntegration(BaseIntegration):
         except IntegrationDownError:
             return {**row, "reason_code": "invalid_preview"}
 
-        base_type = media_type.partition(";")[0].strip(" \t").lower()
+        base_type = media_type_match["base"].lower()
         ext = _PREVIEW_EXTENSIONS.get(base_type, "bin")
         file_index = len(files)
         try:
