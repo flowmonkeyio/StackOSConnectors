@@ -12,9 +12,12 @@ For speech, pass `voice_id`, `text` and a writable `CallOptions(output_dir=...)`
 body fields include `model_id`, `voice_settings`, `previous_text`, `next_text`,
 `seed` (0 through 4294967295) and up to three ordered
 `pronunciation_dictionary_locators`. Each locator takes a
-`pronunciation_dictionary_id` and an optional `version_id`. Omitting the version
-or passing null selects the provider's latest version. An explicitly selected
-`output_format` goes in the query. The provider default is `mp3_44100_128`.
+`pronunciation_dictionary_id` and an optional `version_id`. To pin a
+[created dictionary version](dictionary.md), use its returned `id` as
+`pronunciation_dictionary_id` and its returned `version_id` as `version_id`.
+Omitting the version or passing null selects the provider's latest version. An
+explicitly selected `output_format` goes in the query. The provider default is
+`mp3_44100_128`.
 
 The connector creates the requested output directory if needed and verifies
 that it can write a temporary file there before sending the request. The

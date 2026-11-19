@@ -2,7 +2,7 @@
   "schema_version": "stackos.connector.v1",
   "connector": "elevenlabs",
   "name": "ElevenLabs",
-  "description": "Discover subscription usage, models and voices, search and add shared voices, design voice previews and create voices, generate timestamped speech, and align audio.",
+  "description": "Discover subscription usage, models and voices, search and add shared voices, design voice previews and create voices, create pronunciation dictionaries, generate timestamped speech, and align audio.",
   "icon": {
     "path": "shared/icons/integration.svg",
     "media_type": "image/svg+xml",
@@ -834,6 +834,81 @@
       "config": {},
       "metadata": {
         "name": "Create ElevenLabs voice",
+        "read_only": false,
+        "risk_level": "write"
+      }
+    },
+    {
+      "key": "elevenlabs.dictionaries.create",
+      "operation": "dictionaries.create",
+      "description": "Create a versioned pronunciation dictionary from alias and phoneme rules.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "\\S",
+            "description": "Display name for the new dictionary."
+          },
+          "rules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {"const": "alias"},
+                    "string_to_replace": {"type": "string", "pattern": "\\S"},
+                    "alias": {"type": "string", "pattern": "\\S"},
+                    "case_sensitive": {"type": "boolean"},
+                    "word_boundaries": {"type": "boolean"}
+                  },
+                  "required": ["type", "string_to_replace", "alias"]
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {"const": "phoneme"},
+                    "string_to_replace": {"type": "string", "pattern": "\\S"},
+                    "phoneme": {"type": "string", "pattern": "\\S"},
+                    "alphabet": {"type": "string", "pattern": "\\S", "examples": ["ipa"]},
+                    "case_sensitive": {"type": "boolean"},
+                    "word_boundaries": {"type": "boolean"}
+                  },
+                  "required": ["type", "string_to_replace", "phoneme", "alphabet"]
+                }
+              ]
+            }
+          }
+        },
+        "required": ["name", "rules"]
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "\\S",
+            "description": "Dictionary ID. Use it as pronunciation_dictionary_id in a speech locator."
+          },
+          "version_id": {
+            "type": "string",
+            "pattern": "\\S",
+            "description": "Created version ID. Pass it with the dictionary ID to use this version in speech."
+          }
+        },
+        "required": ["id", "version_id"]
+      },
+      "auth_methods": ["api_key"],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Create ElevenLabs pronunciation dictionary from rules",
         "read_only": false,
         "risk_level": "write"
       }

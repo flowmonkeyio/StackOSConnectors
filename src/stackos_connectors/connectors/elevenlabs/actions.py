@@ -85,6 +85,8 @@ class ElevenLabsActionConnector:
                     )
                 case "voices.create":
                     output, receipt = await integration.create_voice(body=data)
+                case "dictionaries.create":
+                    output, receipt = await integration.create_pronunciation_dictionary(body=data)
                 case "speech.generate":
                     body = {
                         key: value

@@ -454,6 +454,23 @@ class ElevenLabsIntegration(BaseIntegration):
             raise self._post_response_error(receipt, reports_charge=False)
         return {"voice_id": voice_id}, receipt
 
+    async def create_pronunciation_dictionary(
+        self, *, body: dict[str, Any]
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        data, receipt = await self._post(
+            "dictionaries.create",
+            "/v1/pronunciation-dictionaries/add-from-rules",
+            json_body=body,
+            reports_charge=False,
+        )
+        dictionary_id = data.get("id")
+        version_id = data.get("version_id")
+        if not all(
+            isinstance(value, str) and value.strip() for value in (dictionary_id, version_id)
+        ):
+            raise self._post_response_error(receipt, reports_charge=False)
+        return {"id": dictionary_id, "version_id": version_id}, receipt
+
     async def create_alignment(
         self, *, audio_path: Path, mime_type: str, text: str
     ) -> tuple[dict[str, Any], dict[str, Any]]:
