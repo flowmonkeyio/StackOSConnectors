@@ -2,7 +2,7 @@
   "schema_version": "stackos.connector.v1",
   "connector": "elevenlabs",
   "name": "ElevenLabs",
-  "description": "Discover subscription usage, models and voices, generate timestamped speech, and align audio.",
+  "description": "Discover subscription usage, models and voices, search and add shared voices, generate timestamped speech, and align audio.",
   "icon": {
     "path": "shared/icons/integration.svg",
     "media_type": "image/svg+xml",
@@ -438,6 +438,182 @@
         "name": "Get saved ElevenLabs voice settings",
         "read_only": true,
         "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.library.search",
+      "operation": "library.search",
+      "description": "Search one page of the ElevenLabs Voice Library and return voice identities and any supplied preview and pricing metadata.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "search": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Zero-based page index."
+          },
+          "page_size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 30
+          }
+        }
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "has_more": {
+            "type": "boolean",
+            "description": "Whether the provider has another page."
+          },
+          "voices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "public_owner_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Public library owner ID."
+                },
+                "voice_id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Shared voice ID."
+                },
+                "name": {
+                  "type": "string"
+                },
+                "preview_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "notice_period": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "rate": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Provider credit rate multiplier."
+                },
+                "fiat_rate": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Provider price in USD per 1,000 credits. Explicit null indicates default pricing."
+                }
+              },
+              "required": [
+                "public_owner_id",
+                "voice_id",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "has_more",
+          "voices"
+        ]
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Search ElevenLabs Voice Library",
+        "read_only": true,
+        "risk_level": "read"
+      }
+    },
+    {
+      "key": "elevenlabs.library.add",
+      "operation": "library.add",
+      "description": "Add the explicitly identified shared voice to the authenticated ElevenLabs user's collection.",
+      "input_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "public_owner_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "not": {
+              "enum": [
+                ".",
+                ".."
+              ]
+            },
+            "description": "Public library owner ID for the provider's public_user_id path segment."
+          },
+          "voice_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "not": {
+              "enum": [
+                ".",
+                ".."
+              ]
+            },
+            "description": "Shared voice ID to add."
+          },
+          "new_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "description": "Name for the voice in the user's collection."
+          }
+        },
+        "required": [
+          "public_owner_id",
+          "voice_id",
+          "new_name"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "voice_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Voice ID returned by ElevenLabs for the added voice."
+          }
+        },
+        "required": [
+          "voice_id"
+        ]
+      },
+      "auth_methods": [
+        "api_key"
+      ],
+      "auth_optional": false,
+      "config": {},
+      "metadata": {
+        "name": "Add shared ElevenLabs voice",
+        "read_only": false,
+        "risk_level": "write"
       }
     },
     {

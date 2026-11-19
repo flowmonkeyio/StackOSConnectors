@@ -6,6 +6,7 @@ the native client. Requests send the key in `xi-api-key` to
 [ElevenLabs API authentication](https://elevenlabs.io/docs/api-reference/authentication)
 
 See [speech and forced alignment](audio.md) for the paid audio actions.
+See [Voice Library](library.md) for shared voice search and explicit addition.
 
 | Native action | ElevenLabs route | Result |
 | --- | --- | --- |

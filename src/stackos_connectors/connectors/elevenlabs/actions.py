@@ -53,6 +53,18 @@ class ElevenLabsActionConnector:
                     output = await integration.voice_settings()
                 case "voices.settings.get":
                     output = await integration.voice_settings(voice_id=data["voice_id"])
+                case "library.search":
+                    output = await integration.search_shared_voices(
+                        search=data.get("search"),
+                        page=int(data.get("page", 0)),
+                        page_size=int(data.get("page_size", 30)),
+                    )
+                case "library.add":
+                    output, receipt = await integration.add_shared_voice(
+                        public_owner_id=data["public_owner_id"],
+                        voice_id=data["voice_id"],
+                        new_name=data["new_name"],
+                    )
                 case "speech.generate":
                     body = {
                         key: value

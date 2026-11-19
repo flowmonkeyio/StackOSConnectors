@@ -36,6 +36,15 @@ _SETTINGS_FIELDS = (
     "use_speaker_boost",
     "clone_strength",
 )
+_SHARED_VOICE_FIELDS = (
+    "public_owner_id",
+    "voice_id",
+    "name",
+    "preview_url",
+    "notice_period",
+    "rate",
+    "fiat_rate",
+)
 _DEFAULT_OUTPUT_FORMAT = "mp3_44100_128"
 _AUDIO_TYPES = {
     "mp3": ("mp3", "audio/mpeg"),
@@ -98,13 +107,13 @@ def _valid_timed_items(value: Any) -> bool:
     )
 
 
-def _paid_failure_data(*, charge_possible: bool, outcome_unknown: bool) -> dict[str, Any]:
+def _post_failure_data(*, outcome_unknown: bool, charge_possible: bool | None) -> dict[str, Any]:
     return {
         "automatic_retry_count": 0,
         "provider_executed": True,
-        "charge_possible": charge_possible,
         "outcome_unknown": outcome_unknown,
         "retry_safe": False,
+        **({"charge_possible": charge_possible} if charge_possible is not None else {}),
     }
 
 
@@ -181,6 +190,7 @@ class ElevenLabsIntegration(BaseIntegration):
         params: dict[str, Any] | None = None,
         form: dict[str, str] | None = None,
         files: dict[str, tuple[str, BinaryIO, str]] | None = None,
+        reports_charge: bool = True,
     ) -> tuple[dict[str, Any], dict[str, Any]]:
         receipt: dict[str, Any] = {}
 
@@ -218,25 +228,31 @@ class ElevenLabsIntegration(BaseIntegration):
             error.data.update(
                 receipt,
                 **ids,
-                **_paid_failure_data(charge_possible=unknown, outcome_unknown=unknown),
+                **_post_failure_data(
+                    outcome_unknown=unknown, charge_possible=unknown if reports_charge else None
+                ),
             )
             raise error from None
 
         try:
             data = _parse_json(response)
         except (IntegrationDownError, RecursionError):
-            raise self._paid_response_error(receipt) from None
+            raise self._post_response_error(receipt, reports_charge=reports_charge) from None
         if not isinstance(data, dict):
-            raise self._paid_response_error(receipt)
+            raise self._post_response_error(receipt, reports_charge=reports_charge)
         return data, {**receipt, **self._response_ids(response, data)}
 
     @staticmethod
-    def _paid_response_error(receipt: dict[str, Any]) -> IntegrationDownError:
+    def _post_response_error(
+        receipt: dict[str, Any], *, reports_charge: bool = True
+    ) -> IntegrationDownError:
         return IntegrationDownError(
             "ElevenLabs returned an invalid response",
             data={
                 **receipt,
-                **_paid_failure_data(charge_possible=True, outcome_unknown=True),
+                **_post_failure_data(
+                    outcome_unknown=True, charge_possible=True if reports_charge else None
+                ),
                 "reason_code": "invalid_response",
             },
         )
@@ -272,13 +288,13 @@ class ElevenLabsIntegration(BaseIntegration):
             or not encoded
             or not all(_valid_character_alignment(value) for value in alignments.values())
         ):
-            raise self._paid_response_error(receipt)
+            raise self._post_response_error(receipt)
         try:
             audio = decode_base64_media(
                 encoded, vendor=self.vendor, error_message="ElevenLabs returned invalid audio"
             )
         except IntegrationDownError:
-            raise self._paid_response_error(receipt) from None
+            raise self._post_response_error(receipt) from None
         selected_format = output_format or _DEFAULT_OUTPUT_FORMAT
         ext, mime_type = _AUDIO_TYPES[selected_format.split("_", 1)[0]]
         try:
@@ -295,7 +311,7 @@ class ElevenLabsIntegration(BaseIntegration):
                 "ElevenLabs generated speech but the audio file could not be saved",
                 data={
                     **receipt,
-                    **_paid_failure_data(charge_possible=True, outcome_unknown=False),
+                    **_post_failure_data(charge_possible=True, outcome_unknown=False),
                     "reason_code": "audio_persistence_failed",
                 },
             ) from None
@@ -329,7 +345,7 @@ class ElevenLabsIntegration(BaseIntegration):
             or ("characters" in output and not _valid_timed_items(output["characters"]))
             or (output.get("loss") is not None and not _finite_number(output["loss"]))
         ):
-            raise self._paid_response_error(receipt)
+            raise self._post_response_error(receipt)
         return output, receipt
 
     async def _read(
@@ -391,3 +407,49 @@ class ElevenLabsIntegration(BaseIntegration):
         if not isinstance(data, dict):
             raise _invalid_response()
         return {key: data[key] for key in _SETTINGS_FIELDS if key in data}
+
+    async def search_shared_voices(
+        self, *, search: str | None, page: int, page_size: int
+    ) -> dict[str, Any]:
+        params: dict[str, Any] = {"page": page, "page_size": page_size}
+        if search is not None:
+            params["search"] = search
+        data = await self._read("library.search", "/v1/shared-voices", params=params)
+        if not isinstance(data, dict) or not isinstance(data.get("has_more"), bool):
+            raise _invalid_response()
+
+        voices = _identified_rows(data.get("voices"), "voice_id", _SHARED_VOICE_FIELDS)
+        for voice in voices:
+            owner = voice.get("public_owner_id")
+            preview = voice.get("preview_url")
+            notice = voice.get("notice_period")
+            if (
+                not isinstance(owner, str)
+                or not owner.strip()
+                or not voice["voice_id"].strip()
+                or not isinstance(voice.get("name"), str)
+                or (preview is not None and not isinstance(preview, str))
+                or (notice is not None and type(notice) is not int)
+                or any(
+                    voice.get(key) is not None and not _finite_number(voice[key])
+                    for key in ("rate", "fiat_rate")
+                )
+            ):
+                raise _invalid_response()
+        return {"has_more": data["has_more"], "voices": voices}
+
+    async def add_shared_voice(
+        self, *, public_owner_id: str, voice_id: str, new_name: str
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        owner_segment = quote(public_owner_id, safe="")
+        voice_segment = quote(voice_id, safe="")
+        data, receipt = await self._post(
+            "library.add",
+            f"/v1/voices/add/{owner_segment}/{voice_segment}",
+            json_body={"new_name": new_name},
+            reports_charge=False,
+        )
+        added_voice_id = data.get("voice_id")
+        if not isinstance(added_voice_id, str) or not added_voice_id.strip():
+            raise self._post_response_error(receipt, reports_charge=False)
+        return {"voice_id": added_voice_id}, receipt
