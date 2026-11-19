@@ -121,6 +121,48 @@ async def test_design_sends_one_post_and_persists_each_preview(tmp_path, automat
     assert set(tmp_path.iterdir()) == set(paths)
 
 
+@pytest.mark.parametrize(
+    ("middle_type", "middle_suffix"),
+    [("application/octet-stream", ".bin"), ("audio/L16;\trate=16000", ".pcm")],
+)
+async def test_design_saves_all_previews_with_mixed_media_types(
+    tmp_path, middle_type, middle_suffix
+):
+    audio = b"\x00\x00\x38\x01" * 24
+    media_types = ["audio/pcm", middle_type, "audio/pcm"]
+    previews = [
+        preview(f"preview-{index}", index + 0.5, media_type, audio)
+        for index, media_type in enumerate(media_types)
+    ]
+    seen = []
+
+    def handle(request):
+        seen.append(request)
+        assert_post(request, "/v1/text-to-voice/design")
+        return httpx.Response(200, json={"text": TEXT, "previews": previews})
+
+    result = await execute(DESIGN, DESIGN_INPUT, handle, output_dir=tmp_path)
+    assert len(seen) == 1
+    assert result.output_json["status"] == "success"
+    paths = []
+    for index, (row, suffix) in enumerate(
+        zip(result.output_json["previews"], [".pcm", middle_suffix, ".pcm"], strict=True)
+    ):
+        assert row == {
+            "generated_voice_id": f"preview-{index}",
+            "duration_secs": index + 0.5,
+            "media_type": media_types[index],
+            "file_index": index,
+        }
+        file = result.files[row["file_index"]]
+        assert file.mime_type == media_types[index]
+        path = Path(file.path)
+        assert path.suffix == suffix
+        assert path.read_bytes() == audio
+        paths.append(path)
+    assert len(result.files) == len(set(paths)) == 3
+
+
 @pytest.mark.parametrize("failure", ["write", "malformed_audio", "all_writes"])
 async def test_design_outcome_preserves_ids_and_indexes_after_preview_failure(
     tmp_path, monkeypatch, failure

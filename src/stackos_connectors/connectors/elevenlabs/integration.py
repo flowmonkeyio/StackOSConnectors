@@ -392,14 +392,8 @@ class ElevenLabsIntegration(BaseIntegration):
         if _finite_number(duration) and duration >= 0:
             row["duration_secs"] = duration
         media_type = preview.get("media_type")
-        ext = None
-        if isinstance(media_type, str) and media_type.isascii() and media_type.isprintable():
-            base_type = media_type.partition(";")[0].strip().lower()
-            ext = _PREVIEW_EXTENSIONS.get(base_type)
-            if ext is None and re.fullmatch(r"audio/[a-z0-9][a-z0-9.+_-]*", base_type):
-                ext = "bin"
-            if ext is not None:
-                row["media_type"] = media_type
+        if isinstance(media_type, str) and media_type:
+            row["media_type"] = media_type
         language = preview.get("language")
         if "language" in preview and (language is None or isinstance(language, str)):
             row["language"] = language
@@ -408,7 +402,7 @@ class ElevenLabsIntegration(BaseIntegration):
         if (
             "generated_voice_id" not in row
             or "duration_secs" not in row
-            or ext is None
+            or "media_type" not in row
             or not isinstance(encoded, str)
             or not encoded
         ):
@@ -422,6 +416,8 @@ class ElevenLabsIntegration(BaseIntegration):
         except IntegrationDownError:
             return {**row, "reason_code": "invalid_preview"}
 
+        base_type = media_type.partition(";")[0].strip(" \t").lower()
+        ext = _PREVIEW_EXTENSIONS.get(base_type, "bin")
         file_index = len(files)
         try:
             write_media_file(
@@ -430,7 +426,7 @@ class ElevenLabsIntegration(BaseIntegration):
                 prefix=prefix,
                 ext=ext,
                 files=files,
-                mime_type=row["media_type"],
+                mime_type=media_type,
             )
         except (OSError, ValueError, RuntimeError):
             return {**row, "reason_code": "audio_persistence_failed"}

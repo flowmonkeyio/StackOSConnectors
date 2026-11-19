@@ -21,9 +21,9 @@ response. [Design a voice](https://elevenlabs.io/docs/api-reference/text-to-voic
 `result.output_json.previews` follows provider order. Each saved preview row
 contains `generated_voice_id`, `duration_secs`, `media_type` and a zero-based
 `file_index` into `result.files`. Each file carries its preview's MIME type.
-Recognized MIME types determine the file extension. Other audio types use
-`.bin` and retain the provider's MIME type. Audio bytes are available through
-the file descriptors. The connector also returns the provider's preview
+Recognized MIME types determine the file extension. Generic or unrecognized
+types use `.bin` and retain the reported MIME type. Audio bytes are available
+through the file descriptors. The connector also returns the provider's preview
 `text` and per-preview `language` when supplied.
 
 Design reports `success` when all previews are saved, `partial` when some are
