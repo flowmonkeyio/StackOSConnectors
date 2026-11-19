@@ -17,8 +17,16 @@ class ElevenLabsActionConnector:
     key = "elevenlabs"
 
     def validate(self, request: ConnectorRequest) -> list[ValidationIssue]:
-        if request.operation == "speech.generate" and request.options.output_dir is None:
-            return [issue("$.options.output_dir", "output_dir is required for generated speech")]
+        if request.options.output_dir is None:
+            match request.operation:
+                case "speech.generate":
+                    return [
+                        issue("$.options.output_dir", "output_dir is required for generated speech")
+                    ]
+                case "voices.design":
+                    return [
+                        issue("$.options.output_dir", "output_dir is required for voice previews")
+                    ]
         return []
 
     def estimate_cost_cents(self, _request: ConnectorRequest) -> int:
@@ -65,6 +73,18 @@ class ElevenLabsActionConnector:
                         voice_id=data["voice_id"],
                         new_name=data["new_name"],
                     )
+                case "voices.design":
+                    body = {key: value for key, value in data.items() if key != "output_format"}
+                    if body.get("seed") is not None:
+                        body["seed"] = int(body["seed"])
+                    output, receipt = await integration.design_voice(
+                        body=body,
+                        output_format=data.get("output_format"),
+                        output_dir=options.output_dir,
+                        files=files,
+                    )
+                case "voices.create":
+                    output, receipt = await integration.create_voice(body=data)
                 case "speech.generate":
                     body = {
                         key: value

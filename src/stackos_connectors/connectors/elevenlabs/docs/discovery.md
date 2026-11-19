@@ -7,6 +7,7 @@ the native client. Requests send the key in `xi-api-key` to
 
 See [speech and forced alignment](audio.md) for the paid audio actions.
 See [Voice Library](library.md) for shared voice search and explicit addition.
+See [Voice Design](design.md) for generating previews and creating a voice.
 
 | Native action | ElevenLabs route | Result |
 | --- | --- | --- |

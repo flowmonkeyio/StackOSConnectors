@@ -7,6 +7,7 @@ from math import isfinite
 from pathlib import Path
 from typing import Any, BinaryIO
 from urllib.parse import quote
+from uuid import uuid4
 
 import httpx
 
@@ -53,6 +54,19 @@ _AUDIO_TYPES = {
     "pcm": ("pcm", "audio/pcm"),
     "ulaw": ("ulaw", "audio/basic"),
     "alaw": ("alaw", "audio/PCMA"),
+}
+_PREVIEW_EXTENSIONS = {
+    **{mime.lower(): ext for ext, mime in _AUDIO_TYPES.values()},
+    "audio/mp3": "mp3",
+    "audio/wave": "wav",
+    "audio/x-wav": "wav",
+    "audio/vnd.wave": "wav",
+    "audio/ogg": "ogg",
+    "audio/opus": "opus",
+    "audio/x-pcm": "pcm",
+    "audio/l16": "pcm",
+    "audio/pcmu": "ulaw",
+    "application/ogg": "ogg",
 }
 _MAX_ALIGNMENT_FILE_BYTES = 1_000_000_000
 
@@ -115,6 +129,16 @@ def _post_failure_data(*, outcome_unknown: bool, charge_possible: bool | None) -
         "retry_safe": False,
         **({"charge_possible": charge_possible} if charge_possible is not None else {}),
     }
+
+
+def _prepare_audio_output(output_dir: Path | None, purpose: str) -> Path:
+    if output_dir is None:
+        raise ValidationError(f"output_dir is required for {purpose}")
+    try:
+        check_media_output_directory(output_dir)
+    except (OSError, ValueError, RuntimeError):
+        raise ValidationError("output_dir must allow creating an audio file") from None
+    return output_dir
 
 
 def _identified_rows(value: Any, id_field: str, fields: tuple[str, ...]) -> list[dict[str, Any]]:
@@ -266,12 +290,7 @@ class ElevenLabsIntegration(BaseIntegration):
         output_dir: Path | None,
         files: list[ConnectorFile],
     ) -> tuple[dict[str, Any], dict[str, Any]]:
-        if output_dir is None:
-            raise ValidationError("output_dir is required for generated speech")
-        try:
-            check_media_output_directory(output_dir)
-        except (OSError, ValueError, RuntimeError):
-            raise ValidationError("output_dir must allow creating an audio file") from None
+        output_dir = _prepare_audio_output(output_dir, "generated speech")
         segment = quote(voice_id, safe="")
         data, receipt = await self._post(
             "speech.generate",
@@ -316,6 +335,115 @@ class ElevenLabsIntegration(BaseIntegration):
                 },
             ) from None
         return {"output_format": selected_format, **alignments}, receipt
+
+    async def design_voice(
+        self,
+        *,
+        body: dict[str, Any],
+        output_format: str | None,
+        output_dir: Path | None,
+        files: list[ConnectorFile],
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        output_dir = _prepare_audio_output(output_dir, "voice previews")
+        data, receipt = await self._post(
+            "voices.design",
+            "/v1/text-to-voice/design",
+            params={"output_format": output_format} if output_format is not None else None,
+            json_body=body,
+        )
+        previews = data.get("previews")
+        if not isinstance(previews, list) or not previews:
+            raise self._post_response_error(receipt)
+
+        # Each preview gets its own path even if the provider returns identical audio.
+        batch_id = uuid4().hex
+        first_file_index = len(files)
+        rows = [
+            self._save_voice_preview(
+                preview,
+                output_dir=output_dir,
+                prefix=f"elevenlabs-voice-preview-{batch_id}-{index}",
+                files=files,
+            )
+            for index, preview in enumerate(previews)
+        ]
+        saved = len(files) - first_file_index
+        status = "success"
+        if saved != len(rows):
+            status = "partial" if saved else "failed"
+            receipt.update(_post_failure_data(outcome_unknown=False, charge_possible=True))
+
+        output = {"status": status, "previews": rows}
+        if isinstance(data.get("text"), str):
+            output["text"] = data["text"]
+        return output, receipt
+
+    def _save_voice_preview(
+        self, preview: Any, *, output_dir: Path, prefix: str, files: list[ConnectorFile]
+    ) -> dict[str, Any]:
+        row: dict[str, Any] = {}
+        if not isinstance(preview, dict):
+            return {"reason_code": "invalid_preview"}
+
+        voice_id = preview.get("generated_voice_id")
+        if isinstance(voice_id, str) and voice_id.strip():
+            row["generated_voice_id"] = voice_id
+        duration = preview.get("duration_secs")
+        if _finite_number(duration) and duration >= 0:
+            row["duration_secs"] = duration
+        media_type = preview.get("media_type")
+        ext = None
+        if isinstance(media_type, str) and media_type.isascii() and media_type.isprintable():
+            base_type = media_type.partition(";")[0].strip().lower()
+            ext = _PREVIEW_EXTENSIONS.get(base_type)
+            if ext is None and re.fullmatch(r"audio/[a-z0-9][a-z0-9.+_-]*", base_type):
+                ext = "bin"
+            if ext is not None:
+                row["media_type"] = media_type
+        language = preview.get("language")
+        if "language" in preview and (language is None or isinstance(language, str)):
+            row["language"] = language
+
+        encoded = preview.get("audio_base_64")
+        if (
+            "generated_voice_id" not in row
+            or "duration_secs" not in row
+            or ext is None
+            or not isinstance(encoded, str)
+            or not encoded
+        ):
+            return {**row, "reason_code": "invalid_preview"}
+        try:
+            audio = decode_base64_media(
+                encoded,
+                vendor=self.vendor,
+                error_message="ElevenLabs returned invalid preview audio",
+            )
+        except IntegrationDownError:
+            return {**row, "reason_code": "invalid_preview"}
+
+        file_index = len(files)
+        try:
+            write_media_file(
+                audio,
+                output_dir=output_dir,
+                prefix=prefix,
+                ext=ext,
+                files=files,
+                mime_type=row["media_type"],
+            )
+        except (OSError, ValueError, RuntimeError):
+            return {**row, "reason_code": "audio_persistence_failed"}
+        return {**row, "file_index": file_index}
+
+    async def create_voice(self, *, body: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+        data, receipt = await self._post(
+            "voices.create", "/v1/text-to-voice", json_body=body, reports_charge=False
+        )
+        voice_id = data.get("voice_id")
+        if not isinstance(voice_id, str) or not voice_id.strip():
+            raise self._post_response_error(receipt, reports_charge=False)
+        return {"voice_id": voice_id}, receipt
 
     async def create_alignment(
         self, *, audio_path: Path, mime_type: str, text: str
