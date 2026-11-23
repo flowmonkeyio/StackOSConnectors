@@ -91,9 +91,7 @@ async def test_catalog_and_action_require_runtime_organization(native, catalog, 
     ) as http:
         for action in ("cfobooth.catalog.export", "cfobooth.fixture.read"):
             with pytest.raises(ValidationError) as failure:
-                await bound.execute(
-                    "cfobooth", action, {}, auth(org=org), CallOptions(http=http)
-                )
+                await bound.execute("cfobooth", action, {}, auth(org=org), CallOptions(http=http))
             assert any(
                 "verified organization_id" in issue.message for issue in failure.value.issues
             )

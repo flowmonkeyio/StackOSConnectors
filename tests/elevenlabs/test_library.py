@@ -73,7 +73,9 @@ async def test_search_preserves_second_page_duplicates_and_price_metadata():
     def handle(request):
         seen.append(request)
         assert request.method == "GET"
-        assert str(request.url.copy_with(query=None)) == "https://api.elevenlabs.io/v1/shared-voices"
+        assert (
+            str(request.url.copy_with(query=None)) == "https://api.elevenlabs.io/v1/shared-voices"
+        )
         assert dict(request.url.params) == {"search": "Café + voice", "page": "1", "page_size": "4"}
         assert request.headers["xi-api-key"] == KEY
         assert request.content == b""
