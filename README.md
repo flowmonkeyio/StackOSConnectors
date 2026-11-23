@@ -205,7 +205,7 @@ icon_bytes = files("stackos_connectors").joinpath(*icon["path"].split("/")).read
 
 ## CFOBooth native API keys
 
-The private 0.2.9 candidate verifies CFOBooth Accounts with an explicit
+Version 0.2.9 verifies CFOBooth Accounts with an explicit
 `api_base_url` and an `api_key`. The endpoint field is editable and shows
 `https://cfobooth.com` as an example. Owned loopback HTTP and explicit remote
 HTTPS are supported. `GET /api/api-keys/current` returns the verified subject,
@@ -217,9 +217,8 @@ envelopes without per-call catalog fetching or session refresh.
 
 See the [provider contract](src/stackos_connectors/connectors/cfobooth/docs/cfobooth.md)
 for setup, supported schema projection, safety boundaries and local-proof limits.
-This source candidate has not been published; the public installation pin below
-continues to describe the existing release. Host inventory/custody and final
-actual-server integration remain with their existing owners.
+Host inventory/custody and live server qualification remain with their existing
+owners.
 
 ## Installation
 
@@ -229,14 +228,25 @@ Python 3.12 or newer is required. Source:
 Published releases can be installed with:
 
 ```bash
-python -m pip install stackos-connectors==0.2.8
+python -m pip install stackos-connectors==0.2.9
 ```
 
-Or add `stackos-connectors==0.2.8` to your Python dependency requirements.
+Or add `stackos-connectors==0.2.9` to your Python dependency requirements.
 
 Install from a local checkout with `pip install /path/to/StackOSConnectors`, or
 build a wheel with `python -m build --wheel` and install that wheel. Runtime use
 needs only the installed package and its declared dependencies.
+
+### 0.2.9 release notes
+
+- Add explicit QuickBooks token revocation through `revoke_token`, with one
+  bounded request, HTTP 200 confirmation and no automatic retry.
+- Add CFOBooth native API-key discovery and organization-bound catalog/action
+  execution with bounded, sanitized query diagnostics.
+- Extend ElevenLabs discovery, timestamp/alignment output, shared voices,
+  voice design/creation and pronunciation-dictionary actions.
+- Preserve declared schema constraints and local references, bounded HTTP/media
+  handling and uncertain-effect receipts through the shared provider owners.
 
 ### 0.2.8 release notes
 
