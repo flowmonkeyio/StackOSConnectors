@@ -98,8 +98,7 @@ remote revocation is explicit CFOBooth key administration. Browser viewers retai
 their own sessions and never inherit the integration key.
 
 Local proof uses public native discovery/probe/validation/registration/execution
-with owned loopback peers plus frozen-wire security/schema controls. Actual
-issued keys, SQL/current authority, real emitted catalog parity and composed
-StackOS traffic remain tickets17/16. Independent exact-commit review and operator
-installation are separate gates. Version0.2.9 is a private candidate; no package
-publication or installed StackOS change is implied.
+with owned loopback peers plus frozen-wire security/schema controls. Live
+issued-key authority, emitted catalog parity and composed StackOS traffic require
+qualification in the consuming host. Package publication does not change an
+installed StackOS host; its operator owns installation and live qualification.
