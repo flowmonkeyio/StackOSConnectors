@@ -42,6 +42,7 @@ from stackos_connectors import (  # noqa: E402
     probe_credentials,
     project_probe_config,
     request_token,
+    revoke_token,
 )
 from stackos_connectors.connectors.hubspot.signature import verify_signature_v3  # noqa: E402
 from stackos_connectors.connectors.slack_bot.auth import verify_signature_v0  # noqa: E402
@@ -54,6 +55,38 @@ from stackos_connectors.connectors.telegram.auth import (  # noqa: E402
 
 SECRET = "driver-secret-canary"
 ACCESS = "driver-access-canary"
+
+
+async def quickbooks_revocation():
+    """Exercise explicit revocation through the installed public API, without sockets."""
+    calls = []
+    auth = ConnectorAuth("oauth2_token", {"client_id": "driver", "client_secret": SECRET})
+    contract = get_auth_contract("quickbooks-online", method=auth.method)
+    assert (
+        contract.revocation_endpoint == "https://developer.api.intuit.com/v2/oauth2/tokens/revoke"
+    )
+    for status in (200, 400):
+
+        def edge(request, status=status):
+            calls.append(request)
+            assert request.method == "POST" and str(request.url) == contract.revocation_endpoint
+            expected = base64.b64encode(f"driver:{SECRET}".encode()).decode()
+            assert request.headers["authorization"] == f"Basic {expected}"
+            assert json.loads(request.content) == {"token": "driver-latest-refresh-canary"}
+            return httpx.Response(status, content=SECRET)
+
+        async with httpx.AsyncClient(transport=httpx.MockTransport(edge)) as http:
+            try:
+                result = await revoke_token(
+                    "quickbooks-online", auth=auth, token="driver-latest-refresh-canary", http=http
+                )
+            except OAuthTokenError as error:
+                assert status == 400 and error.status_code == 400
+                assert error.category == "provider_rejected" and SECRET not in str(error)
+            else:
+                assert status == 200 and result is None
+            assert not http.is_closed
+    assert len(calls) == 2
 
 
 async def quickbooks_reads(client):
@@ -418,6 +451,9 @@ async def main():
 
     auth_api.request_token = implicit_grant
     oauth_protocol.request_token = implicit_grant
+    await quickbooks_revocation()
+    auth_api.revoke_token = implicit_grant
+    oauth_protocol.revoke_token = implicit_grant
     await quickbooks_reads(client)
     await quickbooks_records(client)
     client.describe("google-workspace")
@@ -516,6 +552,7 @@ async def main():
                     "quickbooks_exact_reads",
                     "quickbooks_30_entity_reads",
                     "quickbooks_company_probe",
+                    "quickbooks_explicit_revocation",
                 ],
                 "network": "blocked; injected edges only",
                 "origins": origins,

@@ -41,6 +41,7 @@ def test_public_auth_and_probe_exports_are_available():
         "get_auth_contract",
         "build_authorization_request",
         "request_token",
+        "revoke_token",
         "probe_credentials",
         "project_probe_config",
         "AuthMethodProbeContext",

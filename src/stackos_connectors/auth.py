@@ -66,6 +66,7 @@ class OAuthProviderContract:
     grant_types: tuple[str, ...] = ()
     response_config_fields: tuple[tuple[str, str, str], ...] = ()
     optional_scope_bundles: Mapping[str, Any] = field(default_factory=dict)
+    revocation_endpoint: str | None = None
 
     def __post_init__(self) -> None:
         for descriptor in fields(self):
@@ -245,6 +246,25 @@ async def request_token(
     )
 
 
+async def revoke_token(
+    connector: str,
+    *,
+    auth: ConnectorAuth,
+    token: str,
+    http: httpx.AsyncClient | None = None,
+    timeout: float = 30,
+) -> None:
+    """Request one declared revocation; only a confirmed HTTP 200 returns successfully.
+
+    The caller selects the exact token, owns grant concurrency and reconciles
+    failures or unknown outcomes. This operation never refreshes or retries.
+    """
+    from .shared.oauth import revoke_token as perform
+
+    contract = get_auth_contract(connector, method=auth.method, config=auth.config)
+    await perform(contract=contract, auth=auth, token=token, http=http, timeout=timeout)
+
+
 __all__ = [
     "AuthorizationRequest",
     "OAuthProviderContract",
@@ -253,4 +273,5 @@ __all__ = [
     "build_authorization_request",
     "get_auth_contract",
     "request_token",
+    "revoke_token",
 ]

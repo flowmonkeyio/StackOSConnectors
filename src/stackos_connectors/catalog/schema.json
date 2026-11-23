@@ -341,6 +341,13 @@
           "type": "string",
           "pattern": "^https://"
         },
+        "revocation_endpoint": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://"
+        },
         "authorization_endpoint": {
           "type": [
             "string",

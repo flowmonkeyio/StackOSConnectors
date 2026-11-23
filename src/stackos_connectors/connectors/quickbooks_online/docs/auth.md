@@ -1,6 +1,6 @@
 # QuickBooks Online authentication
 
-The [catalog](../catalog.json) owns fixed Intuit OAuth declarations. Use the public `build_authorization_request`, `request_token` and `get_auth_contract` functions. Neither read action authorizes or refreshes implicitly.
+The [catalog](../catalog.json) owns fixed Intuit OAuth declarations. Use the public `build_authorization_request`, `request_token`, `revoke_token` and `get_auth_contract` functions. No read action authorizes, refreshes or revokes implicitly.
 
 - `oauth2_authorization_code`: explicit code and refresh grants. Consent requests `com.intuit.quickbooks.accounting` with caller-generated state and callback URI.
 - `oauth2_token`: resolved bearer-token reads, plus explicit refresh grants when application fields and a refresh token are supplied to `request_token`.
@@ -11,6 +11,31 @@ The caller owns application secrets, state verification, callback handling, bind
 Code and refresh grants preserve provider-supplied `x_refresh_token_expires_in` and `x_refresh_token_hard_expires_in` in `TokenResult.metadata`. Missing values stay absent; no lifetime is invented and no hard-expiry opt-in header is added. Metadata values are provider evidence, not validated timestamps: the caller must validate their type and range, derive conservative expiry from request start, retain known hard ceilings and atomically store expiry with any rotated refresh token.
 
 An omitted token response scope remains unknown; the requested accounting scope is not evidence of an actual grant. An omitted refresh token remains absent in `TokenResult`; the caller decides whether to retain a prior value. Unknown refresh outcomes require caller reconciliation, not automatic replay. `CompanyInfo.Id` is a separate entity identifier and need not equal callback `realmId`.
+
+## Explicit disconnection
+
+`revoke_token("quickbooks-online", auth=application_auth, token=latest_refresh_token)`
+supports both declared OAuth methods. Supply `client_id` and `client_secret` in
+application auth fields and the exact latest persisted refresh token explicitly.
+The helper does not select a token from auth fields or refresh before revoking.
+It sends one HTTP Basic-authenticated JSON POST (`{"token": supplied_value}`) to
+the fixed `https://developer.api.intuit.com/v2/oauth2/tokens/revoke` endpoint,
+shared by sandbox and production. Caller configuration cannot replace this URL.
+
+Only HTTP 200 confirms revocation and returns `None`. The response body is not
+read or decoded, so an empty success is supported and unneeded provider content
+cannot be buffered or exposed. Other statuses, including 204, redirects and 400,
+raise sanitized `OAuthTokenError`; a generic 400 is not an already-revoked success.
+Requests have a positive finite timeout (30 seconds by default), never follow
+redirects and never retry automatically. A caller-supplied HTTP client remains
+open; the helper closes its own client and every response.
+
+The caller owns authorization, grant-wide concurrency across duplicate company
+connections, encrypted custody, local cleanup and recovery. A timeout or lost
+response can leave the remote outcome unknown. A transient error classification
+does not establish safe replay or authorize a new grant; reconcile through the
+calling application's lifecycle before retrying. Unit and installed-package
+transport fixtures do not prove live Intuit disconnection.
 
 Both method setup forms require an explicit environment and numeric company realm
 ID of 1–32 digits. Neither field has a default. The caller validates the intended

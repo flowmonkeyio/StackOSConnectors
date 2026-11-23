@@ -191,6 +191,7 @@
     "flow": "authorization_code",
     "authorization_endpoint": "https://appcenter.intuit.com/connect/oauth2",
     "token_endpoint": "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer",
+    "revocation_endpoint": "https://developer.api.intuit.com/v2/oauth2/tokens/revoke",
     "client_auth_style": "basic",
     "pkce_mode": "unavailable",
     "scopes": [

@@ -126,7 +126,14 @@ timestamp/replay checks and policy. HubSpot v2 verification is not implemented.
 
 No library call to discovery, probe or action execution starts an authorization
 flow, refreshes a token, opens a native session, stores credentials or selects
-readiness. Remote token revocation is not part of this API.
+readiness. `revoke_token(connector, auth=..., token=..., http=..., timeout=30)`
+performs one explicitly requested revocation where the catalog declares support
+(currently QuickBooks Online). It returns `None` only after HTTP 200, including
+an empty response; other statuses and transport failures raise `OAuthTokenError`.
+It does not follow redirects, retry, refresh, store state or read provider bodies.
+The caller selects the latest token, coordinates grant-wide concurrency and
+reconciles unknown outcomes. A transient error classification is not evidence
+that replay is safe. A supplied HTTP client remains caller-owned.
 
 For file-producing actions, pass `CallOptions(output_dir=Path(...))` and consume
 the plain descriptors in `result.files`. The library does not create application

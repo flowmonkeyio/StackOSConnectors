@@ -210,6 +210,18 @@ def token_result(contract: OAuthProviderContract, body: dict, grant_type: str) -
     )
 
 
+def _validate_timeout(contract: OAuthProviderContract, timeout: float) -> None:
+    if (
+        not isinstance(timeout, int | float)
+        or isinstance(timeout, bool)
+        or not math.isfinite(timeout)
+        or timeout <= 0
+    ):
+        raise OAuthTokenError(
+            "timeout must be a positive finite number", provider_key=contract.provider_key
+        )
+
+
 async def request_token(
     *,
     contract,
@@ -226,15 +238,7 @@ async def request_token(
         raise OAuthTokenError(
             "auth method does not support this grant", provider_key=contract.provider_key
         )
-    if (
-        not isinstance(timeout, int | float)
-        or isinstance(timeout, bool)
-        or not math.isfinite(timeout)
-        or timeout <= 0
-    ):
-        raise OAuthTokenError(
-            "timeout must be a positive finite number", provider_key=contract.provider_key
-        )
+    _validate_timeout(contract, timeout)
     data = {"grant_type": grant_type, **dict(contract.token_params)}
     if grant_type == "authorization_code":
         if (
@@ -335,3 +339,67 @@ async def request_token(
     finally:
         if owned:
             await client.aclose()
+
+
+def _revocation_application_auth(
+    contract: OAuthProviderContract, auth: ConnectorAuth
+) -> httpx.BasicAuth:
+    client_id, client_secret = auth.fields.get("client_id"), auth.fields.get("client_secret")
+    if (
+        not isinstance(client_id, str)
+        or not client_id.strip()
+        or not isinstance(client_secret, str)
+        or not client_secret.strip()
+    ):
+        raise OAuthTokenError(
+            "OAuth application fields are missing", provider_key=contract.provider_key
+        )
+    return httpx.BasicAuth(client_id, client_secret)
+
+
+async def revoke_token(
+    *,
+    contract: OAuthProviderContract,
+    auth: ConnectorAuth,
+    token: str,
+    http: httpx.AsyncClient | None,
+    timeout: float,
+) -> None:
+    if not contract.revocation_endpoint or contract.client_auth_style != "basic":
+        raise OAuthTokenError(
+            "auth method does not support token revocation", provider_key=contract.provider_key
+        )
+    _validate_timeout(contract, timeout)
+    authentication = _revocation_application_auth(contract, auth)
+    if not isinstance(token, str) or not token.strip():
+        raise OAuthTokenError("revocation material is missing", provider_key=contract.provider_key)
+    owned = http is None
+    client = http or httpx.AsyncClient(timeout=timeout, follow_redirects=False)
+    try:
+        try:
+            async with client.stream(
+                "POST",
+                contract.revocation_endpoint,
+                json={"token": token},
+                auth=authentication,
+                timeout=timeout,
+                follow_redirects=False,
+            ) as response:
+                if response.status_code != 200:
+                    raise _error(
+                        contract,
+                        "provider token revocation was not confirmed",
+                        category="provider_rejected",
+                        retryable=response.status_code in {408, 425, 429}
+                        or response.status_code >= 500,
+                        status=response.status_code,
+                    )
+                # Intuit confirms revocation with status 200, including an empty body.
+                # Do not buffer, parse or expose an unneeded provider response body.
+        finally:
+            if owned:
+                await client.aclose()
+    except httpx.HTTPError:
+        raise _error(
+            contract, "provider revocation transport failed", category="transport"
+        ) from None

@@ -12,6 +12,7 @@ from .auth import (
     build_authorization_request,
     get_auth_contract,
     request_token,
+    revoke_token,
 )
 from .contracts import (
     ActionDefinition,
@@ -120,6 +121,7 @@ __all__ = [
     "probe_credentials",
     "project_probe_config",
     "request_token",
+    "revoke_token",
     "validate",
     "validate_data",
 ]
